@@ -1,15 +1,22 @@
-import { useState } from "react"
-import reactLogo from "./assets/react.svg"
-import viteLogo from "/vite.svg"
+import React from "react"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 import "./App.css"
 
-function App() {
-  const [count, setCount] = useState(0)
+import Navbar from "./components/NavBar/Navbar"
+import NotFoundPage from "./components/NotFoundPage/NotFoundPage"
+import HomePage from "./components/HomePage/HomePage"
+import Footer from "./components/Footer/Footer"
 
+function App() {
   return (
-    <div>
-      <h1>sono app.jsx</h1>
-    </div>
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path="*" element={<NotFoundPage />} />
+        <Route path="/" element={<HomePage />} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
   )
 }
 
