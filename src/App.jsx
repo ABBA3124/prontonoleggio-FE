@@ -4,7 +4,7 @@ import "./App.css"
 
 import Navbar from "./components/NavBar/Navbar"
 import NotFoundPage from "./components/NotFoundPage/NotFoundPage"
-import HomePage from "./components/HomePage/HomePage"
+import HomePage from "./components/HomePage/HomePage/HomePage"
 import Footer from "./components/Footer/Footer"
 import ProfilePage from "./components/Page/Profilo/ProfilePage"
 
