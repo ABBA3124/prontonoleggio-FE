@@ -4,14 +4,11 @@ import { fetchGet } from "../../../../api"
 import "./FiltraVeicoli.css"
 
 const FiltraVeicoli = () => {
-  //<---------------------data odierna come default----------------------->
   const today = new Date().toISOString().split("T")[0]
   const [pickupDate, setPickupDate] = useState(today)
-  //<---------------------data futura di una settimana come default----------------------->
   const nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
   const [dropoffDate, setDropoffDate] = useState(nextWeek)
 
-  //<---------------------default ----------------------->
   const [location, setLocation] = useState("")
   const [carType, setCarType] = useState("")
   const [carCategory, setCarCategory] = useState("")
@@ -20,8 +17,6 @@ const FiltraVeicoli = () => {
 
   const handleFilter = async (e) => {
     e.preventDefault()
-
-    // Costruisce dinamicamente i parametri dell'URL
     const params = new URLSearchParams()
 
     if (location) params.append("posizione", location)
@@ -42,7 +37,7 @@ const FiltraVeicoli = () => {
 
   return (
     <div className="">
-      <div className=" sfondo rounded-5 p-3">
+      <div className="sfondo rounded-5 p-3">
         <Container className="pickup-wrapper wow fadeInUp mt-4">
           <h2 className="">Filtra Auto</h2>
           <Form onSubmit={handleFilter}>
@@ -84,7 +79,7 @@ const FiltraVeicoli = () => {
                   <Form.Label>Categoria Veicolo:</Form.Label>
                   <Form.Control as="select" value={carCategory} onChange={(e) => setCarCategory(e.target.value)}>
                     <option value="">Tutti</option>
-                    <option value="utilitaria">Utilitaria</option>
+                    <option value="Utilitaria">Utilitaria</option>
                     <option value="sportiva">Sportiva</option>
                     <option value="suv">SUV</option>
                     <option value="berlina">Berlina</option>
