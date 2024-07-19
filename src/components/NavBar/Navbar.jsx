@@ -3,19 +3,11 @@ import { Button, Container, Nav, Navbar, NavDropdown, Offcanvas, Image } from "r
 import { fetchWithToken } from "../../../api"
 import RegisterModal from "../Auth/RegisterModal"
 import LoginModal from "../Auth/LoginModal"
-// import logo from "./logo-per-un-azienda-energetica-che-dice-energia_773552-298.jpg"
-
-const capitalize = (str) => {
-  if (typeof str !== "string") return str
-  return str.charAt(0).toUpperCase() + str.slice(1)
-}
 
 const fetchUserData = async () => {
   try {
-    const data = await fetchWithToken("/utenti/me")
+    const data = await fetchWithToken("/utente/me")
     if (data) {
-      data.nome = capitalize(data.nome)
-      data.cognome = capitalize(data.cognome)
     }
     return data
   } catch (error) {
@@ -67,9 +59,8 @@ const NavBar = () => {
     <>
       <Navbar expand={expand} className="bg-dark">
         <Container fluid>
-          <Navbar.Brand href="/Home" className="text-white">
+          <Navbar.Brand href="/" className="text-white">
             <div className="d-flex align-items-center">
-              {/* <img src={logo} alt="Logo" height={30} className="me-2" /> */}
               <span className="fw-bold">ProntoNoleggio</span>
             </div>
           </Navbar.Brand>
@@ -82,27 +73,38 @@ const NavBar = () => {
             <Offcanvas.Header closeButton>
               <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>Menu</Offcanvas.Title>
             </Offcanvas.Header>
-            <Offcanvas.Body>
-              <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link href="/Home" className="text-white">
+            <Offcanvas.Body className="d-flex ">
+              <Nav className="justify-content-end flex-grow-1 pe-3 d-flex align-items-center">
+                <Nav.Link href="/" className="text-white">
                   Home
                 </Nav.Link>
-                <NavDropdown
-                  title="Funzionalità"
-                  id={`offcanvasNavbarDropdown-expand-${expand}`}
-                  className="custom-nav-dropdown text-white"
-                >
-                  <NavDropdown.Item href="/profilo" onClick={handleProtectedLinkClick}>
-                    Profilo
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/clienti" onClick={handleProtectedLinkClick}>
-                    info
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/fatture" onClick={handleProtectedLinkClick}>
-                    Cronologia
-                  </NavDropdown.Item>
-                </NavDropdown>
-                {userData && <Image src={userData.avatar} height={30} width={30} className="mt-1 rounded" />}
+
+                {userData && (
+                  <NavDropdown
+                    title={
+                      <span className="text-white">
+                        <Image src={userData.avatar} height={30} width={30} className="rounded" />
+                      </span>
+                    }
+                    id={`offcanvasNavbarDropdown-expand-${expand}`}
+                    className="custom-nav-dropdown"
+                    align="end"
+                  >
+                    <NavDropdown.Item href="/profilo/me" onClick={handleProtectedLinkClick}>
+                      Profilo
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="/clienti" onClick={handleProtectedLinkClick}>
+                      Clienti
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="/fatture" onClick={handleProtectedLinkClick}>
+                      Fatture
+                    </NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item href="/fatture" onClick={handleLogout}>
+                      Logout
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                )}
               </Nav>
               <div className="d-flex align-items-center justify-content-end ">
                 {!userData ? (
@@ -115,9 +117,7 @@ const NavBar = () => {
                     </Button>
                   </>
                 ) : (
-                  <Button variant="secondary" onClick={handleLogout} className="bg-transparent">
-                    Logout
-                  </Button>
+                  <div></div>
                 )}
               </div>
             </Offcanvas.Body>

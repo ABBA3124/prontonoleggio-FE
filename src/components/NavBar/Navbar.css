@@ -1,4 +1,8 @@
-.custom-nav-dropdown .dropdown-toggle {
+.custom-nav-dropdown .text-white {
+  color: white !important;
+}
+
+.custom-nav-dropdown .dropdown-toggle::after {
   color: white !important;
 }
 
