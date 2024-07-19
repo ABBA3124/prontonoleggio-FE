@@ -1,0 +1,23 @@
+.brand-carousel-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  padding: 2rem 0;
+}
+
+.carousel-item img {
+  justify-content: center;
+  background-color: rgb(255, 255, 255);
+  align-items: center;
+  height: auto;
+  margin: auto;
+  display: block;
+}
+
+.slick-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
