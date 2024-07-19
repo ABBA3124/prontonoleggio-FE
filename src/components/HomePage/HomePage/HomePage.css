@@ -1,0 +1,57 @@
+/* .spazioBrand {
+  margin-top: 270px;
+} */
+
+@media (min-width: 1921px) and (max-width: 2561px) {
+  .spazioBrand {
+    margin-top: 410px;
+  }
+}
+
+@media (min-width: 1600px) and (max-width: 1920px) {
+  .spazioBrand {
+    margin-top: 450px;
+  }
+}
+
+@media (min-width: 1400px) and (max-width: 1599px) {
+  .spazioBrand {
+    margin-top: 140px;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .spazioBrand {
+    margin-top: 45px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .spazioBrand {
+    margin-top: 100px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .spazioBrand {
+    margin-top: 25px;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .spazioBrand {
+    margin-top: -45px;
+  }
+}
+
+@media (max-width: 575px) {
+  .spazioBrand {
+    margin-top: 200px;
+  }
+}
+
+@media (max-width: 429px) {
+  .spazioBrand {
+    margin-top: 340px;
+  }
+}
