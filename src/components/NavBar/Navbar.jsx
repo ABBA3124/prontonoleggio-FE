@@ -63,6 +63,7 @@ const NavBar = () => {
           <Navbar.Brand href="/" className="text-white">
             <div className="d-flex align-items-center">
               <img src={LogoProntoNoleggio} alt="Logo Pronto Noleggio" />
+              <span className="fw-bold"></span>
             </div>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
@@ -76,10 +77,12 @@ const NavBar = () => {
             </Offcanvas.Header>
             <Offcanvas.Body className="d-flex ">
               <Nav className="justify-content-end flex-grow-1 pe-3 d-flex align-items-center">
+                <Nav.Link href="/veicoli" className="text-white">
+                  I Nostri Veicoli
+                </Nav.Link>
                 <Nav.Link href="/" className="text-white">
                   Home
                 </Nav.Link>
-
                 {userData && (
                   <NavDropdown
                     title={
