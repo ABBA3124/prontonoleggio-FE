@@ -5,6 +5,7 @@ import Nav from "react-bootstrap/Nav"
 import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button"
 import "bootstrap/dist/css/bootstrap.min.css"
+import LogoProntoNoleggio from "../NavBar/img/ProntoNoleggioWhite.svg"
 
 const Footer = () => {
   return (
@@ -12,12 +13,20 @@ const Footer = () => {
       <Container>
         <Row>
           <Col md={4}>
-            <h5>Chi Siamo</h5>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus beatae dolores doloremque impedit
-              mollitia doloribus natus totam suscipit similique ipsa recusandae debitis numquam perferendis nesciunt ad,
-              voluptatibus placeat quaerat laudantium?
-            </p>
+            <div className="d-flex flex-column-reverse align-items-end">
+              <div className="">
+                <img src={LogoProntoNoleggio} alt="Logo Pronto Noleggio" />
+              </div>
+              <div>
+                <h5>Chi Siamo</h5>
+                <p>
+                  Pronto Noleggio è il tuo partner di fiducia per il noleggio di auto a prezzi accessibili. Offriamo
+                  un'ampia gamma di veicoli per soddisfare ogni tua esigenza, con un servizio clienti impeccabile e
+                  prenotazioni online semplici e sicure. Che tu abbia bisogno di un'auto per un evento speciale, un
+                  viaggio di lavoro o una vacanza, siamo qui per rendere il tuo viaggio indimenticabile.
+                </p>
+              </div>
+            </div>
           </Col>
           <Col md={4}>
             <h5>Link Rapidi</h5>
