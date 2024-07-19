@@ -3,6 +3,7 @@ import { Button, Container, Nav, Navbar, NavDropdown, Offcanvas, Image } from "r
 import { fetchWithToken } from "../../../api"
 import RegisterModal from "../Auth/RegisterModal"
 import LoginModal from "../Auth/LoginModal"
+import LogoProntoNoleggio from "./img/ProntoNoleggioWhite.svg"
 
 const fetchUserData = async () => {
   try {
@@ -61,7 +62,7 @@ const NavBar = () => {
         <Container fluid>
           <Navbar.Brand href="/" className="text-white">
             <div className="d-flex align-items-center">
-              <span className="fw-bold">ProntoNoleggio</span>
+              <img src={LogoProntoNoleggio} alt="Logo Pronto Noleggio" />
             </div>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
