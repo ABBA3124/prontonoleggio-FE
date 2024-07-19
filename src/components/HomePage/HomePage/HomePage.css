@@ -1,3 +1,10 @@
+/* Spazio per il brand */
+.spazioBrand {
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Media query per varie viewport */
 @media (min-width: 1921px) and (max-width: 2561px) {
   .spazioBrand {
     margin-top: 410px;
