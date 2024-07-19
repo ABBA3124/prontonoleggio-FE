@@ -3,7 +3,6 @@ import { Carousel } from "react-bootstrap"
 import "./HeroHomePage.css"
 import Hero1 from "../Hero/img/hero-1.jpg"
 import Hero2 from "../Hero/img/hero-2.jpg"
-import Hero3 from "../Hero/img/hero-3.jpg"
 import Hero4 from "../Hero/img/hero-4.jpg"
 
 const HeroHomePage = () => {
