@@ -56,6 +56,11 @@ const NavBar = () => {
     }
   }
 
+  const ROLE1 = import.meta.env.VITE_ROLE_VERIFICA1
+  const ROLE2 = import.meta.env.VITE_ROLE_VERIFICA2
+  const verificaRuolo1 = userData?.role === ROLE1
+  const verificaRuolo2 = userData?.role === ROLE2 || userData?.role === ROLE1
+
   return (
     <>
       <Navbar expand={expand} className="bg-dark">
@@ -83,6 +88,76 @@ const NavBar = () => {
                 <Nav.Link href="/" className="text-white">
                   Home
                 </Nav.Link>
+                {/* {verificaRuolo2 && (
+                  <NavDropdown
+                    title={<span className="text-white">Admin Menù</span>}
+                    id={`offcanvasNavbarDropdown-expand-${expand}`}
+                    className="custom-nav-dropdown"
+                    align="end"
+                  >
+                    <NavDropdown.Header>Gestione Utenti</NavDropdown.Header>
+                    <NavDropdown.Item href="/" onClick={handleProtectedLinkClick}>
+                      Cerca Utente per ID
+                    </NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Header>Gestione Veicoli</NavDropdown.Header>
+                    <NavDropdown.Item href="/" onClick={handleProtectedLinkClick}>
+                      Tutti i Veicoli
+                    </NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Header>Gestione Prenotazioni</NavDropdown.Header>
+                    <NavDropdown.Item href="/" onClick={handleProtectedLinkClick}>
+                      Modifica Prenotazione
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                )} */}
+                {verificaRuolo1 && (
+                  <NavDropdown
+                    title={<span className="text-white">Super Admin Menù</span>}
+                    id={`offcanvasNavbarDropdown-expand-${expand}`}
+                    className="custom-nav-dropdown"
+                    align="end"
+                  >
+                    <NavDropdown.Header>Gestione Utenti</NavDropdown.Header>
+                    <NavDropdown.Item href="/superadmin/utenti/all" onClick={handleProtectedLinkClick}>
+                      Tutti gli Utenti
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="/cerca/utente/id=" onClick={handleProtectedLinkClick}>
+                      Cerca Utente per ID
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="/elimina/utente/id=" onClick={handleProtectedLinkClick}>
+                      Elimina Utente per ID
+                    </NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Header>Gestione Veicoli</NavDropdown.Header>
+                    <NavDropdown.Item href="/veicoli/all" onClick={handleProtectedLinkClick}>
+                      Tutti i Veicoli
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="/modifica/auto/id=" onClick={handleProtectedLinkClick}>
+                      Modifica Auto per ID
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="/modifica/moto/id=" onClick={handleProtectedLinkClick}>
+                      Modifica Moto per ID
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="/crea/auto" onClick={handleProtectedLinkClick}>
+                      Aggiungi Auto
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="/crea/moto" onClick={handleProtectedLinkClick}>
+                      Aggiungi Moto
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="/elimina/veicolo/id=" onClick={handleProtectedLinkClick}>
+                      Elimina Veicolo per ID
+                    </NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Header>Gestione Prenotazioni</NavDropdown.Header>
+                    <NavDropdown.Item href="/modifica/prenotazione" onClick={handleProtectedLinkClick}>
+                      Modifica Prenotazione
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="/elimina/prenotazione" onClick={handleProtectedLinkClick}>
+                      Elimina Prenotazione
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                )}
                 {userData && (
                   <NavDropdown
                     title={
@@ -103,8 +178,24 @@ const NavBar = () => {
                     <NavDropdown.Item href="/fatture" onClick={handleProtectedLinkClick}>
                       Fatture
                     </NavDropdown.Item>
+                    {/* {verificaRuolo2 && (
+                      <div>
+                        <NavDropdown.Divider />
+                        <NavDropdown.Item href="/admin" onClick={handleProtectedLinkClick}>
+                          Admin Page
+                        </NavDropdown.Item>
+                      </div>
+                    )}
+                    {verificaRuolo1 && (
+                      <div>
+                        <NavDropdown.Divider />
+                        <NavDropdown.Item href="/superadmin" onClick={handleProtectedLinkClick}>
+                          Super Admin Page
+                        </NavDropdown.Item>
+                      </div>
+                    )} */}
                     <NavDropdown.Divider />
-                    <NavDropdown.Item href="/fatture" onClick={handleLogout}>
+                    <NavDropdown.Item href="/" onClick={handleLogout}>
                       Logout
                     </NavDropdown.Item>
                   </NavDropdown>
