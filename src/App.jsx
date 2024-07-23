@@ -8,17 +8,17 @@ import HomePage from "./components/HomePage/HomePage/HomePage"
 import Footer from "./components/Footer/Footer"
 import ProfilePage from "./components/Page/Profilo/ProfilePage"
 import Veicoli from "./components/Veicoli/Veicoli"
-import GetAllUtenti from "./components/ROLE/SuperAdmin/AllUtenti/GetAllUtenti"
-import CercaUtente from "./components/ROLE/SuperAdmin/CercaUtente/CercaUtente"
-import EliminaUtente from "./components/ROLE/SuperAdmin/EliminaUtente/EliminaUtente"
-import AllVeicoli from "./components/ROLE/SuperAdmin/AllVeicoli/AllVeicoli"
-import ModificaAuto from "./components/ROLE/SuperAdmin/ModificaAuto/ModificaAuto"
-import ModificaMoto from "./components/ROLE/SuperAdmin/ModificaMoto/ModificaMoto"
-import AggiungiAuto from "./components/ROLE/SuperAdmin/AggiungiAuto/AggiungiAuto"
-import AggiungiMoto from "./components/ROLE/SuperAdmin/AggiungiMoto/AggiungiMoto"
-import EliminaVeicolo from "./components/ROLE/SuperAdmin/EliminaVeicolo/EliminaVeicolo"
-import ModificaPrenotazione from "./components/ROLE/SuperAdmin/ModificaPrenotazione/ModificaPrenotazione"
-import EliminaPrenotazione from "./components/ROLE/SuperAdmin/EliminaPrenotazione/EliminaPrenotazione"
+import GetAllUtenti from "./components/ROLE/SuperAdmin/GestioneUtenti/AllUtenti/GetAllUtenti"
+import CercaUtente from "./components/ROLE/SuperAdmin/GestioneUtenti/CercaUtente/CercaUtente"
+import EliminaUtente from "./components/ROLE/SuperAdmin/GestioneUtenti/EliminaUtente/EliminaUtente"
+import AllVeicoli from "./components/ROLE/SuperAdmin/GestioneVeicoli/AllVeicoli/AllVeicoli"
+import ModificaAuto from "./components/ROLE/SuperAdmin/GestioneVeicoli/ModificaAuto/ModificaAuto"
+import ModificaMoto from "./components/ROLE/SuperAdmin/GestioneVeicoli/ModificaMoto/ModificaMoto"
+import AggiungiAuto from "./components/ROLE/SuperAdmin/GestioneVeicoli/AggiungiAuto/AggiungiAuto"
+import AggiungiMoto from "./components/ROLE/SuperAdmin/GestioneVeicoli/AggiungiMoto/AggiungiMoto"
+import EliminaVeicolo from "./components/ROLE/SuperAdmin/GestioneVeicoli/EliminaVeicolo/EliminaVeicolo"
+import ModificaPrenotazione from "./components/ROLE/SuperAdmin/GestionePrenotazioni/ModificaPrenotazione/ModificaPrenotazione"
+import EliminaPrenotazione from "./components/ROLE/SuperAdmin/GestionePrenotazioni/EliminaPrenotazione/EliminaPrenotazione"
 
 function App() {
   return (
@@ -33,8 +33,10 @@ function App() {
         <Route path="/cerca/utente/id=" element={<CercaUtente />} />
         <Route path="/elimina/utente/id=" element={<EliminaUtente />} />
         <Route path="/veicoli/all" element={<AllVeicoli />} />
-        <Route path="/modifica/auto/id=" element={<ModificaAuto />} />
-        <Route path="/modifica/moto/id=" element={<ModificaMoto />} />
+
+        <Route path="/modifica/auto/:id" element={<ModificaAuto />} />
+        <Route path="/modifica/moto/:id" element={<ModificaMoto />} />
+
         <Route path="/crea/auto" element={<AggiungiAuto />} />
         <Route path="/crea/moto" element={<AggiungiMoto />} />
         <Route path="/elimina/veicolo/id=" element={<EliminaVeicolo />} />
