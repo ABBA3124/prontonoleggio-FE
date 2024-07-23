@@ -38,9 +38,15 @@ const AllVeicoli = () => {
   const handleEdit = (id, type) => {
     if (type === "AUTO") {
       navigate(`/modifica/auto/${id}`)
-    } else {
+    } else if (type === "MOTO") {
       navigate(`/modifica/moto/${id}`)
+    } else {
+      setError("Tipo veicolo non valido.")
     }
+  }
+
+  const handleDelete = (id) => {
+    navigate(`/elimina/veicolo/${id}`)
   }
 
   return (
@@ -71,6 +77,7 @@ const AllVeicoli = () => {
                 <th>Disponibilità</th>
                 <th>Posizione</th>
                 <th>Azioni</th>
+                <th>Azioni</th>
               </tr>
             </thead>
             <tbody>
@@ -95,7 +102,12 @@ const AllVeicoli = () => {
                   <td>{veicolo.posizione}</td>
                   <td>
                     <Button variant="warning" onClick={() => handleEdit(veicolo.id, veicolo.tipoVeicolo)}>
-                      Modifica {veicolo.tipoVeicolo === "AUTO" ? "Auto" : "Moto"}
+                      {veicolo.tipoVeicolo === "AUTO" ? "Modifica_Auto" : "Modifica_Moto"}
+                    </Button>
+                  </td>
+                  <td>
+                    <Button variant="danger" onClick={() => handleDelete(veicolo.id)}>
+                      Elimina
                     </Button>
                   </td>
                 </tr>
