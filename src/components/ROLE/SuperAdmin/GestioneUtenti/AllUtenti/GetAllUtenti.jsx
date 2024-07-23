@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Table, Container, Spinner, Alert, Form, Button, Row, Col, Pagination } from "react-bootstrap"
 import { fetchWithToken } from "../../../../../../api"
+import { useNavigate } from "react-router-dom"
 
 const GetAllUtenti = () => {
   const [utenti, setUtenti] = useState([])
@@ -8,6 +9,7 @@ const GetAllUtenti = () => {
   const [error, setError] = useState("")
   const [currentPage, setCurrentPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useState({
     nome: "",
     cognome: "",
@@ -79,6 +81,10 @@ const GetAllUtenti = () => {
   useEffect(() => {
     fetchUtenti()
   }, [])
+
+  const handleDelete = (id) => {
+    navigate(`/elimina/utente/${id}`)
+  }
 
   return (
     <Container className="mt-5">
@@ -254,6 +260,7 @@ const GetAllUtenti = () => {
                 <th>Data Nascita</th>
                 <th>Codice Fiscale</th>
                 <th>Patente</th>
+                <th>Azioni</th>
               </tr>
             </thead>
             <tbody>
@@ -273,6 +280,11 @@ const GetAllUtenti = () => {
                   <td>{utente.dataNascita}</td>
                   <td>{utente.codiceFiscale}</td>
                   <td>{utente.patente}</td>
+                  <td>
+                    <Button variant="danger" onClick={() => handleDelete(utente.id)}>
+                      Elimina
+                    </Button>
+                  </td>
                 </tr>
               ))}
             </tbody>
