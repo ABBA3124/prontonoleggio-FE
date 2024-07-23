@@ -107,3 +107,8 @@ export const login = async (data) => {
 export const updateProfile = async (data) => {
   return fetchPut("/utente/me", data)
 }
+
+// Funzione per cercare veicolo per id
+export const fetchVehicleDetails = async (vehicleId) => {
+  return fetchWithToken(`/vehicles/${vehicleId}`)
+}
