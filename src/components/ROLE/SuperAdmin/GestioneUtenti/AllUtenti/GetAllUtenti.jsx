@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react"
-import { Table, Container, Spinner, Alert, Form, Button, Row, Col } from "react-bootstrap"
-import { fetchWithToken } from "../../../../../api"
+import { Table, Container, Spinner, Alert, Form, Button, Row, Col, Pagination } from "react-bootstrap"
+import { fetchWithToken } from "../../../../../../api"
 
 const GetAllUtenti = () => {
   const [utenti, setUtenti] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [currentPage, setCurrentPage] = useState(0)
+  const [totalPages, setTotalPages] = useState(0)
   const [searchParams, setSearchParams] = useState({
     nome: "",
     cognome: "",
@@ -26,15 +28,16 @@ const GetAllUtenti = () => {
     setSearchParams({ ...searchParams, [e.target.name]: e.target.value })
   }
 
-  const fetchUtenti = async (params = {}) => {
+  const fetchUtenti = async (params = {}, page = 0) => {
     setLoading(true)
     setError("")
     try {
       const filteredParams = Object.fromEntries(Object.entries(params).filter(([key, value]) => value !== ""))
-      const queryParams = new URLSearchParams(filteredParams)
+      const queryParams = new URLSearchParams({ ...filteredParams, page })
       const response = await fetchWithToken(`/utente/all?${queryParams.toString()}`)
       console.log("Response data:", response)
       setUtenti(response.content)
+      setTotalPages(response.totalPages)
     } catch (error) {
       console.error("Errore nel caricamento degli utenti:", error)
       setError("Errore nel caricamento degli utenti.")
@@ -45,7 +48,8 @@ const GetAllUtenti = () => {
 
   const handleSearch = (e) => {
     e.preventDefault()
-    fetchUtenti(searchParams)
+    setCurrentPage(0)
+    fetchUtenti(searchParams, 0)
   }
 
   const handleReset = (e) => {
@@ -65,6 +69,11 @@ const GetAllUtenti = () => {
       patente: "",
     })
     fetchUtenti({})
+  }
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+    fetchUtenti(searchParams, page)
   }
 
   useEffect(() => {
@@ -227,46 +236,60 @@ const GetAllUtenti = () => {
       ) : error ? (
         <Alert variant="danger">{error}</Alert>
       ) : (
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nome</th>
-              <th>Cognome</th>
-              <th>Email</th>
-              <th>Telefono</th>
-              <th>Username</th>
-              <th>Ruolo</th>
-              <th>Età</th>
-              <th>Città</th>
-              <th>Provincia</th>
-              <th>Nazione</th>
-              <th>Data Nascita</th>
-              <th>Codice Fiscale</th>
-              <th>Patente</th>
-            </tr>
-          </thead>
-          <tbody>
-            {utenti.map((utente) => (
-              <tr key={utente.id}>
-                <td>{utente.id}</td>
-                <td>{utente.nome}</td>
-                <td>{utente.cognome}</td>
-                <td>{utente.email}</td>
-                <td>{utente.telefono}</td>
-                <td>{utente.username}</td>
-                <td>{utente.role}</td>
-                <td>{utente.eta}</td>
-                <td>{utente.citta}</td>
-                <td>{utente.provincia}</td>
-                <td>{utente.nazione}</td>
-                <td>{utente.dataNascita}</td>
-                <td>{utente.codiceFiscale}</td>
-                <td>{utente.patente}</td>
+        <>
+          <Table striped bordered hover responsive>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Email</th>
+                <th>Telefono</th>
+                <th>Username</th>
+                <th>Ruolo</th>
+                <th>Età</th>
+                <th>Città</th>
+                <th>Provincia</th>
+                <th>Nazione</th>
+                <th>Data Nascita</th>
+                <th>Codice Fiscale</th>
+                <th>Patente</th>
               </tr>
+            </thead>
+            <tbody>
+              {utenti.map((utente) => (
+                <tr key={utente.id}>
+                  <td>{utente.id}</td>
+                  <td>{utente.nome}</td>
+                  <td>{utente.cognome}</td>
+                  <td>{utente.email}</td>
+                  <td>{utente.telefono}</td>
+                  <td>{utente.username}</td>
+                  <td>{utente.role}</td>
+                  <td>{utente.eta}</td>
+                  <td>{utente.citta}</td>
+                  <td>{utente.provincia}</td>
+                  <td>{utente.nazione}</td>
+                  <td>{utente.dataNascita}</td>
+                  <td>{utente.codiceFiscale}</td>
+                  <td>{utente.patente}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+          <Pagination className="">
+            {[...Array(totalPages).keys()].map((page) => (
+              <Pagination.Item
+                className="mt-2"
+                key={page}
+                active={page === currentPage}
+                onClick={() => handlePageChange(page)}
+              >
+                {page + 1}
+              </Pagination.Item>
             ))}
-          </tbody>
-        </Table>
+          </Pagination>
+        </>
       )}
     </Container>
   )

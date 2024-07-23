@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import { Form, Button, Container, Spinner, Alert } from "react-bootstrap"
-import { fetchWithToken } from "../../../../../api"
+import { fetchWithToken } from "../../../../../../api"
 
-const EliminaUtente = () => {
-  const [userId, setUserId] = useState("")
+const EliminaVeicolo = () => {
+  const [veicoloId, setVeicoloId] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -16,7 +16,7 @@ const EliminaUtente = () => {
     setSuccess("")
 
     try {
-      const response = await fetchWithToken(`/utente/elimina/${userId}`, {
+      const response = await fetchWithToken(`/veicoli/${veicoloId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -27,12 +27,12 @@ const EliminaUtente = () => {
       const responseText = await response.text()
 
       if (response.ok) {
-        setSuccess(responseText)
+        setSuccess("Veicolo eliminato con successo!")
       } else {
         setError(responseText)
       }
     } catch (error) {
-      setSuccess("Utente Eliminato con successo")
+      setError("Errore nell'eliminazione del veicolo.")
     } finally {
       setLoading(false)
     }
@@ -40,15 +40,15 @@ const EliminaUtente = () => {
 
   return (
     <Container className="mt-5">
-      <h1 className="text-center mb-4">Elimina Utente</h1>
+      <h1 className="text-center mb-4">Elimina Veicolo</h1>
       <Form onSubmit={handleDelete}>
-        <Form.Group controlId="userId">
-          <Form.Label>ID Utente</Form.Label>
+        <Form.Group controlId="veicoloId">
+          <Form.Label>ID Veicolo</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Inserisci ID utente"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
+            placeholder="Inserisci ID veicolo"
+            value={veicoloId}
+            onChange={(e) => setVeicoloId(e.target.value)}
           />
         </Form.Group>
         <Form.Group controlId="password" className="mt-3">
@@ -85,4 +85,4 @@ const EliminaUtente = () => {
   )
 }
 
-export default EliminaUtente
+export default EliminaVeicolo
