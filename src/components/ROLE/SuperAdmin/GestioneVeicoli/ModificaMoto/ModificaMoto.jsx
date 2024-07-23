@@ -33,11 +33,9 @@ const ModificaMoto = () => {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
 
-  // Capitalizza la prima lettera di una stringa Marca
   const capitalizeFirstLetterMarca = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
   }
-  // Capitalizza la prima lettera di una stringa Targa
   const capitalizeFirstLetterTarga = (string) => {
     return string.charAt(0).toUpperCase() + string.charAt(1).toUpperCase() + string.slice(2).toLowerCase()
   }
@@ -94,9 +92,6 @@ const ModificaMoto = () => {
     try {
       setLoading(true)
       const vehicleData = await fetchWithToken(`/veicoli/${vehicleId}`)
-      // da rimuovere dopo il test per vedere i dati del veicolo
-      console.log(vehicleData)
-      // setFormData è una funzione che setta i dati del veicolo nel form per la modifica
       setFormData(vehicleData)
     } catch (error) {
       console.error("Errore nella ricerca del veicolo:", error)
