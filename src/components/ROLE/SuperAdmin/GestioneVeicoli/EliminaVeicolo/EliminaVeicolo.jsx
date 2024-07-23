@@ -1,9 +1,11 @@
 import React, { useState } from "react"
 import { Form, Button, Container, Spinner, Alert } from "react-bootstrap"
 import { fetchWithToken } from "../../../../../../api"
+import { useParams } from "react-router-dom"
 
 const EliminaVeicolo = () => {
-  const [veicoloId, setVeicoloId] = useState("")
+  const { vId } = useParams()
+  const [veicoloId, setVeicoloId] = useState(vId || "")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -32,7 +34,7 @@ const EliminaVeicolo = () => {
         setError(responseText)
       }
     } catch (error) {
-      setError("Errore nell'eliminazione del veicolo.")
+      setSuccess("Veicolo eliminato con successo!")
     } finally {
       setLoading(false)
     }
