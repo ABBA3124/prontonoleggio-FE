@@ -7,7 +7,7 @@ import NotFoundPage from "./components/NotFoundPage/NotFoundPage"
 import HomePage from "./components/HomePage/HomePage/HomePage"
 import Footer from "./components/Footer/Footer"
 import ProfilePage from "./components/Page/Profilo/ProfilePage"
-import Veicoli from "./components/Veicoli/Veicoli"
+import Veicoli from "./components/Page/INostriVeicoli/INostriVeicoli"
 import GetAllUtenti from "./components/ROLE/SuperAdmin/GestioneUtenti/AllUtenti/GetAllUtenti"
 import CercaUtente from "./components/ROLE/SuperAdmin/GestioneUtenti/CercaUtente/CercaUtente"
 import EliminaUtente from "./components/ROLE/SuperAdmin/GestioneUtenti/EliminaUtente/EliminaUtente"
@@ -31,15 +31,13 @@ function App() {
         <Route path="/veicoli" element={<Veicoli />} />
         <Route path="/superadmin/utenti/all" element={<GetAllUtenti />} />
         <Route path="/cerca/utente/id=" element={<CercaUtente />} />
-        <Route path="/elimina/utente/id=" element={<EliminaUtente />} />
+        <Route path="/elimina/utente/:uId" element={<EliminaUtente />} />
         <Route path="/veicoli/all" element={<AllVeicoli />} />
-
         <Route path="/modifica/auto/:id" element={<ModificaAuto />} />
         <Route path="/modifica/moto/:id" element={<ModificaMoto />} />
-
         <Route path="/crea/auto" element={<AggiungiAuto />} />
         <Route path="/crea/moto" element={<AggiungiMoto />} />
-        <Route path="/elimina/veicolo/id=" element={<EliminaVeicolo />} />
+        <Route path="/elimina/veicolo/:vId" element={<EliminaVeicolo />} />
         <Route path="/modifica/prenotazione" element={<ModificaPrenotazione />} />
         <Route path="/elimina/prenotazione" element={<EliminaPrenotazione />} />
       </Routes>
