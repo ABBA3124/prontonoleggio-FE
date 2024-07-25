@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
-import { Container, Row, Col, Card, Spinner, Table, Button, Form, Alert } from "react-bootstrap"
-import { fetchWithToken, updateProfile } from "../../../../api"
+import { Container, Row, Col, Card, Spinner, Table, Button, Form, Alert, Modal } from "react-bootstrap"
+import { fetchWithToken, updateProfile, fetchWithTokenAndTextResponse } from "../../../../api"
+import { useNavigate } from "react-router-dom"
 
 const UserContext = createContext()
 
@@ -17,6 +18,7 @@ const ProfileProvider = ({ children }) => {
         setUserData(data)
       } catch (error) {
         setError("Errore durante il caricamento del profilo. Per favore, effettua il login.")
+        setSuccess("")
       } finally {
         setLoading(false)
       }
@@ -86,9 +88,50 @@ const UserProfile = () => {
 }
 
 const UserInfo = ({ userData }) => {
-  const { setUserData, setError, setSuccess, success, error } = useContext(UserContext)
+  const { setUserData, setError, setSuccess } = useContext(UserContext)
   const [formData, setFormData] = useState({ ...userData })
   const [editing, setEditing] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [password, setPassword] = useState("")
+  const navigate = useNavigate()
+  const [errore, setErrore] = useState("")
+  const [tuttook, setTuttoOk] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  const deleteProfile = async (password) => {
+    setLoading(true)
+    try {
+      const responseText = await fetchWithTokenAndTextResponse("/utente/me", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password }),
+      })
+      setTuttoOk(responseText)
+      setErrore("")
+      setPassword("")
+      setTimeout(() => {
+        localStorage.removeItem("token")
+        setUserData(null)
+        navigate("/")
+        window.location.reload()
+      }, 2000)
+    } catch (error) {
+      setErrore("Errore durante l'eliminazione del profilo")
+      setTuttoOk("")
+      setPassword("")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  //123456Daa
+
+  const handleDeleteProfile = async (e) => {
+    e.preventDefault()
+    await deleteProfile(password)
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -130,6 +173,9 @@ const UserInfo = ({ userData }) => {
       setSuccess("")
     }
   }
+
+  const ROLE1 = import.meta.env.VITE_ROLE_VERIFICA1
+  const ROLE2 = import.meta.env.VITE_ROLE_VERIFICA2
 
   return (
     <Card.Text>
@@ -183,6 +229,9 @@ const UserInfo = ({ userData }) => {
       ) : (
         <Table striped bordered hover>
           <tbody>
+            {userData?.role === ROLE1 && <UserDetail label="Ruolo" value={userData.role} />}
+            {userData?.role === ROLE2 && <UserDetail label="Ruolo" value={userData.role} />}
+            {userData?.role === ROLE1 && userData?.role === ROLE2 && <UserDetail label="ID" value={userData.id} />}
             <UserDetail label="Email" value={userData.email} />
             <UserDetail label="Età" value={userData.eta} />
             <UserDetail label="Data di Nascita" value={new Date(userData.dataNascita).toLocaleDateString()} />
@@ -199,16 +248,50 @@ const UserInfo = ({ userData }) => {
       <Button variant="primary" className="mt-3" onClick={() => setEditing(true)}>
         Modifica Profilo
       </Button>
-      {success && (
-        <Alert variant="success" className="mt-3">
-          {success}
-        </Alert>
-      )}
-      {error && (
-        <Alert variant="danger" className="mt-3">
-          {error}
-        </Alert>
-      )}
+      <Button variant="danger" className="ms-2 mt-3" onClick={() => setShowModal(true)}>
+        Elimina Profilo
+      </Button>
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Conferma Eliminazione Profilo</Modal.Title>
+        </Modal.Header>
+        <Form onSubmit={handleDeleteProfile}>
+          <Modal.Body>
+            <Form.Group>
+              <Form.Label>Inserisci la password per confermare</Form.Label>
+              <Form.Control
+                placeholder="Password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Group>
+            <div>
+              {tuttook && (
+                <Alert variant="success" className="mt-3">
+                  {tuttook}
+                </Alert>
+              )}
+            </div>
+            <div>
+              {errore && (
+                <Alert variant="danger" className="mt-3">
+                  {errore}
+                </Alert>
+              )}
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Annulla
+            </Button>
+            <Button variant="danger" type="submit">
+              Elimina Profilo
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
     </Card.Text>
   )
 }
