@@ -96,6 +96,27 @@ export const fetchWithToken = async (endpoint, options = {}) => {
   return response.json()
 }
 
+// Funzione per effettuare una richiesta con token di autenticazione e gestire risposte di testo
+export const fetchWithTokenAndTextResponse = async (endpoint, options = {}) => {
+  const token = localStorage.getItem("token")
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+    ...options.headers,
+  }
+
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    ...options,
+    headers,
+  })
+
+  const responseText = await response.text()
+  if (!response.ok) {
+    throw new Error(responseText)
+  }
+  return responseText
+}
+
 // Funzione per il login con email e password e salvataggio del token in localStorage
 export const login = async (data) => {
   const response = await fetchPost("/auth/login", data)
