@@ -59,7 +59,8 @@ const NavBar = () => {
   const ROLE1 = import.meta.env.VITE_ROLE_VERIFICA1
   const ROLE2 = import.meta.env.VITE_ROLE_VERIFICA2
   const verificaRuolo1 = userData?.role === ROLE1
-  const verificaRuolo2 = userData?.role === ROLE2 || userData?.role === ROLE1
+  const verificaRuolo2 = userData?.role === ROLE2
+  const verificaRuolo12 = userData?.role === ROLE2 || userData?.role === ROLE1
 
   return (
     <>
