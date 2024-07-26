@@ -83,11 +83,11 @@ const NavBar = () => {
             </Offcanvas.Header>
             <Offcanvas.Body className="d-flex ">
               <Nav className="justify-content-end flex-grow-1 pe-3 d-flex align-items-center">
-                <Nav.Link href="/veicoli" className="text-white">
-                  I Nostri Veicoli
-                </Nav.Link>
                 <Nav.Link href="/" className="text-white">
                   Home
+                </Nav.Link>
+                <Nav.Link href="/veicoli" className="text-white">
+                  I Nostri Veicoli
                 </Nav.Link>
                 {/* {verificaRuolo2 && (
                   <NavDropdown
@@ -173,28 +173,9 @@ const NavBar = () => {
                     <NavDropdown.Item href="/profilo/me" onClick={handleProtectedLinkClick}>
                       Profilo
                     </NavDropdown.Item>
-                    <NavDropdown.Item href="/clienti" onClick={handleProtectedLinkClick}>
-                      Clienti
+                    <NavDropdown.Item href="/me/prenotazioni" onClick={handleProtectedLinkClick}>
+                      Cronologia Prenotazioni
                     </NavDropdown.Item>
-                    <NavDropdown.Item href="/fatture" onClick={handleProtectedLinkClick}>
-                      Fatture
-                    </NavDropdown.Item>
-                    {/* {verificaRuolo2 && (
-                      <div>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item href="/admin" onClick={handleProtectedLinkClick}>
-                          Admin Page
-                        </NavDropdown.Item>
-                      </div>
-                    )}
-                    {verificaRuolo1 && (
-                      <div>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item href="/superadmin" onClick={handleProtectedLinkClick}>
-                          Super Admin Page
-                        </NavDropdown.Item>
-                      </div>
-                    )} */}
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="/" onClick={handleLogout}>
                       Logout
