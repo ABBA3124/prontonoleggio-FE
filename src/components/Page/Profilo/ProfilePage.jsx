@@ -126,8 +126,6 @@ const UserInfo = ({ userData }) => {
     }
   }
 
-  //123456Daa
-
   const handleDeleteProfile = async (e) => {
     e.preventDefault()
     await deleteProfile(password)
