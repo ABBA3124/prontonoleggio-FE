@@ -105,7 +105,7 @@ const Veicoli = () => {
         setShowModal(false)
       }, 2000)
     } catch (error) {
-      setPrenotazioneErrore("Errore durante la prenotazione.")
+      setPrenotazioneErrore("Veicolo non disponibile per la data selezionata.")
       setPrenotazioneSuccesso("")
       setTimeout(() => {
         setPrenotazioneErrore("")
