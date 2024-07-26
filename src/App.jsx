@@ -21,6 +21,7 @@ import AggiungiMoto from "./components/ROLE/SuperAdmin/GestioneVeicoli/AggiungiM
 import EliminaVeicolo from "./components/ROLE/SuperAdmin/GestioneVeicoli/EliminaVeicolo/EliminaVeicolo"
 import ModificaPrenotazione from "./components/ROLE/SuperAdmin/GestionePrenotazioni/ModificaPrenotazione/ModificaPrenotazione"
 import EliminaPrenotazione from "./components/ROLE/SuperAdmin/GestionePrenotazioni/EliminaPrenotazione/EliminaPrenotazione"
+import CronologiaPrenotazioni from "./components/Page/CronologiaPrenotazioni/CronologiaPrenotazioni"
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <Route path="/elimina/veicolo/:vId" element={<EliminaVeicolo />} />
         <Route path="/modifica/prenotazione" element={<ModificaPrenotazione />} />
         <Route path="/elimina/prenotazione" element={<EliminaPrenotazione />} />
+        <Route path="/me/prenotazioni" element={<CronologiaPrenotazioni />} />
       </Routes>
       <Footer />
     </BrowserRouter>
