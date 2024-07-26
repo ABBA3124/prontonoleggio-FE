@@ -1,6 +1,8 @@
 import React from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import "./App.css"
+import "bootstrap-icons/font/bootstrap-icons.css"
+import "bootstrap/dist/css/bootstrap.min.css"
 
 import Navbar from "./components/NavBar/Navbar"
 import NotFoundPage from "./components/NotFoundPage/NotFoundPage"
