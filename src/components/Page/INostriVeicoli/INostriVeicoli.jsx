@@ -97,7 +97,6 @@ const Veicoli = () => {
         method: "POST",
         body: JSON.stringify(prenotazione),
       })
-      console.log("Prenotazione effettuata con successo!")
       setPrenotazioneSuccesso("Prenotazione effettuata con successo!")
       setPrenotazioneErrore("")
       setTimeout(() => {
@@ -106,7 +105,6 @@ const Veicoli = () => {
         setShowModal(false)
       }, 2000)
     } catch (error) {
-      console.log("Errore durante la prenotazione.")
       setPrenotazioneErrore("Errore durante la prenotazione.")
       setPrenotazioneSuccesso("")
       setTimeout(() => {
