@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react"
-import { Form, Button, Row, Col, Container, Card } from "react-bootstrap"
+import { Form, Button, Row, Col, Container, Card, Modal, Alert } from "react-bootstrap"
 import { fetchGet, fetchWithToken } from "../../../../api"
 import "./INostriVeicoli.css"
 
 const Veicoli = () => {
-  //filtro veicoli
   const today = new Date().toISOString().split("T")[0]
-  const [pickupDate, setPickupDate] = useState(today)
   const nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
+  const [pickupDate, setPickupDate] = useState(today)
   const [dropoffDate, setDropoffDate] = useState(nextWeek)
 
   const [location, setLocation] = useState("")
@@ -16,23 +15,38 @@ const Veicoli = () => {
   const [minPrezzo, setMinPrezzo] = useState("")
   const [maxPrezzo, setMaxPrezzo] = useState("")
 
-  // lista veicoli
   const [veicoli, setVeicoli] = useState([])
   const [caricamento, setCaricamento] = useState(true)
   const [errore, setErrore] = useState(null)
+  const [user, setUser] = useState(null)
+  const [prenotazioneSuccesso, setPrenotazioneSuccesso] = useState("")
+  const [prenotazioneErrore, setPrenotazioneErrore] = useState("")
+
+  const [showModal, setShowModal] = useState(false)
+  const [selectedVeicolo, setSelectedVeicolo] = useState(null)
 
   useEffect(() => {
+    const fetchUtente = async () => {
+      try {
+        const user = await fetchWithToken("/utente/me")
+        setUser(user)
+      } catch (error) {
+        setErrore("Errore durante il caricamento del profilo.")
+      }
+    }
+
     const fetchVeicoli = async () => {
       try {
         const response = await fetchWithToken("/veicoli/disponibilita/disponibili")
         setVeicoli(response.content)
         setCaricamento(false)
       } catch (error) {
-        setErrore(error)
+        setErrore("Errore durante il caricamento dei veicoli.")
         setCaricamento(false)
       }
     }
 
+    fetchUtente()
     fetchVeicoli()
   }, [])
 
@@ -51,25 +65,61 @@ const Veicoli = () => {
     try {
       const veicoliFiltrati = await fetchGet(`/veicoli/search?${params.toString()}`)
       setVeicoli(veicoliFiltrati.content)
-      console.log("Veicoli disponibili:", veicoliFiltrati)
     } catch (error) {
       console.error("Errore nella ricerca dei veicoli:", error)
     }
   }
 
-  const handlePrenota = (veicoloId) => {
-    console.log(`Prenota veicolo con ID: ${veicoloId}`)
-    // Logica per la prenotazione
+  const handlePrenota = (veicolo) => {
+    setSelectedVeicolo(veicolo)
+    setShowModal(true)
   }
 
   const handleDettagli = (veicoloId) => {
     console.log(`Mostra dettagli veicolo con ID: ${veicoloId}`)
-    // Logica per la visualizzazione dei dettagli
+  }
+
+  const handleSubmitPrenotazione = async () => {
+    if (!user) {
+      setPrenotazioneErrore("Utente non trovato.")
+      return
+    }
+
+    const prenotazione = {
+      veicoloId: selectedVeicolo.id,
+      utenteId: user.id,
+      dataInizio: pickupDate,
+      dataFine: dropoffDate,
+    }
+
+    try {
+      const response = await fetchWithToken("/prenotazioni/crea", {
+        method: "POST",
+        body: JSON.stringify(prenotazione),
+      })
+      console.log("Prenotazione effettuata con successo!")
+      setPrenotazioneSuccesso("Prenotazione effettuata con successo!")
+      setPrenotazioneErrore("")
+      setTimeout(() => {
+        setPrenotazioneErrore("")
+        setPrenotazioneSuccesso("")
+        setShowModal(false)
+      }, 2000)
+    } catch (error) {
+      console.log("Errore durante la prenotazione.")
+      setPrenotazioneErrore("Errore durante la prenotazione.")
+      setPrenotazioneSuccesso("")
+      setTimeout(() => {
+        setPrenotazioneErrore("")
+        setPrenotazioneSuccesso("")
+        setShowModal(false)
+      }, 2000)
+    }
   }
 
   return (
     <div className="">
-      <div className="rounded-5 bg-secondary m-4 p-3 ">
+      <div className="rounded-5 bg-secondary m-4 p-3">
         <Container className="pickup-wrapper wow fadeInUp mt-4">
           <Form onSubmit={handleFilter}>
             <Row>
@@ -154,7 +204,7 @@ const Veicoli = () => {
         {caricamento ? (
           <p>Caricamento in corso...</p>
         ) : errore ? (
-          <p>Errore nel caricamento dei veicoli: {errore.message}</p>
+          <p>Errore nel caricamento dei veicoli: {errore}</p>
         ) : (
           <Row>
             {veicoli.map((veicolo) => (
@@ -185,7 +235,7 @@ const Veicoli = () => {
                       <strong>Aria Condizionata:</strong> {veicolo.ariaCondizionata ? "Sì" : "No"} <br />
                     </Card.Text>
                     <div className="d-flex justify-content-between">
-                      <Button variant="primary" onClick={() => handlePrenota(veicolo.id)}>
+                      <Button variant="primary" onClick={() => handlePrenota(veicolo)}>
                         Prenota Ora
                       </Button>
                       <Button variant="secondary" onClick={() => handleDettagli(veicolo.id)}>
@@ -199,6 +249,62 @@ const Veicoli = () => {
           </Row>
         )}
       </Container>
+      {selectedVeicolo && (
+        <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Conferma Prenotazione</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Container>
+              <Row>
+                <Col xs={12} className="text-center mb-3">
+                  <p className="mb-3 text-center price-info">
+                    {selectedVeicolo.marca} {selectedVeicolo.modello}
+                  </p>
+                  <img
+                    src={selectedVeicolo.immagini}
+                    className="vehicle-card-img rounded-5 mb-3"
+                    alt={`${selectedVeicolo.marca} ${selectedVeicolo.modello}`}
+                  />
+                  <p className="mb-3 text-center price-info">
+                    <strong>Prezzo:</strong> €{selectedVeicolo.tariffaGiornaliera}
+                  </p>
+                  <div className="d-flex justify-content-around mb-3 date-container">
+                    <div className="text-center date-info">
+                      <p className="m-0">
+                        <strong>Data Inizio:</strong>
+                      </p>
+                      <p className="m-0">{pickupDate}</p>
+                    </div>
+                    <div className="text-center date-info">
+                      <p className="m-0">
+                        <strong>Data Fine:</strong>
+                      </p>
+                      <p className="m-0">{dropoffDate}</p>
+                    </div>
+                  </div>
+                  <div className="confirm-message mb-3">
+                    <p className="m-0">
+                      <i className="bi bi-question-circle-fill me-2"></i>
+                      Vuoi confermare la prenotazione di questo veicolo?
+                    </p>
+                  </div>
+                  {prenotazioneErrore && <Alert variant="danger">{prenotazioneErrore}</Alert>}
+                  {prenotazioneSuccesso && <Alert variant="success">{prenotazioneSuccesso}</Alert>}
+                </Col>
+              </Row>
+            </Container>
+          </Modal.Body>
+          <Modal.Footer className="justify-content-between">
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Annulla
+            </Button>
+            <Button variant="primary" onClick={handleSubmitPrenotazione}>
+              Conferma Prenotazione
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
     </div>
   )
 }
