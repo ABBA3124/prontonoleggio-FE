@@ -133,3 +133,25 @@ export const updateProfile = async (data) => {
 export const fetchVehicleDetails = async (vehicleId) => {
   return fetchWithToken(`/vehicles/${vehicleId}`)
 }
+
+// Funzione per effettuare una richiesta PUT per aggiornare una prenotazione
+export const updatePrenotazione = async (prenotazioneId, data) => {
+  return fetchPut(`/prenotazioni/modifica/${prenotazioneId}`, data)
+}
+
+// Funzione per effettuare una richiesta DELETE per cancellare una prenotazione
+export const deletePrenotazione = async (endpoint) => {
+  const token = localStorage.getItem("token")
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(errorText || "Network response was not ok")
+  }
+  return response.text()
+}
