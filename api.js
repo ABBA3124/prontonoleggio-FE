@@ -155,3 +155,24 @@ export const deletePrenotazione = async (endpoint) => {
   }
   return response.text()
 }
+
+// Funzione per effettuare una richiesta DELETE per cancellare le prenotazioni
+export const deletePrenotazionii = async (endpoint, options = {}) => {
+  const token = localStorage.getItem("token")
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+    ...options.headers,
+  }
+
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    ...options,
+    headers,
+  })
+
+  const responseText = await response.text()
+  if (!response.ok) {
+    throw new Error(responseText || "Network response was not ok")
+  }
+  return responseText
+}
