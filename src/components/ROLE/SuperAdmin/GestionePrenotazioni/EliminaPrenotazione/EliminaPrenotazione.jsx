@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Form, Button, Container, Spinner, Alert } from "react-bootstrap"
-import { fetchWithToken } from "../../../../../../api"
+import { deletePrenotazionii } from "../../../../../../api"
 
 const EliminaPrenotazione = () => {
   const [prenotazioneId, setPrenotazioneId] = useState("")
@@ -15,22 +15,30 @@ const EliminaPrenotazione = () => {
     setSuccess("")
 
     try {
-      const response = await fetchWithToken(`/prenotazioni/cancella/${prenotazioneId}`, {
+      await deletePrenotazionii(`/prenotazioni/cancella/${prenotazioneId}`, {
         method: "DELETE",
       })
-
-      const responseText = await response.text()
-
-      if (response.ok) {
-        setSuccess("Prenotazione eliminata con successo!")
-      } else {
-        setError(responseText)
-      }
+      setSuccess("Prenotazione eliminata con successo!")
+      setError("")
+      setTimeout(() => {
+        setError("")
+        setSuccess("")
+        setPrenotazioneId("")
+      }, 1500)
     } catch (error) {
+      setSuccess("")
       setError("Errore nell'eliminazione della prenotazione.")
+      setTimeout(() => {
+        setError("")
+        setSuccess("")
+      }, 1500)
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleClear = async (e) => {
+    setPrenotazioneId("")
   }
 
   return (
@@ -46,9 +54,14 @@ const EliminaPrenotazione = () => {
             onChange={(e) => setPrenotazioneId(e.target.value)}
           />
         </Form.Group>
-        <Button variant="danger" type="submit" className="mt-3" disabled={loading}>
-          Elimina
-        </Button>
+        <div className="d-flex">
+          <Button variant="danger" type="submit" className="mt-3 me-2" disabled={loading}>
+            Elimina
+          </Button>
+          <Button variant="secondary" className="mt-3" onClick={handleClear}>
+            Reset Campo
+          </Button>
+        </div>
       </Form>
       {loading && (
         <div className="text-center mt-3">
