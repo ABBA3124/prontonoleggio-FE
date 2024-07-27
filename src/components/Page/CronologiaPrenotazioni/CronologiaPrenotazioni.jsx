@@ -116,9 +116,26 @@ const CronologiaPrenotazioni = () => {
             <Alert variant="info">Nessuna prenotazione trovata.</Alert>
           ) : (
             prenotazioni.map((prenotazione) => (
-              <Card key={prenotazione.id} className="mb-3">
-                <Card.Header>
-                  <strong>Prenotazione ID:</strong> {prenotazione.id}
+              <Card key={prenotazione.id} className="mb-3 shadow-sm">
+                <Card.Header className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>Prenotazione ID:</strong> {prenotazione.id}
+                  </div>
+                  <div className="d-flex">
+                    <Button variant="warning" size="sm" onClick={() => handleModifica(prenotazione)} className="me-2">
+                      Modifica
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedPrenotazione(prenotazione)
+                        setShowDeleteModal(true)
+                      }}
+                    >
+                      Elimina
+                    </Button>
+                  </div>
                 </Card.Header>
                 <Card.Body>
                   <Row>
@@ -168,18 +185,6 @@ const CronologiaPrenotazioni = () => {
                           <p className="m-0">{prenotazione.dataFine}</p>
                         </div>
                       </div>
-                      <Button variant="warning" onClick={() => handleModifica(prenotazione)} className="me-2">
-                        Modifica
-                      </Button>
-                      <Button
-                        variant="danger"
-                        onClick={() => {
-                          setSelectedPrenotazione(prenotazione)
-                          setShowDeleteModal(true)
-                        }}
-                      >
-                        Elimina
-                      </Button>
                     </Col>
                   </Row>
                 </Card.Body>
