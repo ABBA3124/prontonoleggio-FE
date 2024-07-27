@@ -151,6 +151,9 @@ const NavBar = () => {
                     </NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Header>Gestione Prenotazioni</NavDropdown.Header>
+                    <NavDropdown.Item href="/superadmin/prenotazioni" onClick={handleProtectedLinkClick}>
+                      Tutte le Prenotazioni
+                    </NavDropdown.Item>
                     <NavDropdown.Item href="/modifica/prenotazione" onClick={handleProtectedLinkClick}>
                       Modifica Prenotazione
                     </NavDropdown.Item>
