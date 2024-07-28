@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
-import { Container, Row, Col, Card, Spinner, Alert, Button, Modal, Form } from "react-bootstrap"
-import { fetchWithToken, updatePrenotazione, deletePrenotazione } from "../../../../api"
+import { Container, Row, Col, Card, Spinner, Alert, Button, Modal, Form, Pagination } from "react-bootstrap"
+import { updatePrenotazione, deletePrenotazione, fetchMePrenotazioni } from "../../../../api"
+import { format } from "date-fns"
 
 const CronologiaPrenotazioni = () => {
   const [prenotazioni, setPrenotazioni] = useState([])
@@ -13,21 +14,24 @@ const CronologiaPrenotazioni = () => {
   const [modificaDataFine, setModificaDataFine] = useState("")
   const [success, setSuccess] = useState("")
   const [error, setError] = useState("")
+  const [page, setPage] = useState(0)
+  const [totalPages, setTotalPages] = useState(1)
 
   useEffect(() => {
     const fetchPrenotazioni = async () => {
       try {
-        const response = await fetchWithToken("/prenotazioni/storico")
-        setPrenotazioni(response)
+        const response = await fetchMePrenotazioni(page)
+        setPrenotazioni(response.content)
+        setTotalPages(response.page.totalPages)
         setCaricamento(false)
       } catch (error) {
-        setErrore("Errore durante il caricamento della cronologia delle prenotazioni.")
+        setErrore("Errore durante il caricamento della cronologia delle tue prenotazioni.")
         setCaricamento(false)
       }
     }
 
     fetchPrenotazioni()
-  }, [])
+  }, [page])
 
   const handleModifica = (prenotazione) => {
     setSelectedPrenotazione(prenotazione)
@@ -89,6 +93,10 @@ const CronologiaPrenotazioni = () => {
     }
   }
 
+  const handlePageChange = (newPage) => {
+    setPage(newPage)
+  }
+
   if (caricamento) {
     return (
       <Container className="py-5 text-center">
@@ -118,9 +126,7 @@ const CronologiaPrenotazioni = () => {
             prenotazioni.map((prenotazione) => (
               <Card key={prenotazione.id} className="mb-3 shadow-sm">
                 <Card.Header className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <strong>Prenotazione ID:</strong> {prenotazione.id}
-                  </div>
+                  <div>{/* <strong>Prenotazione ID:</strong> {prenotazione.id} */}</div>
                   <div className="d-flex">
                     <Button variant="warning" size="sm" onClick={() => handleModifica(prenotazione)} className="me-2">
                       Modifica
@@ -148,14 +154,29 @@ const CronologiaPrenotazioni = () => {
                       />
                     </Col>
                     <Col md={8}>
-                      <h5>
-                        {prenotazione.veicolo.marca} {prenotazione.veicolo.modello}
-                      </h5>
-                      <p>
-                        <strong>Anno:</strong> {prenotazione.veicolo.anno}
-                      </p>
-
                       <div className="d-flex justify-content-around mb-3 date-container">
+                        <div className="text-center date-info">
+                          <p className="m-0">
+                            <strong>Numero Prenotazione:</strong>
+                          </p>
+                          <p className="m-0">{prenotazione.id}</p>
+                        </div>
+                      </div>
+                      <div className="d-flex justify-content-around mb-3 date-container">
+                        <div className="text-center date-info">
+                          <p className="m-0">
+                            <strong>Nome:</strong>
+                          </p>
+                          <p className="m-0">
+                            {prenotazione.veicolo.marca} {prenotazione.veicolo.modello}
+                          </p>
+                        </div>
+                        <div className="text-center date-info">
+                          <p className="m-0">
+                            <strong>Anno:</strong>
+                          </p>
+                          <p className="m-0">{prenotazione.veicolo.anno}</p>
+                        </div>
                         <div className="text-center date-info">
                           <p className="m-0">
                             <strong>Categoria:</strong>
@@ -170,19 +191,25 @@ const CronologiaPrenotazioni = () => {
                           </p>
                           <p className="m-0">€{prenotazione.veicolo.tariffaGiornaliera}</p>
                         </div>
+                        <div className="text-center date-info">
+                          <p className="m-0">
+                            <strong>Prenotata Il:</strong>
+                          </p>
+                          <p className="m-0">{format(new Date(prenotazione.dataCreazione), "dd/MM/yyyy HH:mm")}</p>
+                        </div>
                       </div>
                       <div className="d-flex justify-content-around mb-3 date-container">
                         <div className="text-center date-info">
                           <p className="m-0">
                             <strong>Data Inizio:</strong>
                           </p>
-                          <p className="m-0">{prenotazione.dataInizio}</p>
+                          <p className="m-0">{format(new Date(prenotazione.dataInizio), "dd/MM/yyyy")}</p>
                         </div>
                         <div className="text-center date-info">
                           <p className="m-0">
                             <strong>Data Fine:</strong>
                           </p>
-                          <p className="m-0">{prenotazione.dataFine}</p>
+                          <p className="m-0">{format(new Date(prenotazione.dataFine), "dd/MM/yyyy")}</p>
                         </div>
                       </div>
                     </Col>
@@ -191,6 +218,17 @@ const CronologiaPrenotazioni = () => {
               </Card>
             ))
           )}
+          <Pagination className="justify-content-center">
+            <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0} />
+            <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <Pagination.Item key={index} active={index === page} onClick={() => handlePageChange(index)}>
+                {index + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
+            <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1} />
+          </Pagination>
         </Col>
       </Row>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
