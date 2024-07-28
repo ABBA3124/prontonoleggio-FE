@@ -117,7 +117,9 @@ const TutteLePrenotazioni = () => {
             prenotazioni.map((prenotazione) => (
               <Card key={prenotazione.id} className="mb-3 shadow-sm">
                 <Card.Header className="d-flex justify-content-between align-items-center">
-                  <div></div>
+                  <div>
+                    <h5 className="text-primary">Dati Prenotazione</h5>
+                  </div>
                   <div className="d-flex">
                     <Button variant="warning" size="sm" onClick={() => handleModifica(prenotazione)} className="me-2">
                       <i className="bi bi-pencil-fill"></i> Modifica
@@ -129,6 +131,33 @@ const TutteLePrenotazioni = () => {
                 </Card.Header>
                 <Card.Body>
                   <Row>
+                    <div className="d-flex justify-content-around mb-3 date-container">
+                      <div className="text-center date-info">
+                        <p className="m-0">
+                          <strong>Numero Prenotazione:</strong> {prenotazione.id}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="d-flex justify-content-around mb-3 date-container">
+                      <div className="text-center date-info">
+                        <p className="m-0">
+                          <strong>Prenotata Il:</strong>
+                        </p>
+                        <p className="m-0">{format(new Date(prenotazione.dataCreazione), "dd/MM/yyyy HH:mm")}</p>
+                      </div>
+                      <div className="text-center date-info">
+                        <p className="m-0">
+                          <strong>Data Inizio:</strong>
+                        </p>
+                        <p className="m-0">{format(new Date(prenotazione.dataInizio), "dd/MM/yyyy")}</p>
+                      </div>
+                      <div className="text-center date-info">
+                        <p className="m-0">
+                          <strong>Data Fine:</strong>
+                        </p>
+                        <p className="m-0">{format(new Date(prenotazione.dataFine), "dd/MM/yyyy")}</p>
+                      </div>
+                    </div>
                     <Col md={4} className="d-flex align-items-center justify-content-center">
                       <img
                         src={prenotazione.veicolo.immagini}
@@ -139,7 +168,7 @@ const TutteLePrenotazioni = () => {
                     </Col>
                     <Col md={8}>
                       <Row>
-                        <Col md={4} className="mb-3">
+                        <Col md={6} className="mb-3">
                           <h5 className="text-primary">Dati Veicolo</h5>
                           <div className="d-flex justify-content-around date-container">
                             <div className="date-info">
@@ -170,7 +199,7 @@ const TutteLePrenotazioni = () => {
                             </div>
                           </div>
                         </Col>
-                        <Col md={4} className="mb-3">
+                        <Col md={6} className="mb-3">
                           <h5 className="text-primary">Dati Utente</h5>
                           <div className="d-flex justify-content-around date-container">
                             <div className="date-info">
@@ -191,22 +220,6 @@ const TutteLePrenotazioni = () => {
                               </p>
                               <p>
                                 <strong>Patente:</strong> {prenotazione.utente.patente}
-                              </p>
-                            </div>
-                          </div>
-                        </Col>
-                        <Col md={4} className="mb-3">
-                          <h5 className="text-primary">Dati Prenotazione</h5>
-                          <div className="d-flex justify-content-around date-container">
-                            <div className="date-info">
-                              <p>
-                                <strong>Prenotazione Id:</strong> {prenotazione.id}
-                              </p>
-                              <p>
-                                <strong>Data Inizio:</strong> {format(new Date(prenotazione.dataInizio), "dd/MM/yyyy")}
-                              </p>
-                              <p>
-                                <strong>Data Fine:</strong> {format(new Date(prenotazione.dataFine), "dd/MM/yyyy")}
                               </p>
                             </div>
                           </div>
