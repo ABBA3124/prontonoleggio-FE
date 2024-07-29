@@ -2,22 +2,28 @@ import React, { useState, useEffect } from "react"
 import { Table, Container, Spinner, Alert, Pagination, Button } from "react-bootstrap"
 import { fetchWithToken } from "../../../../../../api"
 import { useNavigate } from "react-router-dom"
+import "./AllVeicoli.css"
+import { set } from "date-fns"
 
 const AllVeicoli = () => {
   const [veicoli, setVeicoli] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [currentPage, setCurrentPage] = useState(0)
-  const [totalPages, setTotalPages] = useState(0)
   const navigate = useNavigate()
+  const size = 10
+  const [totalPages, setTotalPages] = useState(1)
+  const [page, setPage] = useState(0)
+  const [totalElements, setTotalElements] = useState(0)
 
   const fetchVeicoli = async (page = 0) => {
     setLoading(true)
     setError("")
     try {
-      const response = await fetchWithToken(`/veicoli?page=${page}&size=10`)
+      const response = await fetchWithToken(`/veicoli?page=${page}&size=${size}`)
       setVeicoli(response.content)
       setTotalPages(response.page.totalPages)
+      setTotalElements(response.page.totalElements)
     } catch (error) {
       console.error("Errore nel caricamento dei veicoli:", error)
       setError("Errore nel caricamento dei veicoli.")
@@ -27,12 +33,11 @@ const AllVeicoli = () => {
   }
 
   useEffect(() => {
-    fetchVeicoli()
-  }, [])
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page)
     fetchVeicoli(page)
+  }, [page])
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage)
   }
 
   const handleEdit = (id, type) => {
@@ -50,8 +55,20 @@ const AllVeicoli = () => {
   }
 
   return (
-    <Container className="mt-5">
+    <Container className="mt-5 containerMod1">
       <h1 className="text-center mb-4">Tutti i Veicoli</h1>
+      <h1 className="text-center mb-4">tutti i veicoli presenti sono: {totalElements}</h1>
+      <Pagination className="justify-content-center">
+        <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0} />
+        <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
+        {Array.from({ length: totalPages }).map((_, index) => (
+          <Pagination.Item key={index} active={index === page} onClick={() => handlePageChange(index)}>
+            {index + 1}
+          </Pagination.Item>
+        ))}
+        <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
+        <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1} />
+      </Pagination>
       {loading ? (
         <div className="text-center">
           <Spinner animation="border" role="status">
@@ -77,7 +94,6 @@ const AllVeicoli = () => {
                 <th>Disponibilità</th>
                 <th>Posizione</th>
                 <th>Azioni</th>
-                <th>Azioni</th>
               </tr>
             </thead>
             <tbody>
@@ -102,7 +118,7 @@ const AllVeicoli = () => {
                   <td>{veicolo.posizione}</td>
                   <td>
                     <Button variant="warning" onClick={() => handleEdit(veicolo.id, veicolo.tipoVeicolo)}>
-                      {veicolo.tipoVeicolo === "AUTO" ? "Modifica_Auto" : "Modifica_Moto"}
+                      {veicolo.tipoVeicolo === "AUTO" ? "Modifica Auto" : "Modifica Moto"}
                     </Button>
                   </td>
                   <td>
@@ -114,17 +130,16 @@ const AllVeicoli = () => {
               ))}
             </tbody>
           </Table>
-          <Pagination>
-            {[...Array(totalPages).keys()].map((page) => (
-              <Pagination.Item
-                className="mt-2"
-                key={page}
-                active={page === currentPage}
-                onClick={() => handlePageChange(page)}
-              >
-                {page + 1}
+          <Pagination className="justify-content-center">
+            <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0} />
+            <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <Pagination.Item key={index} active={index === page} onClick={() => handlePageChange(index)}>
+                {index + 1}
               </Pagination.Item>
             ))}
+            <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
+            <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1} />
           </Pagination>
         </>
       )}
