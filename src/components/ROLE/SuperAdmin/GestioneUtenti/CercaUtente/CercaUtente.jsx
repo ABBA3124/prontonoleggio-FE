@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import { Table, Container, Spinner, Alert, Form, Button, Row, Col } from "react-bootstrap"
 import { fetchWithToken } from "../../../../../../api"
+import "./CercaUtente.css"
+import { format } from "date-fns"
 
 const CercaUtente = () => {
   const [userId, setUserId] = useState("")
@@ -29,7 +31,7 @@ const CercaUtente = () => {
   }
 
   return (
-    <Container className="mt-5">
+    <Container className="mt-5 containerMod4">
       <h1 className="text-center mb-4">Cerca Utente</h1>
       <Form onSubmit={handleSearch} className="mb-4">
         <Row className="justify-content-center">
@@ -61,38 +63,38 @@ const CercaUtente = () => {
         <Table striped bordered hover responsive>
           <thead className="table-dark">
             <tr>
-              <th>ID</th>
               <th>Nome</th>
               <th>Cognome</th>
               <th>Email</th>
-              <th>Telefono</th>
-              <th>Username</th>
-              <th>Ruolo</th>
+              <th>Data_Nascita</th>
               <th>Età</th>
+              <th>Telefono</th>
               <th>Città</th>
               <th>Provincia</th>
               <th>Nazione</th>
-              <th>Data Nascita</th>
               <th>Codice Fiscale</th>
               <th>Patente</th>
+              <th>Username</th>
+              <th>Ruolo</th>
+              <th>id_</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>{utente.id}</td>
               <td>{utente.nome}</td>
               <td>{utente.cognome}</td>
               <td>{utente.email}</td>
-              <td>{utente.telefono}</td>
-              <td>{utente.username}</td>
-              <td>{utente.role}</td>
+              <td>{format(new Date(utente.dataNascita), "dd/MM/yyyy")}</td>
               <td>{utente.eta}</td>
+              <td>{utente.telefono}</td>
               <td>{utente.citta}</td>
               <td>{utente.provincia}</td>
               <td>{utente.nazione}</td>
-              <td>{utente.dataNascita}</td>
               <td>{utente.codiceFiscale}</td>
               <td>{utente.patente}</td>
+              <td>{utente.username}</td>
+              <td>{utente.role}</td>
+              <td>{utente.id}</td>
             </tr>
           </tbody>
         </Table>
