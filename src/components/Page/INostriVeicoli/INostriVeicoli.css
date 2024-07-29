@@ -157,3 +157,8 @@ button.btn-secondary:hover {
   background-color: #0056b3;
   border-color: #004085;
 }
+
+/* --------------------- */
+.containerMod2 {
+  max-width: 1820px;
+}
