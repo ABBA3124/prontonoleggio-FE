@@ -108,7 +108,18 @@ const TutteLePrenotazioni = () => {
       </Toast>
       <Row>
         <Col md={12}>
-          <h1 className="text-center mb-4">Cronologia di tutte le prenotazioni</h1>
+          <h1 className="text-center mt-4 mb-4">Cronologia di tutte le prenotazioni</h1>
+          <Pagination className="justify-content-center">
+            <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0} />
+            <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <Pagination.Item key={index} active={index === page} onClick={() => handlePageChange(index)}>
+                {index + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
+            <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1} />
+          </Pagination>
           {prenotazioni.length === 0 ? (
             <Alert variant="info" className="text-center">
               Nessuna prenotazione trovata.
