@@ -217,10 +217,10 @@ const UserInfo = ({ userData }) => {
           </Form.Group>
           <div className="d-flex justify-content-between">
             <Button variant="secondary" onClick={() => setEditing(false)}>
-              Annulla
+              Annulla Modifiche
             </Button>
             <Button variant="primary" type="submit">
-              Salva
+              Salva Modifiche
             </Button>
           </div>
         </Form>
@@ -241,14 +241,14 @@ const UserInfo = ({ userData }) => {
             <UserDetail label="Codice Fiscale" value={userData.codiceFiscale} />
             <UserDetail label="Patente" value={userData.patente} />
           </tbody>
+          <Button variant="primary" className="mt-3" onClick={() => setEditing(true)}>
+            Modifica Profilo
+          </Button>
+          <Button variant="danger" className="ms-2 mt-3" onClick={() => setShowModal(true)}>
+            Elimina Profilo
+          </Button>
         </Table>
       )}
-      <Button variant="primary" className="mt-3" onClick={() => setEditing(true)}>
-        Modifica Profilo
-      </Button>
-      <Button variant="danger" className="ms-2 mt-3" onClick={() => setShowModal(true)}>
-        Elimina Profilo
-      </Button>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Conferma Eliminazione Profilo</Modal.Title>
