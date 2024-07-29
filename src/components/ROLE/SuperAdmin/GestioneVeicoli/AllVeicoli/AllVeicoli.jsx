@@ -3,7 +3,7 @@ import { Table, Container, Spinner, Alert, Pagination, Button } from "react-boot
 import { fetchWithToken } from "../../../../../../api"
 import { useNavigate } from "react-router-dom"
 import "./AllVeicoli.css"
-import { set } from "date-fns"
+import { format } from "date-fns"
 
 const AllVeicoli = () => {
   const [veicoli, setVeicoli] = useState([])
@@ -56,8 +56,7 @@ const AllVeicoli = () => {
 
   return (
     <Container className="mt-5 containerMod1">
-      <h1 className="text-center mb-4">Tutti i Veicoli</h1>
-      <h1 className="text-center mb-4">tutti i veicoli presenti sono: {totalElements}</h1>
+      <h1 className="text-center mb-4">Tutti i Veicoli - {totalElements} </h1>
       <Pagination className="justify-content-center">
         <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0} />
         <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
@@ -82,24 +81,22 @@ const AllVeicoli = () => {
           <Table striped bordered hover responsive>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Immagini</th>
-                <th>Marca</th>
-                <th>Modello</th>
-                <th>Anno</th>
+                <th>Immagine</th>
+                <th>Marca & Modello</th>
                 <th>Targa</th>
                 <th>Tipo Veicolo</th>
-                <th>Categoria</th>
                 <th>Tariffa Giornaliera</th>
                 <th>Disponibilità</th>
                 <th>Posizione</th>
-                <th>Azioni</th>
+                <th>Creazione</th>
+                <th>id</th>
+                <th>Modifica</th>
+                <th>Elimina</th>
               </tr>
             </thead>
             <tbody>
               {veicoli.map((veicolo) => (
                 <tr key={veicolo.id}>
-                  <td>{veicolo.id}</td>
                   <td>
                     <img
                       src={veicolo.immagini}
@@ -107,15 +104,16 @@ const AllVeicoli = () => {
                       style={{ width: "80px", height: "80px", objectFit: "cover" }}
                     />
                   </td>
-                  <td>{veicolo.marca}</td>
-                  <td>{veicolo.modello}</td>
-                  <td>{veicolo.anno}</td>
+                  <td>
+                    {veicolo.marca} {veicolo.modello}
+                  </td>
                   <td>{veicolo.targa}</td>
                   <td>{veicolo.tipoVeicolo}</td>
-                  <td>{veicolo.categoria}</td>
-                  <td>{veicolo.tariffaGiornaliera}</td>
+                  <td>{veicolo.tariffaGiornaliera} €</td>
                   <td>{veicolo.disponibilita}</td>
                   <td>{veicolo.posizione}</td>
+                  <td>{format(new Date(veicolo.dataCreazioneVeicolo), "dd/MM/yyyy HH:mm")}</td>
+                  <td>{veicolo.id}</td>
                   <td>
                     <Button variant="warning" onClick={() => handleEdit(veicolo.id, veicolo.tipoVeicolo)}>
                       {veicolo.tipoVeicolo === "AUTO" ? "Modifica Auto" : "Modifica Moto"}
