@@ -220,21 +220,29 @@ const Veicoli = () => {
                 </Form.Group>
               </Col>
             </Row>
-            {/* <Button variant="primary" type="submit" className="mt-3 w-100">
-              Filtra
-            </Button> */}
           </Form>
         </Container>
       </div>
-      <Container className="mt-5">
+      <Container className="mt-5 containerMod2">
         {caricamento ? (
           <p>Caricamento in corso...</p>
         ) : errore ? (
           <p>Errore nel caricamento dei veicoli: {errore}</p>
         ) : (
           <Row>
+            <Pagination className="justify-content-center">
+              <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0} />
+              <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
+              {Array.from({ length: totalPages }).map((_, index) => (
+                <Pagination.Item key={index} active={index === page} onClick={() => handlePageChange(index)}>
+                  {index + 1}
+                </Pagination.Item>
+              ))}
+              <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
+              <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1} />
+            </Pagination>
             {veicoli.map((veicolo) => (
-              <Col xs={12} sm={6} md={4} lg={3} key={veicolo.id} className="mb-4">
+              <Col xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} key={veicolo.id} className="mb-4">
                 <Card className="vehicle-card shadow-sm h-100">
                   <Card.Img
                     variant="top"
