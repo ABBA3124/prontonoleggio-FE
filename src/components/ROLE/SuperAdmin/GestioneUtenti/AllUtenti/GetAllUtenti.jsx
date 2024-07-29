@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { Table, Container, Spinner, Alert, Form, Button, Row, Col, Pagination } from "react-bootstrap"
 import { fetchWithToken } from "../../../../../../api"
 import { useNavigate } from "react-router-dom"
+import "./GetAllUtenti.css"
 
 const GetAllUtenti = () => {
   const [utenti, setUtenti] = useState([])
@@ -87,7 +88,7 @@ const GetAllUtenti = () => {
   }
 
   return (
-    <Container className="mt-5">
+    <Container className="mt-5 containerMod1">
       <h1 className="text-center mb-4 font-weight-bold text-primary shadow-sm ">Utenti</h1>
       <Form onSubmit={handleSearch} className="mb-4">
         <Row className="mb-3">
@@ -243,52 +244,54 @@ const GetAllUtenti = () => {
         <Alert variant="danger">{error}</Alert>
       ) : (
         <>
-          <Table striped bordered hover responsive>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Cognome</th>
-                <th>Email</th>
-                <th>Telefono</th>
-                <th>Username</th>
-                <th>Ruolo</th>
-                <th>Età</th>
-                <th>Città</th>
-                <th>Provincia</th>
-                <th>Nazione</th>
-                <th>Data Nascita</th>
-                <th>Codice Fiscale</th>
-                <th>Patente</th>
-                <th>Azioni</th>
-              </tr>
-            </thead>
-            <tbody>
-              {utenti.map((utente) => (
-                <tr key={utente.id}>
-                  <td>{utente.id}</td>
-                  <td>{utente.nome}</td>
-                  <td>{utente.cognome}</td>
-                  <td>{utente.email}</td>
-                  <td>{utente.telefono}</td>
-                  <td>{utente.username}</td>
-                  <td>{utente.role}</td>
-                  <td>{utente.eta}</td>
-                  <td>{utente.citta}</td>
-                  <td>{utente.provincia}</td>
-                  <td>{utente.nazione}</td>
-                  <td>{utente.dataNascita}</td>
-                  <td>{utente.codiceFiscale}</td>
-                  <td>{utente.patente}</td>
-                  <td>
-                    <Button variant="danger" onClick={() => handleDelete(utente.id)}>
-                      Elimina
-                    </Button>
-                  </td>
+          <div className="table-container ">
+            <Table striped bordered hover responsive className="w-100">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nome</th>
+                  <th>Cognome</th>
+                  <th>Email</th>
+                  <th>Telefono</th>
+                  <th>Username</th>
+                  <th>Ruolo</th>
+                  <th>Età</th>
+                  <th>Città</th>
+                  <th>Provincia</th>
+                  <th>Nazione</th>
+                  <th>Data Nascita</th>
+                  <th>Codice Fiscale</th>
+                  <th>Patente</th>
+                  <th>Azioni</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {utenti.map((utente) => (
+                  <tr key={utente.id}>
+                    <td>{utente.id}</td>
+                    <td>{utente.nome}</td>
+                    <td>{utente.cognome}</td>
+                    <td>{utente.email}</td>
+                    <td>{utente.telefono}</td>
+                    <td>{utente.username}</td>
+                    <td>{utente.role}</td>
+                    <td>{utente.eta}</td>
+                    <td>{utente.citta}</td>
+                    <td>{utente.provincia}</td>
+                    <td>{utente.nazione}</td>
+                    <td>{utente.dataNascita}</td>
+                    <td>{utente.codiceFiscale}</td>
+                    <td>{utente.patente}</td>
+                    <td>
+                      <Button variant="danger" onClick={() => handleDelete(utente.id)}>
+                        Elimina
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
           <Pagination className="">
             {[...Array(totalPages).keys()].map((page) => (
               <Pagination.Item
