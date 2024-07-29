@@ -27,7 +27,7 @@ const Veicoli = () => {
 
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
-  const size = 20
+  const size = 24
   useEffect(() => {
     const fetchUtente = async () => {
       try {
@@ -49,7 +49,7 @@ const Veicoli = () => {
       if (maxPrezzo) params.append("maxPrezzo", maxPrezzo)
 
       try {
-        const veicoliFiltrati = await fetchGet(`/veicoli/search?page=${page}&${size}&${params.toString()}`)
+        const veicoliFiltrati = await fetchGet(`/veicoli/search?page=${page}&size=${size}&${params.toString()}`)
         setTotalPages(veicoliFiltrati.page.totalPages)
         setVeicoli(veicoliFiltrati.content)
         setCaricamento(false)
