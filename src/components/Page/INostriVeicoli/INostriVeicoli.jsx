@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Form, Button, Row, Col, Container, Card, Modal, Alert } from "react-bootstrap"
+import { Form, Button, Row, Col, Container, Card, Modal, Alert, Pagination } from "react-bootstrap"
 import { fetchGet, fetchWithToken } from "../../../../api"
 import "./INostriVeicoli.css"
 
@@ -25,6 +25,9 @@ const Veicoli = () => {
   const [showModal, setShowModal] = useState(false)
   const [selectedVeicolo, setSelectedVeicolo] = useState(null)
 
+  const [page, setPage] = useState(0)
+  const [totalPages, setTotalPages] = useState(1)
+  const size = 20
   useEffect(() => {
     const fetchUtente = async () => {
       try {
@@ -36,11 +39,22 @@ const Veicoli = () => {
     }
 
     const fetchVeicoli = async () => {
+      const params = new URLSearchParams()
+      if (pickupDate) params.append("dataInizio", pickupDate)
+      if (dropoffDate) params.append("dataFine", dropoffDate)
+      if (location) params.append("posizione", location)
+      if (carType) params.append("tipoVeicolo", carType)
+      if (carCategory) params.append("categoria", carCategory)
+      if (minPrezzo) params.append("minPrezzo", minPrezzo)
+      if (maxPrezzo) params.append("maxPrezzo", maxPrezzo)
+
       try {
-        const response = await fetchWithToken("/veicoli/disponibilita/disponibili")
-        setVeicoli(response.content)
+        const veicoliFiltrati = await fetchGet(`/veicoli/search?page=${page}&${size}&${params.toString()}`)
+        setTotalPages(veicoliFiltrati.page.totalPages)
+        setVeicoli(veicoliFiltrati.content)
         setCaricamento(false)
       } catch (error) {
+        console.error("Errore nella ricerca dei veicoli:", error)
         setErrore("Errore durante il caricamento dei veicoli.")
         setCaricamento(false)
       }
@@ -48,26 +62,11 @@ const Veicoli = () => {
 
     fetchUtente()
     fetchVeicoli()
-  }, [])
+  }, [page, pickupDate, dropoffDate, location, carType, carCategory, minPrezzo, maxPrezzo])
 
-  const handleFilter = async (e) => {
+  const handleFilter = (e) => {
     e.preventDefault()
-    const params = new URLSearchParams()
-
-    if (location) params.append("posizione", location)
-    if (pickupDate) params.append("dataInizio", pickupDate)
-    if (dropoffDate) params.append("dataFine", dropoffDate)
-    if (carType) params.append("tipoVeicolo", carType)
-    if (carCategory) params.append("categoria", carCategory)
-    if (minPrezzo) params.append("minPrezzo", minPrezzo)
-    if (maxPrezzo) params.append("maxPrezzo", maxPrezzo)
-
-    try {
-      const veicoliFiltrati = await fetchGet(`/veicoli/search?${params.toString()}`)
-      setVeicoli(veicoliFiltrati.content)
-    } catch (error) {
-      console.error("Errore nella ricerca dei veicoli:", error)
-    }
+    setPage(0)
   }
 
   const handlePrenota = (veicolo) => {
@@ -77,6 +76,28 @@ const Veicoli = () => {
 
   const handleDettagli = (veicoloId) => {
     console.log(`Mostra dettagli veicolo con ID: ${veicoloId}`)
+  }
+
+  const fetchVeicoli = async () => {
+    const params = new URLSearchParams()
+    if (pickupDate) params.append("dataInizio", pickupDate)
+    if (dropoffDate) params.append("dataFine", dropoffDate)
+    if (location) params.append("posizione", location)
+    if (carType) params.append("tipoVeicolo", carType)
+    if (carCategory) params.append("categoria", carCategory)
+    if (minPrezzo) params.append("minPrezzo", minPrezzo)
+    if (maxPrezzo) params.append("maxPrezzo", maxPrezzo)
+
+    try {
+      const veicoliFiltrati = await fetchGet(`/veicoli/search?page=${page}&${size}&${params.toString()}`)
+      setTotalPages(veicoliFiltrati.page.totalPages)
+      setVeicoli(veicoliFiltrati.content)
+      setCaricamento(false)
+    } catch (error) {
+      console.error("Errore nella ricerca dei veicoli:", error)
+      setErrore("Errore durante il caricamento dei veicoli.")
+      setCaricamento(false)
+    }
   }
 
   const handleSubmitPrenotazione = async () => {
@@ -93,35 +114,42 @@ const Veicoli = () => {
     }
 
     try {
-      const response = await fetchWithToken("/prenotazioni/crea", {
+      await fetchWithToken("/prenotazioni/crea", {
         method: "POST",
         body: JSON.stringify(prenotazione),
       })
       setPrenotazioneSuccesso("Prenotazione effettuata con successo!")
       setPrenotazioneErrore("")
+      setPage(0)
+      fetchVeicoli()
       setTimeout(() => {
-        setPrenotazioneErrore("")
-        setPrenotazioneSuccesso("")
         setShowModal(false)
-      }, 2000)
+        setPrenotazioneSuccesso("")
+        setPrenotazioneErrore("")
+      }, 1000)
     } catch (error) {
       setPrenotazioneErrore("Veicolo non disponibile per la data selezionata.")
       setPrenotazioneSuccesso("")
+      fetchVeicoli()
       setTimeout(() => {
-        setPrenotazioneErrore("")
-        setPrenotazioneSuccesso("")
         setShowModal(false)
-      }, 2000)
+        setPrenotazioneSuccesso("")
+        setPrenotazioneErrore("")
+      }, 1500)
     }
+  }
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage)
   }
 
   return (
     <div className="">
-      <div className="rounded-5 bg-secondary m-4 p-3">
+      <div className="rounded-5 m-4 p-4 filter-form-container shadow">
         <Container className="pickup-wrapper wow fadeInUp mt-4">
           <Form onSubmit={handleFilter}>
             <Row>
-              <Col xs={12} sm={12} md={12} lg={12} xl={4}>
+              <Col xs={12} sm={12} md={12} lg={12} xl={4} className="mb-3">
                 <Form.Group controlId="formLocation">
                   <Form.Label>Località:</Form.Label>
                   <Form.Control as="select" value={location} onChange={(e) => setLocation(e.target.value)}>
@@ -135,19 +163,19 @@ const Veicoli = () => {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col xs={12} sm={6} md={6} lg={6} xl={4}>
+              <Col xs={12} sm={6} md={6} lg={6} xl={4} className="mb-3">
                 <Form.Group controlId="formPickupDate">
                   <Form.Label>Data Inizio:</Form.Label>
                   <Form.Control type="date" value={pickupDate} onChange={(e) => setPickupDate(e.target.value)} />
                 </Form.Group>
               </Col>
-              <Col xs={12} sm={6} md={6} lg={6} xl={4}>
+              <Col xs={12} sm={6} md={6} lg={6} xl={4} className="mb-3">
                 <Form.Group controlId="formDropoffDate">
                   <Form.Label>Data Fine:</Form.Label>
                   <Form.Control type="date" value={dropoffDate} onChange={(e) => setDropoffDate(e.target.value)} />
                 </Form.Group>
               </Col>
-              <Col xs={12} sm={12} md={6} lg={12} xl={6}>
+              <Col xs={12} sm={12} md={6} lg={12} xl={6} className="mb-3">
                 <Form.Group controlId="formCarType">
                   <Form.Label>Tipo Veicolo:</Form.Label>
                   <Form.Control as="select" value={carType} onChange={(e) => setCarType(e.target.value)}>
@@ -157,7 +185,7 @@ const Veicoli = () => {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col xs={12} sm={12} md={6} lg={12} xl={6}>
+              <Col xs={12} sm={12} md={6} lg={12} xl={6} className="mb-3">
                 <Form.Group controlId="formCarCategory">
                   <Form.Label>Categoria Veicolo:</Form.Label>
                   <Form.Control as="select" value={carCategory} onChange={(e) => setCarCategory(e.target.value)}>
@@ -169,7 +197,7 @@ const Veicoli = () => {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col xs={12} sm={6} md={6} lg={6} xl={6}>
+              <Col xs={12} sm={6} md={6} lg={6} xl={6} className="mb-3">
                 <Form.Group controlId="formMinPrezzo">
                   <Form.Label>Prezzo Minimo:</Form.Label>
                   <Form.Control
@@ -180,7 +208,7 @@ const Veicoli = () => {
                   />
                 </Form.Group>
               </Col>
-              <Col xs={12} sm={6} md={6} lg={6} xl={6}>
+              <Col xs={12} sm={6} md={6} lg={6} xl={6} className="mb-3">
                 <Form.Group controlId="formMaxPrezzo">
                   <Form.Label>Prezzo Massimo:</Form.Label>
                   <Form.Control
@@ -192,9 +220,9 @@ const Veicoli = () => {
                 </Form.Group>
               </Col>
             </Row>
-            <Button variant="primary" type="submit" className="mt-3">
+            {/* <Button variant="primary" type="submit" className="mt-3 w-100">
               Filtra
-            </Button>
+            </Button> */}
           </Form>
         </Container>
       </div>
@@ -207,7 +235,7 @@ const Veicoli = () => {
           <Row>
             {veicoli.map((veicolo) => (
               <Col xs={12} sm={6} md={4} lg={3} key={veicolo.id} className="mb-4">
-                <Card>
+                <Card className="vehicle-card shadow-sm h-100">
                   <Card.Img
                     variant="top"
                     src={veicolo.immagini}
@@ -215,11 +243,12 @@ const Veicoli = () => {
                     className="vehicle-card-img"
                   />
                   <Card.Body>
-                    <Card.Title>
+                    <Card.Title className="vehicle-title">
                       {veicolo.marca} {veicolo.modello}
                     </Card.Title>
-                    <Card.Text>
+                    <Card.Text className="vehicle-info">
                       <hr />
+                      <strong>Data Creazione Veicolo:</strong> {veicolo.dataCreazioneVeicolo} <br />
                       <strong>Anno:</strong> {veicolo.anno} <br />
                       <strong>Categoria:</strong> {veicolo.categoria} <br />
                       <strong>Tariffa Giornaliera:</strong> €{veicolo.tariffaGiornaliera} <br />
@@ -244,6 +273,17 @@ const Veicoli = () => {
                 </Card>
               </Col>
             ))}
+            <Pagination className="justify-content-center">
+              <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0} />
+              <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
+              {Array.from({ length: totalPages }).map((_, index) => (
+                <Pagination.Item key={index} active={index === page} onClick={() => handlePageChange(index)}>
+                  {index + 1}
+                </Pagination.Item>
+              ))}
+              <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
+              <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1} />
+            </Pagination>
           </Row>
         )}
       </Container>
