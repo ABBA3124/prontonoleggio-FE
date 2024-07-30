@@ -12,6 +12,7 @@ const GetAllUtenti = () => {
   const navigate = useNavigate()
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
+  const [totalElements, setTotalElements] = useState(0)
   const [searchParams, setSearchParams] = useState({
     nome: "",
     cognome: "",
@@ -42,6 +43,7 @@ const GetAllUtenti = () => {
       console.log("Response data:", response)
       setUtenti(response.content)
       setTotalPages(response.page.totalPages)
+      setTotalElements(response.page.totalElements)
     } catch (error) {
       console.error("Errore nel caricamento degli utenti:", error)
       setError("Errore nel caricamento degli utenti.")
@@ -90,7 +92,9 @@ const GetAllUtenti = () => {
 
   return (
     <Container className="mt-2 containerMod1">
-      <h1 className="text-center mb-4 font-weight-bold text-primary shadow-sm ">Utenti</h1>
+      <h1 className="text-center mb-4 font-weight-bold text-primary shadow-sm ">
+        Risultati di Ricerca = {totalElements}
+      </h1>
       <Form onSubmit={handleSearch} className="mb-4">
         <Row className="mb-3">
           <Col md={4}>
