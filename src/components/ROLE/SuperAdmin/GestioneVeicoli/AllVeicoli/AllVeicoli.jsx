@@ -110,7 +110,9 @@ const AllVeicoli = () => {
       <Toast onClose={() => setToast({ show: false, message: "", type: "" })} show={toast.show} delay={3000} autohide>
         <Toast.Body className={`text-${toast.type}`}>{toast.message}</Toast.Body>
       </Toast>
-      <h1 className="text-center mb-4 font-weight-bold text-primary shadow-sm">Tutti i Veicoli - {totalElements}</h1>
+      <h1 className="text-center mb-4 font-weight-bold text-primary shadow-sm">
+        Veicoli <i className="bi bi-car-front-fill"> {totalElements}</i>
+      </h1>
       <Form onSubmit={handleSearch} className="mb-4">
         <Row className="mb-3">
           <Col md={2}>
