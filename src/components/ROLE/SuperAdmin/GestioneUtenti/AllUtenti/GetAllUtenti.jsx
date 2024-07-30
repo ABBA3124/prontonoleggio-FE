@@ -93,7 +93,7 @@ const GetAllUtenti = () => {
   return (
     <Container className="mt-2 containerMod1">
       <h1 className="text-center mb-4 font-weight-bold text-primary shadow-sm ">
-        Risultati di Ricerca = {totalElements}
+        Utenti <i className="bi bi-people-fill"> {totalElements}</i>
       </h1>
       <Form onSubmit={handleSearch} className="mb-4">
         <Row className="mb-3">
