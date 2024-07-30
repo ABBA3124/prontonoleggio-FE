@@ -17,6 +17,7 @@ const TutteLePrenotazioni = () => {
   const [totalPages, setTotalPages] = useState(1)
   const [success, setSuccess] = useState(null)
   const [error, setError] = useState(null)
+  const [totalElements, setTotalElements] = useState(0)
 
   const [searchParams, setSearchParams] = useState({
     dataCreazione: "",
@@ -63,6 +64,7 @@ const TutteLePrenotazioni = () => {
       console.log("Response data:", response)
       setPrenotazioni(response.content)
       setTotalPages(response.page.totalPages)
+      setTotalElements(response.page.totalElements)
       setCaricamento(false)
     } catch (error) {
       setErrore("Errore durante il caricamento della cronologia delle prenotazioni.")
@@ -87,6 +89,7 @@ const TutteLePrenotazioni = () => {
       await deletePrenotazione(`/prenotazioni/cancella/${selectedPrenotazione.id}`)
       setPrenotazioni(prenotazioni.filter((prenotazione) => prenotazione.id !== selectedPrenotazione.id))
       setToast({ show: true, message: "Prenotazione eliminata con successo.", type: "success" })
+      setTotalElements(totalElements - 1)
       setShowDeleteModal(false)
     } catch (error) {
       setToast({ show: true, message: "Errore durante l'eliminazione della prenotazione.", type: "danger" })
@@ -155,8 +158,8 @@ const TutteLePrenotazioni = () => {
       </Toast>
       <Row>
         <Col md={12}>
-          <h1 className="text-center mb-4 font-weight-bold text-primary shadow-sm ">
-            Cronologia di tutte le prenotazioni
+          <h1 className="text-center mb-4 font-weight-bold text-primary shadow-sm">
+            Cronologia di tutte le prenotazioni - {totalElements}
           </h1>
           <Form onSubmit={handleSearch} className="mb-4">
             <Row className="mb-3">
