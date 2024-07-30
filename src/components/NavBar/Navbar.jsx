@@ -137,11 +137,11 @@ const NavBar = () => {
                     <NavDropdown.Item href="/modifica/auto/id=" onClick={handleProtectedLinkClick}>
                       Modifica Auto per ID
                     </NavDropdown.Item>
-                    <NavDropdown.Item href="/modifica/moto/id=" onClick={handleProtectedLinkClick}>
-                      Modifica Moto per ID
-                    </NavDropdown.Item>
                     <NavDropdown.Item href="/crea/auto" onClick={handleProtectedLinkClick}>
                       Aggiungi Auto
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="/modifica/moto/id=" onClick={handleProtectedLinkClick}>
+                      Modifica Moto per ID
                     </NavDropdown.Item>
                     <NavDropdown.Item href="/crea/moto" onClick={handleProtectedLinkClick}>
                       Aggiungi Moto
