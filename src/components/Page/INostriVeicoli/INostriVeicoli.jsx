@@ -28,6 +28,9 @@ const Veicoli = () => {
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
   const size = 24
+
+  const [totalElements, setTotalElements] = useState(0)
+
   useEffect(() => {
     const fetchUtente = async () => {
       try {
@@ -37,32 +40,32 @@ const Veicoli = () => {
         setErrore("Errore durante il caricamento del profilo.")
       }
     }
-
-    const fetchVeicoli = async () => {
-      const params = new URLSearchParams()
-      if (pickupDate) params.append("dataInizio", pickupDate)
-      if (dropoffDate) params.append("dataFine", dropoffDate)
-      if (location) params.append("posizione", location)
-      if (carType) params.append("tipoVeicolo", carType)
-      if (carCategory) params.append("categoria", carCategory)
-      if (minPrezzo) params.append("minPrezzo", minPrezzo)
-      if (maxPrezzo) params.append("maxPrezzo", maxPrezzo)
-
-      try {
-        const veicoliFiltrati = await fetchGet(`/veicoli/search?page=${page}&size=${size}&${params.toString()}`)
-        setTotalPages(veicoliFiltrati.page.totalPages)
-        setVeicoli(veicoliFiltrati.content)
-        setCaricamento(false)
-      } catch (error) {
-        console.error("Errore nella ricerca dei veicoli:", error)
-        setErrore("Errore durante il caricamento dei veicoli.")
-        setCaricamento(false)
-      }
-    }
-
     fetchUtente()
     fetchVeicoli()
   }, [page, pickupDate, dropoffDate, location, carType, carCategory, minPrezzo, maxPrezzo])
+
+  const fetchVeicoli = async () => {
+    const params = new URLSearchParams()
+    if (pickupDate) params.append("dataInizio", pickupDate)
+    if (dropoffDate) params.append("dataFine", dropoffDate)
+    if (location) params.append("posizione", location)
+    if (carType) params.append("tipoVeicolo", carType)
+    if (carCategory) params.append("categoria", carCategory)
+    if (minPrezzo) params.append("minPrezzo", minPrezzo)
+    if (maxPrezzo) params.append("maxPrezzo", maxPrezzo)
+
+    try {
+      const veicoliFiltrati = await fetchGet(`/veicoli/search?page=${page}&size=${size}&${params.toString()}`)
+      setTotalPages(veicoliFiltrati.page.totalPages)
+      setVeicoli(veicoliFiltrati.content)
+      setTotalElements(veicoliFiltrati.page.totalElements)
+      setCaricamento(false)
+    } catch (error) {
+      console.error("Errore nella ricerca dei veicoli:", error)
+      setErrore("Errore durante il caricamento dei veicoli.")
+      setCaricamento(false)
+    }
+  }
 
   const handleFilter = (e) => {
     e.preventDefault()
@@ -76,28 +79,6 @@ const Veicoli = () => {
 
   const handleDettagli = (veicoloId) => {
     console.log(`Mostra dettagli veicolo con ID: ${veicoloId}`)
-  }
-
-  const fetchVeicoli = async () => {
-    const params = new URLSearchParams()
-    if (pickupDate) params.append("dataInizio", pickupDate)
-    if (dropoffDate) params.append("dataFine", dropoffDate)
-    if (location) params.append("posizione", location)
-    if (carType) params.append("tipoVeicolo", carType)
-    if (carCategory) params.append("categoria", carCategory)
-    if (minPrezzo) params.append("minPrezzo", minPrezzo)
-    if (maxPrezzo) params.append("maxPrezzo", maxPrezzo)
-
-    try {
-      const veicoliFiltrati = await fetchGet(`/veicoli/search?page=${page}&${size}&${params.toString()}`)
-      setTotalPages(veicoliFiltrati.page.totalPages)
-      setVeicoli(veicoliFiltrati.content)
-      setCaricamento(false)
-    } catch (error) {
-      console.error("Errore nella ricerca dei veicoli:", error)
-      setErrore("Errore durante il caricamento dei veicoli.")
-      setCaricamento(false)
-    }
   }
 
   const handleSubmitPrenotazione = async () => {
@@ -143,10 +124,24 @@ const Veicoli = () => {
     setPage(newPage)
   }
 
+  const handleReset = (e) => {
+    e.preventDefault()
+    setPickupDate(today)
+    setDropoffDate(nextWeek)
+    setLocation("")
+    setCarType("")
+    setCarCategory("")
+    setMinPrezzo("")
+    setMaxPrezzo("")
+    setPage(0)
+    fetchVeicoli()
+  }
+
   return (
     <div className="">
-      <div className="rounded-5 m-4 p-4 filter-form-container shadow">
-        <Container className="pickup-wrapper wow fadeInUp mt-4">
+      <div className="rounded-5 p-4 filter-form-container shadow">
+        <Container className="pickup-wrapper wow fadeInUp">
+          <h1 className="text-center mb-4 font-weight-bold text-primary">Risultati di ricerca - {totalElements}</h1>
           <Form onSubmit={handleFilter}>
             <Row>
               <Col xs={12} sm={12} md={12} lg={12} xl={4} className="mb-3">
@@ -221,6 +216,11 @@ const Veicoli = () => {
               </Col>
             </Row>
           </Form>
+          <div className="d-flex mt-3 justify-content-center">
+            <Button onClick={handleReset} variant="secondary" type="button" className="ms-2">
+              Resetta
+            </Button>
+          </div>
         </Container>
       </div>
       <Container className="mt-5 containerMod2">
