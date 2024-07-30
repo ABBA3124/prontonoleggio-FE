@@ -141,7 +141,9 @@ const Veicoli = () => {
     <div className="">
       <div className="rounded-5 p-4 filter-form-container shadow">
         <Container className="pickup-wrapper wow fadeInUp">
-          <h1 className="text-center mb-4 font-weight-bold text-primary">Risultati di ricerca - {totalElements}</h1>
+          <h1 className="text-center mb-4 font-weight-bold text-primary">
+            <i className="bi bi-search"> {totalElements}</i>
+          </h1>
           <Form onSubmit={handleFilter}>
             <Row>
               <Col xs={12} sm={12} md={12} lg={12} xl={4} className="mb-3">
@@ -186,9 +188,10 @@ const Veicoli = () => {
                   <Form.Control as="select" value={carCategory} onChange={(e) => setCarCategory(e.target.value)}>
                     <option value="">Tutti</option>
                     <option value="Utilitaria">Utilitaria</option>
-                    <option value="sportiva">Sportiva</option>
-                    <option value="suv">SUV</option>
-                    <option value="berlina">Berlina</option>
+                    <option value="Sportiva">Sportiva</option>
+                    <option value="Suv">SUV</option>
+                    <option value="Berlina">Berlina</option>
+                    <option value="Moto">Moto</option>
                   </Form.Control>
                 </Form.Group>
               </Col>
@@ -230,17 +233,6 @@ const Veicoli = () => {
           <p>Errore nel caricamento dei veicoli: {errore}</p>
         ) : (
           <Row>
-            <Pagination className="justify-content-center">
-              <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0} />
-              <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
-              {Array.from({ length: totalPages }).map((_, index) => (
-                <Pagination.Item key={index} active={index === page} onClick={() => handlePageChange(index)}>
-                  {index + 1}
-                </Pagination.Item>
-              ))}
-              <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
-              <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1} />
-            </Pagination>
             {veicoli.map((veicolo) => (
               <Col xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} key={veicolo.id} className="mb-4">
                 <Card className="vehicle-card shadow-sm h-100">
@@ -255,20 +247,63 @@ const Veicoli = () => {
                       {veicolo.marca} {veicolo.modello}
                     </Card.Title>
                     <Card.Text className="vehicle-info">
-                      <hr />
-                      <strong>Data Creazione Veicolo:</strong> {veicolo.dataCreazioneVeicolo} <br />
-                      <strong>Anno:</strong> {veicolo.anno} <br />
-                      <strong>Categoria:</strong> {veicolo.categoria} <br />
-                      <strong>Tariffa Giornaliera:</strong> €{veicolo.tariffaGiornaliera} <br />
-                      <strong>Posizione:</strong> {veicolo.posizione} <br />
-                      <strong>Posti:</strong> {veicolo.posti} <br />
-                      <strong>Motorizzazione:</strong> {veicolo.motorizzazione} <br />
-                      <strong>Trasmissione:</strong> {veicolo.trasmissione} <br />
-                      <hr />
-                      <strong>Disponibilità:</strong> {veicolo.disponibilita} <br />
-                      <strong>Porte:</strong> {veicolo.porte} <br />
-                      <strong>Aria Condizionata:</strong> {veicolo.ariaCondizionata ? "Sì" : "No"} <br />
+                      <strong>Tipo Veicolo: </strong>{" "}
+                      {veicolo.tipoVeicolo === "MOTO" ? (
+                        <i className="fas fa-motorcycle"></i>
+                      ) : veicolo.tipoVeicolo === "AUTO" ? (
+                        <i className="fa-solid fa-car"></i>
+                      ) : (
+                        ""
+                      )}
+                      <br />
+                      <strong>Categoria:</strong>
+                      {"  "}
+                      {veicolo.categoria}
+                      {"  "}
+                      {veicolo.categoria === "Utilitaria" ? (
+                        <i className="fas fa-car-side"></i>
+                      ) : veicolo.categoria === "Sportiva" ? (
+                        <i className="fas fa-car"></i>
+                      ) : veicolo.categoria === "Suv" ? (
+                        <i className="fas fa-truck"></i>
+                      ) : veicolo.categoria === "Berlina" ? (
+                        <i className="fas fa-taxi"></i>
+                      ) : (
+                        ""
+                      )}
+                      <br />
+                      <strong>
+                        <i className="bi bi-person-fill"></i>
+                      </strong>
+                      {veicolo.posti} posti
+                      <br />
+                      <strong>
+                        <i className="bi bi-speedometer2"> </i>
+                      </strong>
+                      Chilometraggio illimitato
+                      <br />
+                      <strong>
+                        <i className="bi bi-fan"> </i>Aria Condizionata {""}
+                      </strong>
+                      {veicolo.ariaCondizionata ? <i className="bi bi-check-lg"></i> : <i className="bi bi-ban"></i>}{" "}
+                      <br />
+                      <strong>
+                        <i className="bi bi-shield-shaded"> </i>
+                      </strong>
+                      Copertura contro danni e furto <br />
                     </Card.Text>
+                    <Card.Footer className="vehicle-info mb-3">
+                      <strong>
+                        <i class="bi bi-airplane"> </i>{" "}
+                      </strong>
+                      Località di ritiro: <br />
+                      <strong>Ritiro presso la sede di </strong>
+                      {veicolo.posizione} <br /> <strong> in</strong> {veicolo.viaSede}
+                      <hr />
+                      <strong>{veicolo.tariffaGiornaliera} €</strong> /giorno <br />
+                      Totale {veicolo.tariffaGiornaliera} €
+                      <br />
+                    </Card.Footer>
                     <div className="d-flex justify-content-between">
                       <Button variant="primary" onClick={() => handlePrenota(veicolo)}>
                         Prenota Ora
