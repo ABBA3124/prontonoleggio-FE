@@ -159,7 +159,7 @@ const TutteLePrenotazioni = () => {
       <Row>
         <Col md={12}>
           <h1 className="text-center mb-4 font-weight-bold text-primary shadow-sm">
-            Cronologia di tutte le prenotazioni - {totalElements}
+            Prenotazioni <i className="bi bi-card-checklist"> {totalElements}</i>
           </h1>
           <Form onSubmit={handleSearch} className="mb-4">
             <Row className="mb-3">
