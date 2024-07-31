@@ -16,8 +16,6 @@ const CronologiaPrenotazioni = () => {
   const [error, setError] = useState("")
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
-  const [totaleGiorni, setTotaleGiorni] = useState(0)
-  const [total, setTotal] = useState(0)
 
   useEffect(() => {
     const fetchPrenotazioni = async () => {
@@ -34,24 +32,6 @@ const CronologiaPrenotazioni = () => {
 
     fetchPrenotazioni()
   }, [page])
-
-  useEffect(() => {
-    const calculateTotal = () => {
-      let totalDays = 0
-      const total = prenotazioni.reduce((total, prenotazione) => {
-        const startDate = new Date(prenotazione.dataInizio)
-        const endDate = new Date(prenotazione.dataFine)
-        const diffTime = Math.abs(endDate - startDate)
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-        totalDays += diffDays
-        return total + diffDays * prenotazione.veicolo.tariffaGiornaliera
-      }, 0)
-      setTotaleGiorni(totalDays)
-      setTotal(total)
-    }
-
-    calculateTotal()
-  }, [prenotazioni])
 
   const handleModifica = (prenotazione) => {
     setSelectedPrenotazione(prenotazione)
@@ -117,6 +97,15 @@ const CronologiaPrenotazioni = () => {
     setPage(newPage)
   }
 
+  const calculateTotal = (prenotazione) => {
+    const startDate = new Date(prenotazione.dataInizio)
+    const endDate = new Date(prenotazione.dataFine)
+    const diffTime = Math.abs(endDate - startDate)
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    const total = diffDays * prenotazione.veicolo.tariffaGiornaliera
+    return { totalDays: diffDays, totalAmount: total.toLocaleString("it-IT", { style: "currency", currency: "EUR" }) }
+  }
+
   if (caricamento) {
     return (
       <Container className="py-5 text-center">
@@ -143,110 +132,113 @@ const CronologiaPrenotazioni = () => {
           {prenotazioni.length === 0 ? (
             <Alert variant="info">Nessuna prenotazione trovata.</Alert>
           ) : (
-            prenotazioni.map((prenotazione) => (
-              <Card key={prenotazione.id} className="mb-3 shadow-sm">
-                <Card.Header className="d-flex justify-content-between align-items-center">
-                  <div>{/* <strong>Prenotazione ID:</strong> {prenotazione.id} */}</div>
-                  <div className="d-flex">
-                    <Button variant="warning" size="sm" onClick={() => handleModifica(prenotazione)} className="me-2">
-                      Modifica
-                    </Button>
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => {
-                        setSelectedPrenotazione(prenotazione)
-                        setShowDeleteModal(true)
-                      }}
-                    >
-                      Elimina
-                    </Button>
-                  </div>
-                </Card.Header>
-                <Card.Body>
-                  <Row>
-                    <Col md={4}>
-                      <img
-                        src={prenotazione.veicolo.immagini}
-                        alt={`${prenotazione.veicolo.marca} ${prenotazione.veicolo.modello}`}
-                        className="img-fluid rounded-3"
-                        style={{ width: "100%", height: "300px", objectFit: "cover" }}
-                      />
-                    </Col>
-                    <Col md={8}>
-                      <div className="d-flex justify-content-around mb-3 date-container">
-                        <div className="text-center date-info">
-                          <p className="m-0">
-                            <strong>Numero Prenotazione:</strong>
-                          </p>
-                          <p className="m-0">{prenotazione.id}</p>
+            prenotazioni.map((prenotazione) => {
+              const { totalDays, totalAmount } = calculateTotal(prenotazione)
+              return (
+                <Card key={prenotazione.id} className="mb-3 shadow-sm">
+                  <Card.Header className="d-flex justify-content-between align-items-center">
+                    <div>{/* <strong>Prenotazione ID:</strong> {prenotazione.id} */}</div>
+                    <div className="d-flex">
+                      <Button variant="warning" size="sm" onClick={() => handleModifica(prenotazione)} className="me-2">
+                        Modifica
+                      </Button>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedPrenotazione(prenotazione)
+                          setShowDeleteModal(true)
+                        }}
+                      >
+                        Elimina
+                      </Button>
+                    </div>
+                  </Card.Header>
+                  <Card.Body>
+                    <Row>
+                      <Col md={4}>
+                        <img
+                          src={prenotazione.veicolo.immagini}
+                          alt={`${prenotazione.veicolo.marca} ${prenotazione.veicolo.modello}`}
+                          className="img-fluid rounded-3"
+                          style={{ width: "100%", height: "300px", objectFit: "cover" }}
+                        />
+                      </Col>
+                      <Col md={8}>
+                        <div className="d-flex justify-content-around mb-3 date-container">
+                          <div className="text-center date-info">
+                            <p className="m-0">
+                              <strong>Numero Prenotazione:</strong>
+                            </p>
+                            <p className="m-0">{prenotazione.id}</p>
+                          </div>
                         </div>
-                      </div>
-                      <div className="d-flex justify-content-around mb-3 date-container">
-                        <div className="text-center date-info">
-                          <p className="m-0">
-                            <strong>Nome:</strong>
-                          </p>
-                          <p className="m-0">
-                            {prenotazione.veicolo.marca} {prenotazione.veicolo.modello}
-                          </p>
+                        <div className="d-flex justify-content-around mb-3 date-container">
+                          <div className="text-center date-info">
+                            <p className="m-0">
+                              <strong>Nome:</strong>
+                            </p>
+                            <p className="m-0">
+                              {prenotazione.veicolo.marca} {prenotazione.veicolo.modello}
+                            </p>
+                          </div>
+                          <div className="text-center date-info">
+                            <p className="m-0">
+                              <strong>Anno:</strong>
+                            </p>
+                            <p className="m-0">{prenotazione.veicolo.anno}</p>
+                          </div>
+                          <div className="text-center date-info">
+                            <p className="m-0">
+                              <strong>Categoria:</strong>
+                            </p>
+                            <p className="m-0">{prenotazione.veicolo.categoria}</p>
+                          </div>
                         </div>
-                        <div className="text-center date-info">
-                          <p className="m-0">
-                            <strong>Anno:</strong>
-                          </p>
-                          <p className="m-0">{prenotazione.veicolo.anno}</p>
-                        </div>
-                        <div className="text-center date-info">
-                          <p className="m-0">
-                            <strong>Categoria:</strong>
-                          </p>
-                          <p className="m-0">{prenotazione.veicolo.categoria}</p>
-                        </div>
-                      </div>
-                      <div className="d-flex justify-content-around mb-3 date-container">
-                        <div className="text-center date-info">
-                          <p className="m-0">
-                            <strong>Tariffa Giornaliera:</strong>
-                          </p>
-                          <p className="m-0">{prenotazione.veicolo.tariffaGiornaliera}€</p>
-                        </div>
+                        <div className="d-flex justify-content-around mb-3 date-container">
+                          <div className="text-center date-info">
+                            <p className="m-0">
+                              <strong>Tariffa Giornaliera:</strong>
+                            </p>
+                            <p className="m-0">{prenotazione.veicolo.tariffaGiornaliera}€</p>
+                          </div>
 
-                        <div className="text-center date-info">
-                          <p className="m-0">
-                            <strong>Totale: </strong>
-                            {totaleGiorni} giorni
-                            <br />
-                            <p className="fs-6">{total}€ iva inclusa</p>
-                          </p>
-                        </div>
+                          <div className="text-center date-info">
+                            <p className="m-0">
+                              <strong>Totale </strong>
+                              {totalAmount} iva inclusa
+                              <br />
+                              <p className="fs-6">per {totalDays} giorni/o</p>
+                            </p>
+                          </div>
 
-                        <div className="text-center date-info">
-                          <p className="m-0">
-                            <strong>Prenotata Il:</strong>
-                          </p>
-                          <p className="m-0">{format(new Date(prenotazione.dataCreazione), "dd/MM/yyyy HH:mm")}</p>
+                          <div className="text-center date-info">
+                            <p className="m-0">
+                              <strong>Prenotata Il:</strong>
+                            </p>
+                            <p className="m-0">{format(new Date(prenotazione.dataCreazione), "dd/MM/yyyy HH:mm")}</p>
+                          </div>
                         </div>
-                      </div>
-                      <div className="d-flex justify-content-around mb-3 date-container">
-                        <div className="text-center date-info">
-                          <p className="m-0">
-                            <strong>Data Inizio:</strong>
-                          </p>
-                          <p className="m-0">{format(new Date(prenotazione.dataInizio), "dd/MM/yyyy")}</p>
+                        <div className="d-flex justify-content-around mb-3 date-container">
+                          <div className="text-center date-info">
+                            <p className="m-0">
+                              <strong>Data Inizio:</strong>
+                            </p>
+                            <p className="m-0">{format(new Date(prenotazione.dataInizio), "dd/MM/yyyy")}</p>
+                          </div>
+                          <div className="text-center date-info">
+                            <p className="m-0">
+                              <strong>Data Fine:</strong>
+                            </p>
+                            <p className="m-0">{format(new Date(prenotazione.dataFine), "dd/MM/yyyy")}</p>
+                          </div>
                         </div>
-                        <div className="text-center date-info">
-                          <p className="m-0">
-                            <strong>Data Fine:</strong>
-                          </p>
-                          <p className="m-0">{format(new Date(prenotazione.dataFine), "dd/MM/yyyy")}</p>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Card>
-            ))
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              )
+            })
           )}
           <Pagination className="justify-content-center">
             <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0} />
