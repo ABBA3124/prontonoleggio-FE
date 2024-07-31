@@ -14,7 +14,7 @@ const Brand = () => {
   const settings = {
     dots: false,
     infinite: true,
-    speed: 2500,
+    speed: 1500,
     slidesToShow: 6,
     slidesToScroll: 1,
     autoplay: true,

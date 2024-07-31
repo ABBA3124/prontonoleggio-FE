@@ -1,38 +1,67 @@
 import React from "react"
-import { Carousel } from "react-bootstrap"
-import "./HeroHomePage.css"
+import Carousel from "react-material-ui-carousel"
+import { Paper, Typography, Box } from "@mui/material"
 import Hero1 from "../Hero/img/hero-1.jpg"
 import Hero2 from "../Hero/img/hero-2.jpg"
 import Hero4 from "../Hero/img/hero-4.jpg"
+import "./HeroHomePage.css"
+
+const items = [
+  {
+    image: Hero1,
+    caption: "Qualsiasi auto di lusso a basso prezzo",
+    title: "PRONTO NOLEGGIO",
+  },
+  {
+    image: Hero2,
+    caption: "Noleggio facile e veloce",
+    title: "GUIDA IL MEGLIO",
+  },
+  {
+    image: Hero4,
+    caption: "Prenotazioni online sicure",
+    title: "VIAGGIA CON STILE",
+  },
+]
 
 const HeroHomePage = () => {
   return (
     <div className="hero-image">
-      <Carousel>
-        <Carousel.Item>
-          <img className="d-block w-100" src={Hero1} alt="First slide" />
-          <Carousel.Caption>
-            <h6>Qualsiasi auto di lusso a basso prezzo</h6>
-            <h1 className="">PRONTO NOLEGGIO</h1>
-          </Carousel.Caption>
-        </Carousel.Item>
-        <Carousel.Item>
-          <img className="d-block w-100" src={Hero2} alt="Second slide" />
-          <Carousel.Caption>
-            <h6>Noleggio facile e veloce</h6>
-            <h1 className="">GUIDA IL MEGLIO</h1>
-          </Carousel.Caption>
-        </Carousel.Item>
-        <Carousel.Item>
-          <div id="prova" className="position-relative">
-            <div className="overlay"></div>
-            <img className="d-block w-100" src={Hero4} alt="Third slide" />
-            <Carousel.Caption>
-              <h6>Prenotazioni online sicure</h6>
-              <h1 className="">VIAGGIA CON STILE</h1>
-            </Carousel.Caption>
-          </div>
-        </Carousel.Item>
+      <Carousel
+        indicators={false}
+        navButtonsAlwaysVisible
+        autoPlay
+        animation="fade"
+        duration={700}
+        cycleNavigation
+        sx={{ height: "100%" }}
+      >
+        {items.map((item, index) => (
+          <Paper key={index} sx={{ position: "relative" }}>
+            <img className="d-block w-100" src={item.image} alt={`Slide ${index + 1}`} />
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                background: "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+                textAlign: "center",
+              }}
+            >
+              <Typography variant="h6">{item.caption}</Typography>
+              <Typography variant="h1" sx={{ fontSize: { xs: "2rem", sm: "3rem", md: "4rem", lg: "5rem" } }}>
+                {item.title}
+              </Typography>
+            </Box>
+          </Paper>
+        ))}
       </Carousel>
     </div>
   )

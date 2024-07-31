@@ -51,7 +51,7 @@ const FiltraVeicoli = () => {
     <Box
       sx={{
         position: "absolute",
-        top: { xs: "10%", sm: "50%", md: "55%", lg: "55%", xl: "55%" },
+        top: { xs: "2%", sm: "55%", md: "55%", lg: "33%", xl: "48%" },
         left: "50%",
         transform: {
           xs: "translate(-50%, 25%)",
@@ -60,6 +60,7 @@ const FiltraVeicoli = () => {
           lg: "translate(-50%, 70%)",
           xl: "translate(-50%, 78%)",
         },
+
         color: "#ffffff",
         textAlign: "center",
         zIndex: 2,
@@ -79,7 +80,6 @@ const FiltraVeicoli = () => {
           <SearchIcon fontSize="large" />
           Cerca Veicoli
         </Typography>
-
         <form onSubmit={handleFilter}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={4}>

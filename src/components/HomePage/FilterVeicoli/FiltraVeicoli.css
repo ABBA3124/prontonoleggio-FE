@@ -1,4 +1,5 @@
-/* .sfondo {
+/*
+ .sfondo {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -11,13 +12,13 @@
   border-radius: 10px;
 }
 
+
 @media (min-width: 1921px) and (max-width: 2561px) {
   .sfondo {
     top: 55%;
     transform: translate(-50%, 78%);
   }
 }
-
 @media (min-width: 1600px) and (max-width: 1920px) {
   .sfondo {
     top: 55%;
