@@ -185,7 +185,7 @@ export const fetchAllPrenotazioni = async (page = 0, size = 20) => {
 }
 
 // Funzione per ottenere tutte le prenotazioni con paginazione
-export const fetchMePrenotazioni = async (page = 0, size = 5) => {
+export const fetchMePrenotazioni = async (page = 0, size = 12) => {
   const response = await fetchWithToken(`/prenotazioni/storico?page=${page}&size=${size}`)
   return response
 }
