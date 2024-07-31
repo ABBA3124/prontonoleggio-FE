@@ -1,6 +1,42 @@
 import React, { useState } from "react"
-import { Modal, Button, Form, Alert } from "react-bootstrap"
-import { register } from "../../../api.js"
+import {
+  Typography,
+  Button,
+  Avatar,
+  Box,
+  Modal,
+  Grid,
+  Paper,
+  Link,
+  TextField,
+  CssBaseline,
+  Alert,
+  IconButton,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+} from "@mui/material"
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
+import CloseIcon from "@mui/icons-material/Close"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
+import { register } from "../../../api"
+
+function Copyright(props) {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {"Copyright © "}
+      <Link color="inherit" href="http://localhost:5173/">
+        Pronto Noleggio
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  )
+}
+
+const theme = createTheme()
 
 const RegisterModal = ({ show, handleClose }) => {
   const [nome, setNome] = useState("")
@@ -74,179 +110,254 @@ const RegisterModal = ({ show, handleClose }) => {
   }
 
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Registrati</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {error && <Alert variant="danger">{error}</Alert>}
-        {success && <Alert variant="success">{success}</Alert>}
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="formNome">
-            <Form.Label>Nome</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Inserisci Nome"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formCognome">
-            <Form.Label>Cognome</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Inserisci Cognome"
-              value={cognome}
-              onChange={(e) => setCognome(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="formSesso">
-            <Form.Label>Sesso</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Inserisci MASCHIO, FEMMINA O ALTRO"
-              value={sesso}
-              onChange={(e) => setSesso(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formUsername">
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Inserisci Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Inserisci Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formTelefono">
-            <Form.Label>Telefono</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Inserisci Telefono"
-              value={telefono}
-              onChange={(e) => setTelefono(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formIndirizzo">
-            <Form.Label>Indirizzo</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Inserisci Indirizzo"
-              value={indirizzo}
-              onChange={(e) => setIndirizzo(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formNumeroCivico">
-            <Form.Label>Numero Civico</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Inserisci Numero Civico"
-              value={numeroCivico}
-              onChange={(e) => setNumeroCivico(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formCitta">
-            <Form.Label>Città</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Inserisci Città"
-              value={citta}
-              onChange={(e) => setCitta(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formCap">
-            <Form.Label>CAP</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Inserisci CAP"
-              value={cap}
-              onChange={(e) => setCap(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formProvincia">
-            <Form.Label>Provincia</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Inserisci Provincia"
-              value={provincia}
-              onChange={(e) => setProvincia(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formNazione">
-            <Form.Label>Nazione</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Inserisci Nazione"
-              value={nazione}
-              onChange={(e) => setNazione(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formDataNascita">
-            <Form.Label>Data di Nascita</Form.Label>
-            <Form.Control
-              type="date"
-              placeholder="Inserisci Data di Nascita"
-              value={dataNascita}
-              onChange={(e) => setDataNascita(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formCodiceFiscale">
-            <Form.Label>Codice Fiscale</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Inserisci Codice Fiscale"
-              value={codiceFiscale}
-              onChange={(e) => setCodiceFiscale(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formPatente">
-            <Form.Label>Patente</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Inserisci Patente"
-              value={patente}
-              onChange={(e) => setPatente(e.target.value)}
-            />
-          </Form.Group>
-
-          <Button variant="primary" type="submit">
-            Registrati
-          </Button>
-        </Form>
-      </Modal.Body>
-    </Modal>
+    <ThemeProvider theme={theme}>
+      <Modal open={show} onClose={handleClose}>
+        <Grid container component="main" sx={{ height: "100vh" }}>
+          <CssBaseline />
+          <Grid item xs={false} sm={12} md={7} lg={2} />
+          <Grid
+            item
+            xs={12}
+            sm={8}
+            md={5}
+            lg={12}
+            xl={12}
+            component={Paper}
+            elevation={6}
+            square
+            sx={{ overflow: "auto", maxHeight: "100vh" }}
+          >
+            <Box
+              sx={{
+                my: 8,
+                mx: 4,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                position: "relative",
+              }}
+            >
+              <IconButton
+                onClick={handleClose}
+                sx={{
+                  position: "absolute",
+                  top: 16,
+                  right: 16,
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                <LockOutlinedIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Registrati
+              </Typography>
+              <Box component="form" noValidate onSubmit={handleSubmit} sx={{ width: "50%", mt: 1 }}>
+                {error && (
+                  <Alert severity="error" sx={{ width: "100%", mt: 2 }}>
+                    {error}
+                  </Alert>
+                )}
+                {success && (
+                  <Alert severity="success" sx={{ width: "100%", mt: 2 }}>
+                    {success}
+                  </Alert>
+                )}
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="nome"
+                  label="Nome"
+                  name="nome"
+                  autoComplete="nome"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="cognome"
+                  label="Cognome"
+                  name="cognome"
+                  autoComplete="cognome"
+                  value={cognome}
+                  onChange={(e) => setCognome(e.target.value)}
+                />
+                <FormControl component="fieldset" sx={{ mt: 2 }}>
+                  <FormLabel component="legend">Sesso</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-label="sesso"
+                    name="sesso"
+                    value={sesso}
+                    onChange={(e) => setSesso(e.target.value)}
+                  >
+                    <FormControlLabel value="MASCHIO" control={<Radio />} label="Maschio" />
+                    <FormControlLabel value="FEMMINA" control={<Radio />} label="Femmina" />
+                    <FormControlLabel value="ALTRO" control={<Radio />} label="Altro" />
+                  </RadioGroup>
+                </FormControl>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="telefono"
+                  label="Telefono"
+                  name="telefono"
+                  autoComplete="telefono"
+                  value={telefono}
+                  onChange={(e) => setTelefono(e.target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="indirizzo"
+                  label="Indirizzo"
+                  name="indirizzo"
+                  autoComplete="indirizzo"
+                  value={indirizzo}
+                  onChange={(e) => setIndirizzo(e.target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="numeroCivico"
+                  label="Numero Civico"
+                  name="numeroCivico"
+                  autoComplete="numeroCivico"
+                  value={numeroCivico}
+                  onChange={(e) => setNumeroCivico(e.target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="citta"
+                  label="Città"
+                  name="citta"
+                  autoComplete="citta"
+                  value={citta}
+                  onChange={(e) => setCitta(e.target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="cap"
+                  label="CAP"
+                  name="cap"
+                  autoComplete="cap"
+                  value={cap}
+                  onChange={(e) => setCap(e.target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="provincia"
+                  label="Provincia"
+                  name="provincia"
+                  autoComplete="provincia"
+                  value={provincia}
+                  onChange={(e) => setProvincia(e.target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="nazione"
+                  label="Nazione"
+                  name="nazione"
+                  autoComplete="nazione"
+                  value={nazione}
+                  onChange={(e) => setNazione(e.target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="dataNascita"
+                  label="Data di Nascita"
+                  type="date"
+                  name="dataNascita"
+                  autoComplete="dataNascita"
+                  value={dataNascita}
+                  onChange={(e) => setDataNascita(e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="codiceFiscale"
+                  label="Codice Fiscale"
+                  name="codiceFiscale"
+                  autoComplete="codiceFiscale"
+                  value={codiceFiscale}
+                  onChange={(e) => setCodiceFiscale(e.target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="patente"
+                  label="Patente"
+                  name="patente"
+                  autoComplete="patente"
+                  value={patente}
+                  onChange={(e) => setPatente(e.target.value)}
+                />
+                <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                  Registrati
+                </Button>
+                <Copyright sx={{ mt: 5 }} />
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
+      </Modal>
+    </ThemeProvider>
   )
 }
 
