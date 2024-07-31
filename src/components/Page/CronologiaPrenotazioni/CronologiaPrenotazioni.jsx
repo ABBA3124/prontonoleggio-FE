@@ -16,6 +16,8 @@ const CronologiaPrenotazioni = () => {
   const [error, setError] = useState("")
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
+  const [totaleGiorni, setTotaleGiorni] = useState(0)
+  const [total, setTotal] = useState(0)
 
   useEffect(() => {
     const fetchPrenotazioni = async () => {
@@ -32,6 +34,24 @@ const CronologiaPrenotazioni = () => {
 
     fetchPrenotazioni()
   }, [page])
+
+  useEffect(() => {
+    const calculateTotal = () => {
+      let totalDays = 0
+      const total = prenotazioni.reduce((total, prenotazione) => {
+        const startDate = new Date(prenotazione.dataInizio)
+        const endDate = new Date(prenotazione.dataFine)
+        const diffTime = Math.abs(endDate - startDate)
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        totalDays += diffDays
+        return total + diffDays * prenotazione.veicolo.tariffaGiornaliera
+      }, 0)
+      setTotaleGiorni(totalDays)
+      setTotal(total)
+    }
+
+    calculateTotal()
+  }, [prenotazioni])
 
   const handleModifica = (prenotazione) => {
     setSelectedPrenotazione(prenotazione)
@@ -189,8 +209,18 @@ const CronologiaPrenotazioni = () => {
                           <p className="m-0">
                             <strong>Tariffa Giornaliera:</strong>
                           </p>
-                          <p className="m-0">€{prenotazione.veicolo.tariffaGiornaliera}</p>
+                          <p className="m-0">{prenotazione.veicolo.tariffaGiornaliera}€</p>
                         </div>
+
+                        <div className="text-center date-info">
+                          <p className="m-0">
+                            <strong>Totale: </strong>
+                            {totaleGiorni} giorni
+                            <br />
+                            <p className="fs-6">{total}€ iva inclusa</p>
+                          </p>
+                        </div>
+
                         <div className="text-center date-info">
                           <p className="m-0">
                             <strong>Prenotata Il:</strong>
