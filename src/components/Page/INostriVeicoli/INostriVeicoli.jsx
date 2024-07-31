@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { Form, Button, Row, Col, Container, Card, Modal, Alert, Pagination } from "react-bootstrap"
 import { fetchGet, fetchWithToken } from "../../../../api"
 import "./INostriVeicoli.css"
-import { format } from "date-fns"
+import { format, set } from "date-fns"
 
 const Veicoli = () => {
   const today = new Date().toISOString().split("T")[0]
@@ -31,6 +31,9 @@ const Veicoli = () => {
   const size = 24
 
   const [totalElements, setTotalElements] = useState(0)
+
+  const [totaleGiorni, setTotaleGiorni] = useState(0)
+  const [total, setTotal] = useState(0)
 
   useEffect(() => {
     const fetchUtente = async () => {
@@ -155,22 +158,25 @@ const Veicoli = () => {
     }
   }
 
-  const calculateTotal = () => {
-    const startDate = new Date(pickupDate)
-    let endDate = new Date(dropoffDate)
-    let diffTime = Math.abs(endDate - startDate)
-    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  useEffect(() => {
+    if (selectedVeicolo) {
+      const startDate = new Date(pickupDate)
+      let endDate = new Date(dropoffDate)
+      let diffTime = Math.abs(endDate - startDate)
+      let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
-    // Se il giorno di ritiro e il giorno di consegna sono gli stessi, aggiungi un giorno a endDate
-    if (diffDays === 0) {
-      endDate.setDate(endDate.getDate() + 1)
-      setDropoffDate(endDate.toISOString().split("T")[0])
-      diffTime = Math.abs(endDate - startDate)
-      diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      if (diffDays === 0) {
+        endDate.setDate(endDate.getDate() + 1)
+        setDropoffDate(endDate.toISOString().split("T")[0])
+        diffTime = Math.abs(endDate - startDate)
+        diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      }
+      setTotaleGiorni(diffDays)
+      setTotal(
+        (diffDays * selectedVeicolo.tariffaGiornaliera).toLocaleString("it-IT", { style: "currency", currency: "EUR" })
+      )
     }
-
-    return diffDays * selectedVeicolo.tariffaGiornaliera
-  }
+  }, [pickupDate, dropoffDate, selectedVeicolo])
 
   return (
     <div className="">
@@ -397,9 +403,8 @@ const Veicoli = () => {
                     </div>
                   </div>
                   <p className="mb-3 date-container text-center price-info">
-                    <strong>Totale:</strong> {calculateTotal()}€
-                    <br />
-                    <p className="fs-6">iva inclusa</p>
+                    Totale {total} iva inclusa
+                    <p className="fs-6">per {totaleGiorni} giorni/o</p>
                   </p>
                   <div className="confirm-message mb-3">
                     <p className="m-0">
