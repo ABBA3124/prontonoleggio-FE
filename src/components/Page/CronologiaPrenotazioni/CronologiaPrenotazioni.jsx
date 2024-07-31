@@ -212,7 +212,11 @@ const CronologiaPrenotazioni = () => {
                       <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
                         <EventIcon fontSize="small" sx={{ mr: 0.5, color: "primary.main" }} />
                         <span style={{ fontWeight: "bold", marginRight: 4 }}>Numero Prenotazione:</span>{" "}
-                        {prenotazione.id}
+                      </Box>
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                        <span fontSize="small" style={{ fontWeight: "bold" }}>
+                          {prenotazione.id}
+                        </span>
                       </Box>
                       <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
                         <EventIcon fontSize="small" sx={{ mr: 0.5, color: "primary.main" }} />
@@ -230,8 +234,8 @@ const CronologiaPrenotazioni = () => {
                       </Box>
                       <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
                         <EuroIcon fontSize="small" sx={{ mr: 0.5, color: "success.main" }} />
-                        <span style={{ fontWeight: "bold", marginRight: 4 }}>Totale:</span> {totalAmount} iva inclusa
-                        per {totalDays} giorni/o
+                        <span style={{ fontWeight: "bold", marginRight: 4 }}>Totale:</span> {totalAmount} {"("}
+                        {totalDays} giorni/o {")"}
                       </Box>
                       <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
                         <EventIcon fontSize="small" sx={{ mr: 0.5, color: "primary.main" }} />
