@@ -1,7 +1,28 @@
 import React, { useState, useEffect } from "react"
-import { Container, Row, Col, Card, Spinner, Alert, Button, Modal, Form, Pagination } from "react-bootstrap"
-import { updatePrenotazione, deletePrenotazione, fetchMePrenotazioni } from "../../../../api"
+import {
+  Container,
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions,
+  Typography,
+  Button,
+  Modal,
+  TextField,
+  Alert,
+  Pagination,
+  CircularProgress,
+  Box,
+  Stack,
+  IconButton,
+} from "@mui/material"
 import { format } from "date-fns"
+import { updatePrenotazione, deletePrenotazione, fetchMePrenotazioni } from "../../../../api"
+import EditIcon from "@mui/icons-material/Edit"
+import DeleteIcon from "@mui/icons-material/Delete"
+import EventIcon from "@mui/icons-material/Event"
+import EuroIcon from "@mui/icons-material/Euro"
 
 const CronologiaPrenotazioni = () => {
   const [prenotazioni, setPrenotazioni] = useState([])
@@ -16,6 +37,7 @@ const CronologiaPrenotazioni = () => {
   const [error, setError] = useState("")
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
+  const [totalElements, setTotalElements] = useState(0)
 
   useEffect(() => {
     const fetchPrenotazioni = async () => {
@@ -23,6 +45,7 @@ const CronologiaPrenotazioni = () => {
         const response = await fetchMePrenotazioni(page)
         setPrenotazioni(response.content)
         setTotalPages(response.page.totalPages)
+        setTotalElements(response.page.totalElements)
         setCaricamento(false)
       } catch (error) {
         setErrore("Errore durante il caricamento della cronologia delle tue prenotazioni.")
@@ -47,9 +70,10 @@ const CronologiaPrenotazioni = () => {
       setSuccess("Prenotazione eliminata con successo.")
       setError("")
       setTimeout(() => {
-        setShowDeleteModal(false)
         setError("")
         setSuccess("")
+        setTotalElements(totalElements - 1)
+        setShowDeleteModal(false)
       }, 1500)
     } catch (error) {
       setSuccess("")
@@ -93,8 +117,8 @@ const CronologiaPrenotazioni = () => {
     }
   }
 
-  const handlePageChange = (newPage) => {
-    setPage(newPage)
+  const handlePageChange = (event, value) => {
+    setPage(value - 1)
   }
 
   const calculateTotal = (prenotazione) => {
@@ -109,9 +133,7 @@ const CronologiaPrenotazioni = () => {
   if (caricamento) {
     return (
       <Container className="py-5 text-center">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Caricamento...</span>
-        </Spinner>
+        <CircularProgress />
       </Container>
     )
   }
@@ -119,213 +141,181 @@ const CronologiaPrenotazioni = () => {
   if (errore) {
     return (
       <Container className="py-5 text-center">
-        <Alert variant="danger">{errore}</Alert>
+        <Alert severity="error">{errore}</Alert>
       </Container>
     )
   }
 
   return (
     <Container>
-      <Row>
-        <Col md={12}>
-          <h3 className="mb-3 mt-3">Cronologia Prenotazioni</h3>
-          {prenotazioni.length === 0 ? (
-            <Alert variant="info">Nessuna prenotazione trovata.</Alert>
-          ) : (
-            prenotazioni.map((prenotazione) => {
-              const { totalDays, totalAmount } = calculateTotal(prenotazione)
-              return (
-                <Card key={prenotazione.id} className="mb-3 shadow-sm">
-                  <Card.Header className="d-flex justify-content-between align-items-center">
-                    <div>{/* <strong>Prenotazione ID:</strong> {prenotazione.id} */}</div>
-                    <div className="d-flex">
-                      <Button variant="warning" size="sm" onClick={() => handleModifica(prenotazione)} className="me-2">
-                        Modifica
-                      </Button>
-                      <Button
-                        variant="danger"
-                        size="sm"
+      <Typography
+        className="mt-4"
+        variant="h4"
+        gutterBottom
+        align="center"
+        sx={{ mb: 4, fontWeight: "bold", color: "#007bff" }}
+      >
+        Cronologia Prenotazioni {totalElements > 0 && `(${totalElements})`}
+      </Typography>
+
+      {prenotazioni.length === 0 ? (
+        <Alert severity="info">Nessuna prenotazione trovata.</Alert>
+      ) : (
+        <Grid container spacing={3}>
+          {prenotazioni.map((prenotazione) => {
+            const { totalDays, totalAmount } = calculateTotal(prenotazione)
+            return (
+              <Grid item xs={12} sm={6} md={4} key={prenotazione.id}>
+                <Card
+                  sx={{
+                    borderRadius: 2,
+                    boxShadow: 3,
+                    "&:hover": { boxShadow: 6 },
+                    overflow: "hidden",
+                    position: "relative",
+                    transition: "transform 0.2s",
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
+                    "&:hover": {
+                      transform: "translateY(-5px)",
+                      boxShadow: 6,
+                    },
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    height="280"
+                    image={prenotazione.veicolo.immagini}
+                    alt={`${prenotazione.veicolo.marca} ${prenotazione.veicolo.modello}`}
+                    sx={{ filter: "brightness(0.85)" }}
+                  />
+                  <CardContent sx={{ position: "relative", flexGrow: 1 }}>
+                    <Box sx={{ position: "absolute", top: 8, right: 8 }}>
+                      <IconButton color="primary" onClick={() => handleModifica(prenotazione)}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        sx={{ color: "red" }}
                         onClick={() => {
                           setSelectedPrenotazione(prenotazione)
                           setShowDeleteModal(true)
                         }}
                       >
-                        Elimina
-                      </Button>
-                    </div>
-                  </Card.Header>
-                  <Card.Body>
-                    <Row>
-                      <Col md={4}>
-                        <img
-                          src={prenotazione.veicolo.immagini}
-                          alt={`${prenotazione.veicolo.marca} ${prenotazione.veicolo.modello}`}
-                          className="img-fluid rounded-3"
-                          style={{ width: "100%", height: "300px", objectFit: "cover" }}
-                        />
-                      </Col>
-                      <Col md={8}>
-                        <div className="d-flex justify-content-around mb-3 date-container">
-                          <div className="text-center date-info">
-                            <p className="m-0">
-                              <strong>Numero Prenotazione:</strong>
-                            </p>
-                            <p className="m-0">{prenotazione.id}</p>
-                          </div>
-                        </div>
-                        <div className="d-flex justify-content-around mb-3 date-container">
-                          <div className="text-center date-info">
-                            <p className="m-0">
-                              <strong>Nome:</strong>
-                            </p>
-                            <p className="m-0">
-                              {prenotazione.veicolo.marca} {prenotazione.veicolo.modello}
-                            </p>
-                          </div>
-                          <div className="text-center date-info">
-                            <p className="m-0">
-                              <strong>Anno:</strong>
-                            </p>
-                            <p className="m-0">{prenotazione.veicolo.anno}</p>
-                          </div>
-                          <div className="text-center date-info">
-                            <p className="m-0">
-                              <strong>Categoria:</strong>
-                            </p>
-                            <p className="m-0">{prenotazione.veicolo.categoria}</p>
-                          </div>
-                        </div>
-                        <div className="d-flex justify-content-around mb-3 date-container">
-                          <div className="text-center date-info">
-                            <p className="m-0">
-                              <strong>Tariffa Giornaliera:</strong>
-                            </p>
-                            <p className="m-0">{prenotazione.veicolo.tariffaGiornaliera}€</p>
-                          </div>
-
-                          <div className="text-center date-info">
-                            <p className="m-0">
-                              <strong>Totale </strong>
-                              {totalAmount} iva inclusa
-                              <br />
-                              <p className="fs-6">per {totalDays} giorni/o</p>
-                            </p>
-                          </div>
-
-                          <div className="text-center date-info">
-                            <p className="m-0">
-                              <strong>Prenotata Il:</strong>
-                            </p>
-                            <p className="m-0">{format(new Date(prenotazione.dataCreazione), "dd/MM/yyyy HH:mm")}</p>
-                          </div>
-                        </div>
-                        <div className="d-flex justify-content-around mb-3 date-container">
-                          <div className="text-center date-info">
-                            <p className="m-0">
-                              <strong>Data Inizio:</strong>
-                            </p>
-                            <p className="m-0">{format(new Date(prenotazione.dataInizio), "dd/MM/yyyy")}</p>
-                          </div>
-                          <div className="text-center date-info">
-                            <p className="m-0">
-                              <strong>Data Fine:</strong>
-                            </p>
-                            <p className="m-0">{format(new Date(prenotazione.dataFine), "dd/MM/yyyy")}</p>
-                          </div>
-                        </div>
-                      </Col>
-                    </Row>
-                  </Card.Body>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
+                    <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: "bold" }}>
+                      {prenotazione.veicolo.marca} {prenotazione.veicolo.modello}
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                        <EventIcon fontSize="small" sx={{ mr: 0.5, color: "primary.main" }} />
+                        <span style={{ fontWeight: "bold", marginRight: 4 }}>Numero Prenotazione:</span>{" "}
+                        {prenotazione.id}
+                      </Box>
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                        <EventIcon fontSize="small" sx={{ mr: 0.5, color: "primary.main" }} />
+                        <span style={{ fontWeight: "bold", marginRight: 4 }}>Anno:</span> {prenotazione.veicolo.anno}
+                      </Box>
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                        <EventIcon fontSize="small" sx={{ mr: 0.5, color: "primary.main" }} />
+                        <span style={{ fontWeight: "bold", marginRight: 4 }}>Categoria:</span>{" "}
+                        {prenotazione.veicolo.categoria}
+                      </Box>
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                        <EuroIcon fontSize="small" sx={{ mr: 0.5, color: "success.main" }} />
+                        <span style={{ fontWeight: "bold", marginRight: 4 }}>Tariffa Giornaliera:</span>{" "}
+                        {prenotazione.veicolo.tariffaGiornaliera}€
+                      </Box>
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                        <EuroIcon fontSize="small" sx={{ mr: 0.5, color: "success.main" }} />
+                        <span style={{ fontWeight: "bold", marginRight: 4 }}>Totale:</span> {totalAmount} iva inclusa
+                        per {totalDays} giorni/o
+                      </Box>
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                        <EventIcon fontSize="small" sx={{ mr: 0.5, color: "primary.main" }} />
+                        <span style={{ fontWeight: "bold", marginRight: 4 }}>Prenotata Il:</span>{" "}
+                        {format(new Date(prenotazione.dataCreazione), "dd/MM/yyyy HH:mm")}
+                      </Box>
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                        <EventIcon fontSize="small" sx={{ mr: 0.5, color: "primary.main" }} />
+                        <span style={{ fontWeight: "bold", marginRight: 4 }}>Data Inizio:</span>{" "}
+                        {format(new Date(prenotazione.dataInizio), "dd/MM/yyyy")}
+                      </Box>
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                        <EventIcon fontSize="small" sx={{ mr: 0.5, color: "primary.main" }} />
+                        <span style={{ fontWeight: "bold", marginRight: 4 }}>Data Fine:</span>{" "}
+                        {format(new Date(prenotazione.dataFine), "dd/MM/yyyy")}
+                      </Box>
+                    </Typography>
+                  </CardContent>
+                  <CardActions sx={{ justifyContent: "space-between", mt: "auto" }}></CardActions>
                 </Card>
-              )
-            })
-          )}
-          <Pagination className="justify-content-center">
-            <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0} />
-            <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
-            {Array.from({ length: totalPages }).map((_, index) => (
-              <Pagination.Item key={index} active={index === page} onClick={() => handlePageChange(index)}>
-                {index + 1}
-              </Pagination.Item>
-            ))}
-            <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
-            <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1} />
-          </Pagination>
-        </Col>
-      </Row>
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modifica Prenotazione</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="modificaDataInizio">
-              <Form.Label>Data Inizio:</Form.Label>
-              <Form.Control
-                type="date"
-                value={modificaDataInizio}
-                onChange={(e) => setModificaDataInizio(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="modificaDataFine">
-              <Form.Label>Data Fine:</Form.Label>
-              <Form.Control
-                type="date"
-                value={modificaDataFine}
-                onChange={(e) => setModificaDataFine(e.target.value)}
-              />
-            </Form.Group>
-            {success && (
-              <Alert variant="success" className="mt-3">
-                {success}
-              </Alert>
-            )}
-            {error && (
-              <Alert variant="danger" className="mt-3">
-                {error}
-              </Alert>
-            )}
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Annulla
-          </Button>
-          <Button variant="primary" onClick={handleSubmitModifica}>
-            Salva Modifiche
-          </Button>
-        </Modal.Footer>
+              </Grid>
+            )
+          })}
+        </Grid>
+      )}
+      <Box my={4} display="flex" justifyContent="center">
+        <Pagination count={totalPages} page={page + 1} onChange={handlePageChange} variant="outlined" color="primary" />
+      </Box>
+      <Modal open={showModal} onClose={() => setShowModal(false)}>
+        <Box sx={{ p: 4, backgroundColor: "white", borderRadius: 1, maxWidth: 400, mx: "auto", mt: 5 }}>
+          <Typography variant="h6" gutterBottom>
+            Modifica Prenotazione
+          </Typography>
+          <Stack spacing={2}>
+            <TextField
+              label="Data Inizio"
+              type="date"
+              value={modificaDataInizio}
+              onChange={(e) => setModificaDataInizio(e.target.value)}
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              label="Data Fine"
+              type="date"
+              value={modificaDataFine}
+              onChange={(e) => setModificaDataFine(e.target.value)}
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            {success && <Alert severity="success">{success}</Alert>}
+            {error && <Alert severity="error">{error}</Alert>}
+          </Stack>
+          <Box mt={2} display="flex" justifyContent="space-between">
+            <Button variant="contained" color="primary" onClick={handleSubmitModifica}>
+              Salva Modifiche
+            </Button>
+            <Button variant="outlined" color="secondary" onClick={() => setShowModal(false)}>
+              Annulla
+            </Button>
+          </Box>
+        </Box>
       </Modal>
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Conferma Eliminazione</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="confirm-message mb-3">
-            <p className="m-0">
-              <i className="bi bi-question-circle-fill me-2"></i>
-              Sei sicuro di voler eliminare questa prenotazione?
-            </p>
-          </div>
-          {success && (
-            <Alert variant="success" className="mt-3">
-              {success}
-            </Alert>
-          )}
-          {error && (
-            <Alert variant="danger" className="mt-3">
-              {error}
-            </Alert>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Annulla
-          </Button>
-          <Button variant="danger" onClick={handleElimina}>
-            Elimina
-          </Button>
-        </Modal.Footer>
+      <Modal open={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
+        <Box sx={{ p: 4, backgroundColor: "white", borderRadius: 1, maxWidth: 400, mx: "auto", mt: 5 }}>
+          <Typography variant="h6" gutterBottom>
+            Conferma Eliminazione
+          </Typography>
+          <Typography variant="body1">Sei sicuro di voler eliminare questa prenotazione?</Typography>
+          {success && <Alert severity="success">{success}</Alert>}
+          {error && <Alert severity="error">{error}</Alert>}
+          <Box mt={2} display="flex" justifyContent="space-between">
+            <Button variant="contained" color="secondary" onClick={handleElimina}>
+              Elimina
+            </Button>
+            <Button variant="outlined" color="primary" onClick={() => setShowDeleteModal(false)}>
+              Annulla
+            </Button>
+          </Box>
+        </Box>
       </Modal>
     </Container>
   )
