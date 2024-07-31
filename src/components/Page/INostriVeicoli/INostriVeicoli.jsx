@@ -1,8 +1,36 @@
 import React, { useState, useEffect } from "react"
-import { Form, Button, Row, Col, Container, Card, Modal, Alert, Pagination } from "react-bootstrap"
+import {
+  Button,
+  Container,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  CardActions,
+  TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  CircularProgress,
+  Alert,
+  Pagination,
+  Modal,
+  Box,
+  Typography,
+} from "@mui/material"
 import { fetchGet, fetchWithToken } from "../../../../api"
-import "./INostriVeicoli.css"
-import { format, set } from "date-fns"
+import { format } from "date-fns"
+import SearchIcon from "@mui/icons-material/Search"
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar"
+import TwoWheelerIcon from "@mui/icons-material/TwoWheeler"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import CancelIcon from "@mui/icons-material/Cancel"
+import LocationOnIcon from "@mui/icons-material/LocationOn"
+import LocalGasStationIcon from "@mui/icons-material/LocalGasStation"
+import EventIcon from "@mui/icons-material/Event"
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney"
+import AirIcon from "@mui/icons-material/Air"
 
 const Veicoli = () => {
   const today = new Date().toISOString().split("T")[0]
@@ -28,7 +56,7 @@ const Veicoli = () => {
 
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
-  const size = 24
+  const size = 16
 
   const [totalElements, setTotalElements] = useState(0)
 
@@ -179,256 +207,329 @@ const Veicoli = () => {
   }, [pickupDate, dropoffDate, selectedVeicolo])
 
   return (
-    <div className="">
-      <div className="rounded-5 p-4 filter-form-container shadow">
-        <Container className="pickup-wrapper wow fadeInUp">
-          <h1 className="text-center mb-4 font-weight-bold text-primary">
-            <i className="bi bi-search"> {totalElements}</i>
-          </h1>
-          <Form onSubmit={handleFilter}>
-            <Row>
-              <Col xs={12} sm={12} md={12} lg={12} xl={4} className="mb-3">
-                <Form.Group controlId="formLocation">
-                  <Form.Label>Località:</Form.Label>
-                  <Form.Control as="select" value={location} onChange={(e) => setLocation(e.target.value)}>
-                    <option value="">Tutte</option>
-                    <option value="Milano">Milano</option>
-                    <option value="Roma">Roma</option>
-                    <option value="Napoli">Napoli</option>
-                    <option value="Messina">Messina</option>
-                    <option value="Catania">Catania</option>
-                    <option value="Palermo">Palermo</option>
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-              <Col xs={12} sm={6} md={6} lg={6} xl={4} className="mb-3">
-                <Form.Group controlId="formPickupDate">
-                  <Form.Label>Data Inizio:</Form.Label>
-                  <Form.Control type="date" value={pickupDate} onChange={handleDateChange(setPickupDate)} />
-                </Form.Group>
-              </Col>
-              <Col xs={12} sm={6} md={6} lg={6} xl={4} className="mb-3">
-                <Form.Group controlId="formDropoffDate">
-                  <Form.Label>Data Fine:</Form.Label>
-                  <Form.Control type="date" value={dropoffDate} onChange={handleDateChange(setDropoffDate)} />
-                </Form.Group>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={12} xl={6} className="mb-3">
-                <Form.Group controlId="formCarType">
-                  <Form.Label>Tipo Veicolo:</Form.Label>
-                  <Form.Control as="select" value={carType} onChange={(e) => setCarType(e.target.value)}>
-                    <option value="">Tutti</option>
-                    <option value="AUTO">Auto</option>
-                    <option value="MOTO">Moto</option>
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={12} xl={6} className="mb-3">
-                <Form.Group controlId="formCarCategory">
-                  <Form.Label>Categoria Veicolo:</Form.Label>
-                  <Form.Control as="select" value={carCategory} onChange={(e) => setCarCategory(e.target.value)}>
-                    <option value="">Tutti</option>
-                    <option value="Utilitaria">Utilitaria</option>
-                    <option value="Sportiva">Sportiva</option>
-                    <option value="Suv">SUV</option>
-                    <option value="Berlina">Berlina</option>
-                    <option value="Moto">Moto</option>
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-              <Col xs={12} sm={6} md={6} lg={6} xl={6} className="mb-3">
-                <Form.Group controlId="formMinPrezzo">
-                  <Form.Label>Prezzo Minimo:</Form.Label>
-                  <Form.Control
-                    type="number"
-                    value={minPrezzo}
-                    onChange={(e) => setMinPrezzo(e.target.value)}
-                    placeholder="Prezzo minimo"
-                  />
-                </Form.Group>
-              </Col>
-              <Col xs={12} sm={6} md={6} lg={6} xl={6} className="mb-3">
-                <Form.Group controlId="formMaxPrezzo">
-                  <Form.Label>Prezzo Massimo:</Form.Label>
-                  <Form.Control
-                    type="number"
-                    value={maxPrezzo}
-                    onChange={(e) => setMaxPrezzo(e.target.value)}
-                    placeholder="Prezzo massimo"
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-          </Form>
-          <div className="d-flex mt-3 justify-content-center">
-            <Button onClick={handleReset} variant="secondary" type="button" className="ms-2">
+    <Container>
+      <Box className="rounded-5 p-4 filter-form-container shadow" sx={{ mb: 5 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          <SearchIcon fontSize="large" /> Cerca Veicoli ({totalElements} trovati)
+        </Typography>
+        <form onSubmit={handleFilter}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={4}>
+              <FormControl fullWidth>
+                <InputLabel>Località</InputLabel>
+                <Select value={location} onChange={(e) => setLocation(e.target.value)}>
+                  <MenuItem value="">Tutte</MenuItem>
+                  <MenuItem value="Milano">Milano</MenuItem>
+                  <MenuItem value="Roma">Roma</MenuItem>
+                  <MenuItem value="Napoli">Napoli</MenuItem>
+                  <MenuItem value="Messina">Messina</MenuItem>
+                  <MenuItem value="Catania">Catania</MenuItem>
+                  <MenuItem value="Palermo">Palermo</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                label="Data Inizio"
+                type="date"
+                fullWidth
+                value={pickupDate}
+                onChange={handleDateChange(setPickupDate)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                label="Data Fine"
+                type="date"
+                fullWidth
+                value={dropoffDate}
+                onChange={handleDateChange(setDropoffDate)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+              <FormControl fullWidth>
+                <InputLabel>Tipo Veicolo</InputLabel>
+                <Select value={carType} onChange={(e) => setCarType(e.target.value)}>
+                  <MenuItem value="">Tutti</MenuItem>
+                  <MenuItem value="AUTO">Auto</MenuItem>
+                  <MenuItem value="MOTO">Moto</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+              <FormControl fullWidth>
+                <InputLabel>Categoria Veicolo</InputLabel>
+                <Select value={carCategory} onChange={(e) => setCarCategory(e.target.value)}>
+                  <MenuItem value="">Tutti</MenuItem>
+                  <MenuItem value="Utilitaria">Utilitaria</MenuItem>
+                  <MenuItem value="Sportiva">Sportiva</MenuItem>
+                  <MenuItem value="Suv">SUV</MenuItem>
+                  <MenuItem value="Berlina">Berlina</MenuItem>
+                  <MenuItem value="Moto">Moto</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+              <TextField
+                label="Prezzo Minimo"
+                type="number"
+                fullWidth
+                value={minPrezzo}
+                onChange={(e) => setMinPrezzo(e.target.value)}
+                placeholder="Prezzo minimo"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+              <TextField
+                label="Prezzo Massimo"
+                type="number"
+                fullWidth
+                value={maxPrezzo}
+                onChange={(e) => setMaxPrezzo(e.target.value)}
+                placeholder="Prezzo massimo"
+              />
+            </Grid>
+          </Grid>
+          <Box sx={{ mt: 3, textAlign: "center" }}>
+            <Button variant="contained" color="secondary" onClick={handleReset}>
               Resetta
             </Button>
-          </div>
-        </Container>
-      </div>
-      <Container className="mt-5 containerMod2">
+          </Box>
+        </form>
+      </Box>
+      <Container>
         {caricamento ? (
-          <p>Caricamento in corso...</p>
+          <Box textAlign="center" py={5}>
+            <CircularProgress />
+          </Box>
         ) : errore ? (
-          <p>Errore nel caricamento dei veicoli: {errore}</p>
+          <Alert severity="error">{errore}</Alert>
         ) : (
-          <Row>
+          <Grid container spacing={4}>
             {veicoli.map((veicolo) => (
-              <Col xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} key={veicolo.id} className="mb-4">
-                <Card className="vehicle-card shadow-sm h-100">
-                  <Card.Img
-                    variant="top"
-                    src={veicolo.immagini}
+              <Grid item xs={12} sm={6} md={4} lg={3} key={veicolo.id}>
+                <Card
+                  className="vehicle-card shadow-sm h-100"
+                  sx={{
+                    borderRadius: 2,
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                    "&:hover": {
+                      transform: "translateY(-5px)",
+                      boxShadow: 6,
+                    },
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <CardMedia
+                    component="img"
                     alt={`${veicolo.marca} ${veicolo.modello}`}
-                    className="vehicle-card-img"
+                    height="200"
+                    image={veicolo.immagini}
+                    sx={{ filter: "brightness(0.85)" }}
                   />
-                  <Card.Body>
-                    <Card.Title className="vehicle-title">
+                  <CardContent sx={{ paddingBottom: "16px" }}>
+                    <Typography variant="h6" component="div" sx={{ fontWeight: "bold", mb: 1 }}>
                       {veicolo.marca} {veicolo.modello}
-                    </Card.Title>
-                    <Card.Text className="vehicle-info">
-                      <strong>Tipo Veicolo: </strong>{" "}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1, color: "text.secondary" }}>
+                      <strong>Tipo Veicolo: </strong>
                       {veicolo.tipoVeicolo === "MOTO" ? (
-                        <i className="fas fa-motorcycle"></i>
+                        <TwoWheelerIcon sx={{ verticalAlign: "middle", color: "primary.main" }} />
                       ) : veicolo.tipoVeicolo === "AUTO" ? (
-                        <i className="fa-solid fa-car"></i>
+                        <DirectionsCarIcon sx={{ verticalAlign: "middle", color: "primary.main" }} />
                       ) : (
                         ""
                       )}
-                      <br />
-                      <strong>Categoria:</strong>
-                      {"  "}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1, color: "text.secondary" }}>
+                      <strong>Categoria: </strong>
                       {veicolo.categoria}
-                      {"  "}
-                      {veicolo.categoria === "Utilitaria" ? (
-                        <i className="fas fa-car-side"></i>
-                      ) : veicolo.categoria === "Sportiva" ? (
-                        <i className="fas fa-car"></i>
-                      ) : veicolo.categoria === "Suv" ? (
-                        <i className="fas fa-truck"></i>
-                      ) : veicolo.categoria === "Berlina" ? (
-                        <i className="fas fa-taxi"></i>
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1, color: "text.secondary" }}>
+                      <strong>
+                        <LocalGasStationIcon sx={{ verticalAlign: "middle", color: "primary.main" }} /> Chilometraggio
+                        Illimitato
+                      </strong>
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1, color: "text.secondary" }}>
+                      <strong>
+                        <AirIcon sx={{ verticalAlign: "middle", color: "primary.main" }} /> Aria Condizionata:{" "}
+                      </strong>
+                      {veicolo.ariaCondizionata ? (
+                        <CheckCircleIcon sx={{ color: "success.main", verticalAlign: "middle" }} />
                       ) : (
-                        ""
+                        <CancelIcon sx={{ color: "error.main", verticalAlign: "middle" }} />
                       )}
-                      <br />
-                      <strong>
-                        <i className="bi bi-person-fill"></i>
-                      </strong>
-                      {veicolo.posti} posti
-                      <br />
-                      <strong>
-                        <i className="bi bi-speedometer2"> </i>
-                      </strong>
-                      Chilometraggio illimitato
-                      <br />
-                      <strong>
-                        <i className="bi bi-fan"> </i>Aria Condizionata {""}
-                      </strong>
-                      {veicolo.ariaCondizionata ? <i className="bi bi-check-lg"></i> : <i className="bi bi-ban"></i>}{" "}
-                      <br />
-                      <strong>
-                        <i className="bi bi-shield-shaded"> </i>
-                      </strong>
-                      Copertura contro danni e furto <br />
-                    </Card.Text>
-                    <Card.Footer className="vehicle-info mb-3">
-                      <strong>
-                        <i class="bi bi-airplane"> </i>{" "}
-                      </strong>
-                      Località di ritiro: <br />
-                      <strong>Ritiro presso la sede di </strong>
-                      {veicolo.posizione} <br /> <strong> in</strong> {veicolo.viaSede}
-                      <hr />
-                      <strong>{veicolo.tariffaGiornaliera} €</strong> /giorno <br />
-                      Totale {veicolo.tariffaGiornaliera} €
-                      <br />
-                    </Card.Footer>
-                    <div className="d-flex justify-content-between">
-                      <Button variant="primary" onClick={() => handlePrenota(veicolo)}>
-                        Prenota Ora
-                      </Button>
-                      <Button variant="secondary" onClick={() => handleDettagli(veicolo.id)}>
-                        Dettagli
-                      </Button>
-                    </div>
-                  </Card.Body>
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ mb: 1, color: "text.secondary", display: "flex", alignItems: "center" }}
+                    >
+                      <i className="bi bi-person-fill" style={{ marginRight: "4px", color: "primary.main" }}></i>
+                      <strong>Posti:</strong>
+                      <span style={{ marginLeft: "4px" }}>{veicolo.posti}</span>
+                    </Typography>
+
+                    <Typography
+                      variant="body2"
+                      sx={{ mb: 1, color: "text.secondary", display: "flex", alignItems: "center" }}
+                    >
+                      <i className="bi bi-shield-shaded" style={{ marginRight: "4px", color: "primary.main" }}></i>
+                      <strong>Copertura contro danni e furto</strong>
+                    </Typography>
+
+                    <hr />
+                    <Typography
+                      variant="body2"
+                      sx={{ mb: 1, color: "text.secondary", display: "flex", alignItems: "center" }}
+                    >
+                      <LocationOnIcon sx={{ mr: 0.5, color: "primary.main" }} />
+                      <strong>Località di ritiro: </strong>
+                      <span style={{ marginLeft: "4px" }}>
+                        {veicolo.posizione}, {veicolo.viaSede}
+                      </span>
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ mb: 1, color: "text.secondary", display: "flex", alignItems: "center" }}
+                    >
+                      <AttachMoneyIcon sx={{ mr: 0.5, color: "primary.main" }} />
+                      <strong>Tariffa giornaliera: </strong> {veicolo.tariffaGiornaliera} € /giorno
+                    </Typography>
+                  </CardContent>
+                  <CardActions sx={{ justifyContent: "space-between", padding: 2 }}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handlePrenota(veicolo)}
+                      sx={{
+                        transition: "background-color 0.3s, transform 0.3s",
+                        "&:hover": {
+                          backgroundColor: "darkblue",
+                          transform: "scale(1.05)",
+                        },
+                        display: "flex",
+                        alignItems: "center",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <i className="bi bi-calendar-check" style={{ marginRight: "8px", flexShrink: 0 }}></i>
+                      Prenota Ora
+                    </Button>
+
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={() => handleDettagli(veicolo.id)}
+                      sx={{
+                        transition: "background-color 0.3s, transform 0.3s",
+                        "&:hover": {
+                          backgroundColor: "lightgrey",
+                          transform: "scale(1.05)",
+                        },
+                      }}
+                    >
+                      Dettagli
+                    </Button>
+                  </CardActions>
                 </Card>
-              </Col>
+              </Grid>
             ))}
-            <Pagination className="justify-content-center">
-              <Pagination.First onClick={() => handlePageChange(0)} disabled={page === 0} />
-              <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
-              {Array.from({ length: totalPages }).map((_, index) => (
-                <Pagination.Item key={index} active={index === page} onClick={() => handlePageChange(index)}>
-                  {index + 1}
-                </Pagination.Item>
-              ))}
-              <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
-              <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1} />
-            </Pagination>
-          </Row>
+          </Grid>
         )}
+        <Pagination
+          count={totalPages}
+          page={page + 1}
+          onChange={(event, value) => handlePageChange(value - 1)}
+          sx={{ mt: 3, display: "flex", justifyContent: "center" }}
+          className="mb-3"
+        />
       </Container>
       {selectedVeicolo && (
-        <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-          <Modal.Header closeButton>
-            <Modal.Title>Conferma Prenotazione</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
+        <Modal open={showModal} onClose={() => setShowModal(false)} aria-labelledby="modal-title" centered>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              p: 4,
+              borderRadius: 2,
+            }}
+          >
+            <Typography id="modal-title" variant="h6" component="h2">
+              Conferma Prenotazione
+            </Typography>
             <Container>
-              <Row>
-                <Col xs={12} className="text-center mb-3">
-                  <p className="mb-3 text-center price-info">
+              <Grid container spacing={2}>
+                <Grid item xs={12} className="text-center mb-3">
+                  <Typography variant="h6" component="p" className="mb-3 text-center price-info">
                     {selectedVeicolo.marca} {selectedVeicolo.modello}
-                  </p>
+                  </Typography>
                   <img
                     src={selectedVeicolo.immagini}
                     className="vehicle-card-img rounded-5 mb-3"
+                    style={{ width: "100%" }}
                     alt={`${selectedVeicolo.marca} ${selectedVeicolo.modello}`}
                   />
-                  <div className="d-flex justify-content-around mb-3 date-container">
-                    <div className="text-center date-info">
-                      <p className="m-0">
+                  <Box className="d-flex justify-content-around mb-3 date-container">
+                    <Box className="text-center date-info">
+                      <Typography variant="body2" component="p">
                         <strong>Data Inizio:</strong>
-                      </p>
-                      <p className="m-0">{format(new Date(pickupDate), "dd/MM/yyyy")}</p>
-                    </div>
-                    <div className="text-center date-info">
-                      <p className="m-0">
+                      </Typography>
+                      <Typography variant="body2" component="p">
+                        {format(new Date(pickupDate), "dd/MM/yyyy")}
+                      </Typography>
+                    </Box>
+                    <Box className="text-center date-info">
+                      <Typography variant="body2" component="p">
                         <strong>Data Fine:</strong>
-                      </p>
-                      <p className="m-0">{format(new Date(dropoffDate), "dd/MM/yyyy")}</p>
-                    </div>
-                  </div>
-                  <p className="mb-3 date-container text-center price-info">
+                      </Typography>
+                      <Typography variant="body2" component="p">
+                        {format(new Date(dropoffDate), "dd/MM/yyyy")}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Typography variant="body2" component="p" className="mb-3 date-container text-center price-info">
                     Totale {total} iva inclusa
-                    <p className="fs-6">per {totaleGiorni} giorni/o</p>
-                  </p>
-                  <div className="confirm-message mb-3">
-                    <p className="m-0">
+                    <Typography variant="body2" component="p" className="fs-6">
+                      per {totaleGiorni} giorni/o
+                    </Typography>
+                  </Typography>
+                  <Box className="confirm-message mb-3">
+                    <Typography variant="body2" component="p" className="m-0">
                       <i className="bi bi-question-circle-fill me-2"></i>
                       Vuoi confermare la prenotazione di questo veicolo?
-                    </p>
-                  </div>
-                  {prenotazioneErrore && <Alert variant="danger">{prenotazioneErrore}</Alert>}
-                  {prenotazioneSuccesso && <Alert variant="success">{prenotazioneSuccesso}</Alert>}
-                </Col>
-              </Row>
+                    </Typography>
+                  </Box>
+                  {prenotazioneErrore && <Alert severity="error">{prenotazioneErrore}</Alert>}
+                  {prenotazioneSuccesso && <Alert severity="success">{prenotazioneSuccesso}</Alert>}
+                </Grid>
+              </Grid>
             </Container>
-          </Modal.Body>
-          <Modal.Footer className="justify-content-between">
-            <Button variant="secondary" onClick={() => setShowModal(false)}>
-              Annulla
-            </Button>
-            <Button variant="primary" onClick={handleSubmitPrenotazione}>
-              Conferma Prenotazione
-            </Button>
-          </Modal.Footer>
+            <Box className="d-flex justify-content-between">
+              <Button variant="outlined" color="secondary" onClick={() => setShowModal(false)}>
+                Annulla
+              </Button>
+              <Button variant="contained" color="primary" onClick={handleSubmitPrenotazione}>
+                Conferma Prenotazione
+              </Button>
+            </Box>
+          </Box>
         </Modal>
       )}
-    </div>
+    </Container>
   )
 }
 
