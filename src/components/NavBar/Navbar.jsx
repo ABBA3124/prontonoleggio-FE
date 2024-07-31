@@ -1,5 +1,23 @@
 import React, { useState, useEffect } from "react"
-import { Button, Container, Nav, Navbar, NavDropdown, Offcanvas, Image } from "react-bootstrap"
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Menu,
+  MenuItem,
+  Button,
+  Avatar,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Divider,
+  Box,
+} from "@mui/material"
+import MenuIcon from "@mui/icons-material/Menu"
+import AccountCircle from "@mui/icons-material/AccountCircle"
 import { fetchWithToken } from "../../../api"
 import RegisterModal from "../Auth/RegisterModal"
 import LoginModal from "../Auth/LoginModal"
@@ -17,11 +35,13 @@ const fetchUserData = async () => {
 }
 
 const NavBar = () => {
-  const expand = "md"
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [showRegisterModal, setShowRegisterModal] = useState(false)
   const [userData, setUserData] = useState(null)
   const [error, setError] = useState("")
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [adminAnchorEl, setAdminAnchorEl] = useState(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,154 +76,274 @@ const NavBar = () => {
     }
   }
 
-  const ROLE1 = import.meta.env.VITE_ROLE_VERIFICA1
-  const ROLE2 = import.meta.env.VITE_ROLE_VERIFICA2
-  const verificaRuolo1 = userData?.role === ROLE1
-  const verificaRuolo2 = userData?.role === ROLE2
-  const verificaRuolo12 = userData?.role === ROLE2 || userData?.role === ROLE1
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+    setAdminAnchorEl(null)
+  }
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen)
+  }
+
+  const handleAdminMenu = (event) => {
+    setAdminAnchorEl(event.currentTarget)
+  }
+
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+      <Typography variant="h6" sx={{ my: 2 }}>
+        Menu
+      </Typography>
+      <Divider />
+      <List>
+        <ListItem button component="a" href="/">
+          <ListItemText primary="Home" />
+        </ListItem>
+        <ListItem button component="a" href="/veicoli">
+          <ListItemText primary="I Nostri Veicoli" />
+        </ListItem>
+        {userData?.role === import.meta.env.VITE_ROLE_VERIFICA1 && (
+          <>
+            <Divider />
+            <ListItem button component="a" href="/superadmin/utenti/all" onClick={handleProtectedLinkClick}>
+              <ListItemText primary="Tutti gli Utenti" />
+            </ListItem>
+            <ListItem button component="a" href="/cerca/utente/id=" onClick={handleProtectedLinkClick}>
+              <ListItemText primary="Cerca Utente per ID" />
+            </ListItem>
+            <ListItem button component="a" href="/elimina/utente/id=" onClick={handleProtectedLinkClick}>
+              <ListItemText primary="Elimina Utente per ID" />
+            </ListItem>
+            <Divider />
+            <ListItem button component="a" href="/veicoli/all" onClick={handleProtectedLinkClick}>
+              <ListItemText primary="Tutti i Veicoli" />
+            </ListItem>
+            <ListItem button component="a" href="/modifica/auto/id=" onClick={handleProtectedLinkClick}>
+              <ListItemText primary="Modifica Auto per ID" />
+            </ListItem>
+            <ListItem button component="a" href="/crea/auto" onClick={handleProtectedLinkClick}>
+              <ListItemText primary="Aggiungi Auto" />
+            </ListItem>
+            <ListItem button component="a" href="/modifica/moto/id=" onClick={handleProtectedLinkClick}>
+              <ListItemText primary="Modifica Moto per ID" />
+            </ListItem>
+            <ListItem button component="a" href="/crea/moto" onClick={handleProtectedLinkClick}>
+              <ListItemText primary="Aggiungi Moto" />
+            </ListItem>
+            <ListItem button component="a" href="/elimina/veicolo/id=" onClick={handleProtectedLinkClick}>
+              <ListItemText primary="Elimina Veicolo per ID" />
+            </ListItem>
+            <Divider />
+            <ListItem button component="a" href="/superadmin/prenotazioni" onClick={handleProtectedLinkClick}>
+              <ListItemText primary="Tutte le Prenotazioni" />
+            </ListItem>
+            <ListItem button component="a" href="/modifica/prenotazione" onClick={handleProtectedLinkClick}>
+              <ListItemText primary="Modifica Prenotazione" />
+            </ListItem>
+            <ListItem button component="a" href="/elimina/prenotazione" onClick={handleProtectedLinkClick}>
+              <ListItemText primary="Elimina Prenotazione" />
+            </ListItem>
+          </>
+        )}
+        {userData && (
+          <>
+            <Divider />
+            <ListItem button component="a" href="/profilo/me" onClick={handleProtectedLinkClick}>
+              <ListItemText primary="Profilo" />
+            </ListItem>
+            <ListItem button component="a" href="/me/prenotazioni" onClick={handleProtectedLinkClick}>
+              <ListItemText primary="Cronologia Prenotazioni" />
+            </ListItem>
+            <Divider />
+            <ListItem button onClick={handleLogout}>
+              <ListItemText primary="Logout" />
+            </ListItem>
+          </>
+        )}
+      </List>
+    </Box>
+  )
+
+  const container = window !== undefined ? () => window.document.body : undefined
 
   return (
     <>
-      <Navbar expand={expand} className="bg-dark">
-        <Container fluid>
-          <Navbar.Brand href="/" className="text-white">
-            <div className="d-flex align-items-center">
-              <img src={LogoProntoNoleggio} alt="Logo Pronto Noleggio" />
-              <span className="fw-bold"></span>
-            </div>
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
-          <Navbar.Offcanvas
-            id={`offcanvasNavbar-expand-${expand}`}
-            aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
-            placement="end"
+      <AppBar position="static" style={{ backgroundColor: "rgba(33, 37, 41, 1)" }}>
+        <Toolbar>
+          <IconButton
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            color="primary"
+            sx={{ mr: 2, display: { sm: "none" } }}
           >
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>Menu</Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body className="d-flex ">
-              <Nav className="justify-content-end flex-grow-1 pe-3 d-flex align-items-center">
-                <Nav.Link href="/" className="text-white">
-                  Home
-                </Nav.Link>
-                <Nav.Link href="/veicoli" className="text-white">
-                  I Nostri Veicoli
-                </Nav.Link>
-                {/* {verificaRuolo2 && (
-                  <NavDropdown
-                    title={<span className="text-white">Admin Menù</span>}
-                    id={`offcanvasNavbarDropdown-expand-${expand}`}
-                    className="custom-nav-dropdown"
-                    align="end"
-                  >
-                    <NavDropdown.Header>Gestione Utenti</NavDropdown.Header>
-                    <NavDropdown.Item href="/" onClick={handleProtectedLinkClick}>
-                      Cerca Utente per ID
-                    </NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Header>Gestione Veicoli</NavDropdown.Header>
-                    <NavDropdown.Item href="/" onClick={handleProtectedLinkClick}>
-                      Tutti i Veicoli
-                    </NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Header>Gestione Prenotazioni</NavDropdown.Header>
-                    <NavDropdown.Item href="/" onClick={handleProtectedLinkClick}>
-                      Modifica Prenotazione
-                    </NavDropdown.Item>
-                  </NavDropdown>
-                )} */}
-                {verificaRuolo1 && (
-                  <NavDropdown
-                    title={<span className="text-white">Super Admin Menù</span>}
-                    id={`offcanvasNavbarDropdown-expand-${expand}`}
-                    className="custom-nav-dropdown"
-                    align="end"
-                  >
-                    <NavDropdown.Header>Gestione Utenti</NavDropdown.Header>
-                    <NavDropdown.Item href="/superadmin/utenti/all" onClick={handleProtectedLinkClick}>
-                      Tutti gli Utenti
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/cerca/utente/id=" onClick={handleProtectedLinkClick}>
-                      Cerca Utente per ID
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/elimina/utente/id=" onClick={handleProtectedLinkClick}>
-                      Elimina Utente per ID
-                    </NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Header>Gestione Veicoli</NavDropdown.Header>
-                    <NavDropdown.Item href="/veicoli/all" onClick={handleProtectedLinkClick}>
-                      Tutti i Veicoli
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/modifica/auto/id=" onClick={handleProtectedLinkClick}>
-                      Modifica Auto per ID
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/crea/auto" onClick={handleProtectedLinkClick}>
-                      Aggiungi Auto
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/modifica/moto/id=" onClick={handleProtectedLinkClick}>
-                      Modifica Moto per ID
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/crea/moto" onClick={handleProtectedLinkClick}>
-                      Aggiungi Moto
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/elimina/veicolo/id=" onClick={handleProtectedLinkClick}>
-                      Elimina Veicolo per ID
-                    </NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Header>Gestione Prenotazioni</NavDropdown.Header>
-                    <NavDropdown.Item href="/superadmin/prenotazioni" onClick={handleProtectedLinkClick}>
-                      Tutte le Prenotazioni
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/modifica/prenotazione" onClick={handleProtectedLinkClick}>
-                      Modifica Prenotazione
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/elimina/prenotazione" onClick={handleProtectedLinkClick}>
-                      Elimina Prenotazione
-                    </NavDropdown.Item>
-                  </NavDropdown>
-                )}
-                {userData && (
-                  <NavDropdown
-                    title={
-                      <span className="text-white">
-                        <Image src={userData.avatar} height={30} width={30} className="rounded" />
-                      </span>
-                    }
-                    id={`offcanvasNavbarDropdown-expand-${expand}`}
-                    className="custom-nav-dropdown"
-                    align="end"
-                  >
-                    <NavDropdown.Item href="/profilo/me" onClick={handleProtectedLinkClick}>
-                      Profilo
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/me/prenotazioni" onClick={handleProtectedLinkClick}>
-                      Cronologia Prenotazioni
-                    </NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item href="/" onClick={handleLogout}>
-                      Logout
-                    </NavDropdown.Item>
-                  </NavDropdown>
-                )}
-              </Nav>
-              <div className="d-flex align-items-center justify-content-end ">
-                {!userData ? (
-                  <>
-                    <Button variant="primary" onClick={handleLoginModalShow}>
-                      Login
-                    </Button>
-                    <Button variant="secondary" onClick={handleRegisterModalShow} className="ms-2">
-                      Registrati
-                    </Button>
-                  </>
-                ) : (
-                  <div></div>
-                )}
-              </div>
-            </Offcanvas.Body>
-          </Navbar.Offcanvas>
-        </Container>
-      </Navbar>
+            <MenuIcon />
+          </IconButton>
+          <img src={LogoProntoNoleggio} alt="Logo Pronto Noleggio" style={{ height: "40px", marginRight: "10px" }} />
+          <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            <Button
+              color="inherit"
+              href="/"
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                },
+              }}
+            >
+              Home
+            </Button>
+
+            <Button
+              color="inherit"
+              href="/veicoli"
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                },
+              }}
+            >
+              I Nostri Veicoli
+            </Button>
+            {userData?.role === import.meta.env.VITE_ROLE_VERIFICA1 && (
+              <>
+                <Button
+                  color="inherit"
+                  aria-controls="admin-menu"
+                  aria-haspopup="true"
+                  onClick={handleAdminMenu}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    },
+                  }}
+                >
+                  Super Admin Menù
+                </Button>
+                <Menu
+                  id="admin-menu"
+                  anchorEl={adminAnchorEl}
+                  keepMounted
+                  open={Boolean(adminAnchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem disabled>Gestione Utenti</MenuItem>
+                  <MenuItem onClick={handleClose} component="a" href="/superadmin/utenti/all">
+                    Tutti gli Utenti
+                  </MenuItem>
+                  <MenuItem onClick={handleClose} component="a" href="/cerca/utente/id=">
+                    Cerca Utente per ID
+                  </MenuItem>
+                  <MenuItem onClick={handleClose} component="a" href="/elimina/utente/id=">
+                    Elimina Utente per ID
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem disabled>Gestione Veicoli</MenuItem>
+                  <MenuItem onClick={handleClose} component="a" href="/veicoli/all">
+                    Tutti i Veicoli
+                  </MenuItem>
+                  <MenuItem onClick={handleClose} component="a" href="/modifica/auto/id=">
+                    Modifica Auto per ID
+                  </MenuItem>
+                  <MenuItem onClick={handleClose} component="a" href="/crea/auto">
+                    Aggiungi Auto
+                  </MenuItem>
+                  <MenuItem onClick={handleClose} component="a" href="/modifica/moto/id=">
+                    Modifica Moto per ID
+                  </MenuItem>
+                  <MenuItem onClick={handleClose} component="a" href="/crea/moto">
+                    Aggiungi Moto
+                  </MenuItem>
+                  <MenuItem onClick={handleClose} component="a" href="/elimina/veicolo/id=">
+                    Elimina Veicolo per ID
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem disabled>Gestione Prenotazioni</MenuItem>
+                  <MenuItem onClick={handleClose} component="a" href="/superadmin/prenotazioni">
+                    Tutte le Prenotazioni
+                  </MenuItem>
+                  <MenuItem onClick={handleClose} component="a" href="/modifica/prenotazione">
+                    Modifica Prenotazione
+                  </MenuItem>
+                  <MenuItem onClick={handleClose} component="a" href="/elimina/prenotazione">
+                    Elimina Prenotazione
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+            {userData && (
+              <>
+                <IconButton
+                  color="inherit"
+                  onClick={handleMenu}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    },
+                  }}
+                >
+                  <Avatar src={userData.avatar} />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClose} component="a" href="/profilo/me">
+                    Profilo
+                  </MenuItem>
+                  <MenuItem onClick={handleClose} component="a" href="/me/prenotazioni">
+                    Cronologia Prenotazioni
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </>
+            )}
+            {!userData && (
+              <>
+                <Button color="inherit" onClick={handleLoginModalShow}>
+                  Login
+                </Button>
+                <Button color="inherit" onClick={handleRegisterModalShow}>
+                  Registrati
+                </Button>
+              </>
+            )}
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        container={container}
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        sx={{
+          display: { xs: "block", sm: "none" },
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: 240,
+          },
+        }}
+      >
+        {drawer}
+      </Drawer>
       <LoginModal show={showLoginModal} handleClose={handleLoginModalClose} />
       <RegisterModal show={showRegisterModal} handleClose={handleRegisterModalClose} />
     </>
