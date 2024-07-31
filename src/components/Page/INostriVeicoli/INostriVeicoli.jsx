@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { Form, Button, Row, Col, Container, Card, Modal, Alert, Pagination } from "react-bootstrap"
 import { fetchGet, fetchWithToken } from "../../../../api"
 import "./INostriVeicoli.css"
+import { format } from "date-fns"
 
 const Veicoli = () => {
   const today = new Date().toISOString().split("T")[0]
@@ -137,6 +138,40 @@ const Veicoli = () => {
     fetchVeicoli()
   }
 
+  const handleDateChange = (setter) => (e) => {
+    const newDate = e.target.value
+    setter(newDate)
+
+    if (setter === setPickupDate && newDate >= dropoffDate) {
+      const nextDay = new Date(newDate)
+      nextDay.setDate(nextDay.getDate() + 1)
+      setDropoffDate(nextDay.toISOString().split("T")[0])
+    } else if (setter === setDropoffDate) {
+      if (newDate === pickupDate || newDate < pickupDate) {
+        const nextDay = new Date(pickupDate)
+        nextDay.setDate(nextDay.getDate() + 1)
+        setDropoffDate(nextDay.toISOString().split("T")[0])
+      }
+    }
+  }
+
+  const calculateTotal = () => {
+    const startDate = new Date(pickupDate)
+    let endDate = new Date(dropoffDate)
+    let diffTime = Math.abs(endDate - startDate)
+    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+    // Se il giorno di ritiro e il giorno di consegna sono gli stessi, aggiungi un giorno a endDate
+    if (diffDays === 0) {
+      endDate.setDate(endDate.getDate() + 1)
+      setDropoffDate(endDate.toISOString().split("T")[0])
+      diffTime = Math.abs(endDate - startDate)
+      diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    }
+
+    return diffDays * selectedVeicolo.tariffaGiornaliera
+  }
+
   return (
     <div className="">
       <div className="rounded-5 p-4 filter-form-container shadow">
@@ -163,13 +198,13 @@ const Veicoli = () => {
               <Col xs={12} sm={6} md={6} lg={6} xl={4} className="mb-3">
                 <Form.Group controlId="formPickupDate">
                   <Form.Label>Data Inizio:</Form.Label>
-                  <Form.Control type="date" value={pickupDate} onChange={(e) => setPickupDate(e.target.value)} />
+                  <Form.Control type="date" value={pickupDate} onChange={handleDateChange(setPickupDate)} />
                 </Form.Group>
               </Col>
               <Col xs={12} sm={6} md={6} lg={6} xl={4} className="mb-3">
                 <Form.Group controlId="formDropoffDate">
                   <Form.Label>Data Fine:</Form.Label>
-                  <Form.Control type="date" value={dropoffDate} onChange={(e) => setDropoffDate(e.target.value)} />
+                  <Form.Control type="date" value={dropoffDate} onChange={handleDateChange(setDropoffDate)} />
                 </Form.Group>
               </Col>
               <Col xs={12} sm={12} md={6} lg={12} xl={6} className="mb-3">
@@ -347,23 +382,25 @@ const Veicoli = () => {
                     className="vehicle-card-img rounded-5 mb-3"
                     alt={`${selectedVeicolo.marca} ${selectedVeicolo.modello}`}
                   />
-                  <p className="mb-3 text-center price-info">
-                    <strong>Prezzo:</strong> €{selectedVeicolo.tariffaGiornaliera}
-                  </p>
                   <div className="d-flex justify-content-around mb-3 date-container">
                     <div className="text-center date-info">
                       <p className="m-0">
                         <strong>Data Inizio:</strong>
                       </p>
-                      <p className="m-0">{pickupDate}</p>
+                      <p className="m-0">{format(new Date(pickupDate), "dd/MM/yyyy")}</p>
                     </div>
                     <div className="text-center date-info">
                       <p className="m-0">
                         <strong>Data Fine:</strong>
                       </p>
-                      <p className="m-0">{dropoffDate}</p>
+                      <p className="m-0">{format(new Date(dropoffDate), "dd/MM/yyyy")}</p>
                     </div>
                   </div>
+                  <p className="mb-3 date-container text-center price-info">
+                    <strong>Totale:</strong> {calculateTotal()}€
+                    <br />
+                    <p className="fs-6">iva inclusa</p>
+                  </p>
                   <div className="confirm-message mb-3">
                     <p className="m-0">
                       <i className="bi bi-question-circle-fill me-2"></i>
