@@ -184,8 +184,7 @@ const NavBar = () => {
             <MenuIcon />
           </IconButton>
           <img src={LogoProntoNoleggio} alt="Logo Pronto Noleggio" style={{ height: "40px", marginRight: "10px" }} />
-          <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+          <Typography variant="h6" sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
             <Button
               color="inherit"
               href="/"
@@ -209,6 +208,8 @@ const NavBar = () => {
             >
               I Nostri Veicoli
             </Button>
+          </Typography>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {userData?.role === import.meta.env.VITE_ROLE_VERIFICA1 && (
               <>
                 <Button
