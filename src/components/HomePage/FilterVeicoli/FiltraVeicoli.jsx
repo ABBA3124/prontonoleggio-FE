@@ -1,5 +1,17 @@
 import React, { useState } from "react"
-import { Form, Button, Row, Col, Container } from "react-bootstrap"
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Typography,
+} from "@mui/material"
+import SearchIcon from "@mui/icons-material/Search"
 import { fetchGet } from "../../../../api"
 import "./FiltraVeicoli.css"
 
@@ -36,86 +48,144 @@ const FiltraVeicoli = () => {
   }
 
   return (
-    <div className="">
-      <div className="sfondo rounded-5 p-3">
-        <Container className="pickup-wrapper wow fadeInUp mt-4">
-          <h2 className="">Filtra Auto</h2>
-          <Form onSubmit={handleFilter}>
-            <Row>
-              <Col xs={12} sm={12} md={12} lg={12} xl={4}>
-                <Form.Group controlId="formLocation">
-                  <Form.Label>Località:</Form.Label>
-                  <Form.Control as="select" value={location} onChange={(e) => setLocation(e.target.value)}>
-                    <option value="">Tutte</option>
-                    <option value="milano">Milano</option>
-                    <option value="roma">Roma</option>
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-              <Col xs={12} sm={6} md={6} lg={6} xl={4}>
-                <Form.Group controlId="formPickupDate">
-                  <Form.Label>Data Inizio:</Form.Label>
-                  <Form.Control type="date" value={pickupDate} onChange={(e) => setPickupDate(e.target.value)} />
-                </Form.Group>
-              </Col>
-              <Col xs={12} sm={6} md={6} lg={6} xl={4}>
-                <Form.Group controlId="formDropoffDate">
-                  <Form.Label>Data Fine:</Form.Label>
-                  <Form.Control type="date" value={dropoffDate} onChange={(e) => setDropoffDate(e.target.value)} />
-                </Form.Group>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={12} xl={6}>
-                <Form.Group controlId="formCarType">
-                  <Form.Label>Tipo Veicolo:</Form.Label>
-                  <Form.Control as="select" value={carType} onChange={(e) => setCarType(e.target.value)}>
-                    <option value="">Tutti</option>
-                    <option value="AUTO">Auto</option>
-                    <option value="MOTO">Moto</option>
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-              <Col xs={12} sm={12} md={6} lg={12} xl={6}>
-                <Form.Group controlId="formCarCategory">
-                  <Form.Label>Categoria Veicolo:</Form.Label>
-                  <Form.Control as="select" value={carCategory} onChange={(e) => setCarCategory(e.target.value)}>
-                    <option value="">Tutti</option>
-                    <option value="Utilitaria">Utilitaria</option>
-                    <option value="sportiva">Sportiva</option>
-                    <option value="suv">SUV</option>
-                    <option value="berlina">Berlina</option>
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-              <Col xs={12} sm={6} md={6} lg={6} xl={6}>
-                <Form.Group controlId="formMinPrezzo">
-                  <Form.Label>Prezzo Minimo:</Form.Label>
-                  <Form.Control
-                    type="number"
-                    value={minPrezzo}
-                    onChange={(e) => setMinPrezzo(e.target.value)}
-                    placeholder="Prezzo minimo"
-                  />
-                </Form.Group>
-              </Col>
-              <Col xs={12} sm={6} md={6} lg={6} xl={6}>
-                <Form.Group controlId="formMaxPrezzo">
-                  <Form.Label>Prezzo Massimo:</Form.Label>
-                  <Form.Control
-                    type="number"
-                    value={maxPrezzo}
-                    onChange={(e) => setMaxPrezzo(e.target.value)}
-                    placeholder="Prezzo massimo"
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Button variant="primary" type="submit" className="mt-3">
+    <Box
+      sx={{
+        position: "absolute",
+        top: { xs: "10%", sm: "50%", md: "55%", lg: "55%", xl: "55%" },
+        left: "50%",
+        transform: {
+          xs: "translate(-50%, 25%)",
+          sm: "translate(-50%, -55%)",
+          md: "translate(-50%, -35%)",
+          lg: "translate(-50%, 70%)",
+          xl: "translate(-50%, 78%)",
+        },
+        color: "#ffffff",
+        textAlign: "center",
+        zIndex: 2,
+        background: "color: #ffffff",
+        padding: "0px",
+        borderRadius: "10px",
+      }}
+    >
+      <Container className="pickup-wrapper wow fadeInUp mt-4">
+        <Typography
+          variant="h4"
+          align="center"
+          gutterBottom
+          color="text.primary"
+          sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1 }}
+        >
+          <SearchIcon fontSize="large" />
+          Cerca Veicoli
+        </Typography>
+
+        <form onSubmit={handleFilter}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={4}>
+              <FormControl fullWidth variant="outlined" sx={{ bgcolor: "white", borderRadius: 1 }}>
+                <InputLabel>Località</InputLabel>
+                <Select
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  label="Località"
+                  sx={{ color: "#000" }}
+                >
+                  <MenuItem value="">Tutte</MenuItem>
+                  <MenuItem value="milano">Milano</MenuItem>
+                  <MenuItem value="roma">Roma</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                label="Data Inizio"
+                type="date"
+                fullWidth
+                value={pickupDate}
+                onChange={(e) => setPickupDate(e.target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                sx={{ bgcolor: "white", borderRadius: 1 }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                label="Data Fine"
+                type="date"
+                fullWidth
+                value={dropoffDate}
+                onChange={(e) => setDropoffDate(e.target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                sx={{ bgcolor: "white", borderRadius: 1 }}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth variant="outlined" sx={{ bgcolor: "white", borderRadius: 1 }}>
+                <InputLabel>Tipo Veicolo</InputLabel>
+                <Select
+                  value={carType}
+                  onChange={(e) => setCarType(e.target.value)}
+                  label="Tipo Veicolo"
+                  sx={{ color: "#000" }}
+                >
+                  <MenuItem value="">Tutti</MenuItem>
+                  <MenuItem value="AUTO">Auto</MenuItem>
+                  <MenuItem value="MOTO">Moto</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth variant="outlined" sx={{ bgcolor: "white", borderRadius: 1 }}>
+                <InputLabel>Categoria Veicolo</InputLabel>
+                <Select
+                  value={carCategory}
+                  onChange={(e) => setCarCategory(e.target.value)}
+                  label="Categoria Veicolo"
+                  sx={{ color: "#000" }}
+                >
+                  <MenuItem value="">Tutti</MenuItem>
+                  <MenuItem value="Utilitaria">Utilitaria</MenuItem>
+                  <MenuItem value="Sportiva">Sportiva</MenuItem>
+                  <MenuItem value="SUV">SUV</MenuItem>
+                  <MenuItem value="Berlina">Berlina</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Prezzo Minimo"
+                type="number"
+                fullWidth
+                value={minPrezzo}
+                onChange={(e) => setMinPrezzo(e.target.value)}
+                placeholder="Prezzo minimo"
+                sx={{ bgcolor: "white", borderRadius: 1 }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Prezzo Massimo"
+                type="number"
+                fullWidth
+                value={maxPrezzo}
+                onChange={(e) => setMaxPrezzo(e.target.value)}
+                placeholder="Prezzo massimo"
+                sx={{ bgcolor: "white", borderRadius: 1 }}
+              />
+            </Grid>
+          </Grid>
+          <Box sx={{ mt: 3, textAlign: "center" }}>
+            <Button variant="contained" color="primary" type="submit">
               Filtra
             </Button>
-          </Form>
-        </Container>
-      </div>
-    </div>
+          </Box>
+        </form>
+      </Container>
+    </Box>
   )
 }
 
