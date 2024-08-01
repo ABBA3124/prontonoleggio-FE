@@ -12,12 +12,10 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemIcon,
   Divider,
   Box,
 } from "@mui/material"
 import MenuIcon from "@mui/icons-material/Menu"
-import AccountCircle from "@mui/icons-material/AccountCircle"
 import { fetchWithToken } from "../../../api"
 import RegisterModal from "../Auth/RegisterModal"
 import LoginModal from "../Auth/LoginModal"
@@ -316,10 +314,26 @@ const NavBar = () => {
             )}
             {!userData && (
               <>
-                <Button color="inherit" onClick={handleLoginModalShow}>
+                <Button
+                  color="inherit"
+                  onClick={handleLoginModalShow}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    },
+                  }}
+                >
                   Login
                 </Button>
-                <Button color="inherit" onClick={handleRegisterModalShow}>
+                <Button
+                  color="inherit"
+                  onClick={handleRegisterModalShow}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    },
+                  }}
+                >
                   Registrati
                 </Button>
               </>
