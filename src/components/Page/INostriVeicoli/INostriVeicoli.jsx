@@ -20,7 +20,7 @@ import {
   Typography,
 } from "@mui/material"
 import { fetchGet, fetchWithToken } from "../../../../api"
-import { format } from "date-fns"
+import { format, set } from "date-fns"
 import SearchIcon from "@mui/icons-material/Search"
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar"
 import TwoWheelerIcon from "@mui/icons-material/TwoWheeler"
@@ -31,6 +31,7 @@ import LocalGasStationIcon from "@mui/icons-material/LocalGasStation"
 import EventIcon from "@mui/icons-material/Event"
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney"
 import AirIcon from "@mui/icons-material/Air"
+import PayPalButton from "../../Paypal/PayPalButton"
 
 const Veicoli = () => {
   const today = new Date().toISOString().split("T")[0]
@@ -63,6 +64,32 @@ const Veicoli = () => {
   const [totaleGiorni, setTotaleGiorni] = useState(0)
   const [total, setTotal] = useState(0)
 
+  //-------------------------------------------------------
+
+  const handlePayPalSuccess = (details) => {
+    console.log("Transaction completed by " + details.payer.name.given_name)
+    setPrenotazioneSuccesso("Pagamento effettuato con successo!")
+    setPrenotazioneErrore("")
+    handleSubmitPrenotazione()
+  }
+
+  const handlePayPalError = (err) => {
+    console.error("PayPal error: ", err)
+    setPrenotazioneErrore("Errore durante il pagamento con PayPal.")
+    setTimeout(() => {
+      setPrenotazioneErrore("")
+      setShowModal(false)
+    }, 1500)
+  }
+
+  const formatAmount = (amount) => {
+    if (typeof amount === "number") {
+      return amount.toFixed(2)
+    }
+    return parseFloat(amount.replace(",", ".")).toFixed(2)
+  }
+
+  //-------------------------------------------------------
   useEffect(() => {
     const fetchUtente = async () => {
       try {
@@ -72,8 +99,8 @@ const Veicoli = () => {
         setErrore("Errore durante il caricamento del profilo.")
       }
     }
-    fetchUtente()
     fetchVeicoli()
+    fetchUtente()
   }, [page, pickupDate, dropoffDate, location, carType, carCategory, minPrezzo, maxPrezzo])
 
   const fetchVeicoli = async () => {
@@ -139,7 +166,7 @@ const Veicoli = () => {
         setShowModal(false)
         setPrenotazioneSuccesso("")
         setPrenotazioneErrore("")
-      }, 1000)
+      }, 3000)
     } catch (error) {
       setPrenotazioneErrore("Veicolo non disponibile per la data selezionata.")
       setPrenotazioneSuccesso("")
@@ -199,10 +226,10 @@ const Veicoli = () => {
         diffTime = Math.abs(endDate - startDate)
         diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
       }
+
       setTotaleGiorni(diffDays)
-      setTotal(
-        (diffDays * selectedVeicolo.tariffaGiornaliera).toLocaleString("it-IT", { style: "currency", currency: "EUR" })
-      )
+      const total = diffDays * selectedVeicolo.tariffaGiornaliera
+      setTotal(formatAmount(total))
     }
   }, [pickupDate, dropoffDate, selectedVeicolo])
 
@@ -518,12 +545,13 @@ const Veicoli = () => {
                 </Grid>
               </Grid>
             </Container>
-            <Box className="d-flex justify-content-between">
+            <Box className="">
+              {/* <Button variant="contained" color="primary" onClick={handleSubmitPrenotazione}>
+                Conferma Prenotazione
+              </Button> */}
+              <PayPalButton amount={formatAmount(total)} onSuccess={handlePayPalSuccess} onError={handlePayPalError} />
               <Button variant="outlined" color="secondary" onClick={() => setShowModal(false)}>
                 Annulla
-              </Button>
-              <Button variant="contained" color="primary" onClick={handleSubmitPrenotazione}>
-                Conferma Prenotazione
               </Button>
             </Box>
           </Box>
