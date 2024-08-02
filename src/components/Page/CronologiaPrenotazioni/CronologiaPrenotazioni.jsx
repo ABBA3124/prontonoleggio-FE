@@ -23,6 +23,8 @@ import EditIcon from "@mui/icons-material/Edit"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EventIcon from "@mui/icons-material/Event"
 import EuroIcon from "@mui/icons-material/Euro"
+import LocationOnIcon from "@mui/icons-material/LocationOn"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 
 const CronologiaPrenotazioni = () => {
   const [prenotazioni, setPrenotazioni] = useState([])
@@ -235,7 +237,8 @@ const CronologiaPrenotazioni = () => {
                       <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
                         <EuroIcon fontSize="small" sx={{ mr: 0.5, color: "success.main" }} />
                         <span style={{ fontWeight: "bold", marginRight: 4 }}>Totale:</span> {totalAmount} {"("}
-                        {totalDays} giorni/o {")"}
+                        {totalDays} giorni/o {")"}{" "}
+                        <CheckCircleIcon className="ms-1" sx={{ color: "success.main", verticalAlign: "middle" }} />
                       </Box>
                       <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
                         <EventIcon fontSize="small" sx={{ mr: 0.5, color: "primary.main" }} />
@@ -251,6 +254,32 @@ const CronologiaPrenotazioni = () => {
                         <EventIcon fontSize="small" sx={{ mr: 0.5, color: "primary.main" }} />
                         <span style={{ fontWeight: "bold", marginRight: 4 }}>Data Fine:</span>{" "}
                         {format(new Date(prenotazione.dataFine), "dd/MM/yyyy")}
+                      </Box>
+                      <hr />
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                        <Typography
+                          variant="body2"
+                          sx={{ mb: 1, color: "text.secondary", display: "flex", alignItems: "center" }}
+                        >
+                          <LocationOnIcon sx={{ mr: 0.5, color: "primary.main" }} />
+                          <strong>Località di ritiro: </strong>
+                          <span style={{ marginLeft: "4px" }}>
+                            {prenotazione.veicolo.posizione}, {prenotazione.veicolo.viaSede}
+                          </span>
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                        <Typography
+                          variant="body2"
+                          sx={{ mb: 1, color: "text.secondary", display: "flex", alignItems: "center" }}
+                        >
+                          <div className="d-flex align-items-center">
+                            <CheckCircleIcon className="me-1" sx={{ color: "success.main", verticalAlign: "middle" }} />
+                            <strong>
+                              La prenotazione è stata eseguita con successo. Riceverai una email con tutti i dettagli.
+                            </strong>
+                          </div>
+                        </Typography>
                       </Box>
                     </Typography>
                   </CardContent>

@@ -20,7 +20,7 @@ import {
   Typography,
 } from "@mui/material"
 import { fetchGet, fetchWithToken } from "../../../../api"
-import { format, set } from "date-fns"
+import { format } from "date-fns"
 import SearchIcon from "@mui/icons-material/Search"
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar"
 import TwoWheelerIcon from "@mui/icons-material/TwoWheeler"
@@ -32,37 +32,33 @@ import EventIcon from "@mui/icons-material/Event"
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney"
 import AirIcon from "@mui/icons-material/Air"
 import PayPalButton from "../../Paypal/PayPalButton"
+import { useNavigate } from "react-router-dom"
 
 const Veicoli = () => {
   const today = new Date().toISOString().split("T")[0]
   const nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
   const [pickupDate, setPickupDate] = useState(today)
   const [dropoffDate, setDropoffDate] = useState(nextWeek)
-
   const [location, setLocation] = useState("")
   const [carType, setCarType] = useState("")
   const [carCategory, setCarCategory] = useState("")
   const [minPrezzo, setMinPrezzo] = useState("")
   const [maxPrezzo, setMaxPrezzo] = useState("")
-
   const [veicoli, setVeicoli] = useState([])
   const [caricamento, setCaricamento] = useState(true)
   const [errore, setErrore] = useState(null)
   const [user, setUser] = useState(null)
   const [prenotazioneSuccesso, setPrenotazioneSuccesso] = useState("")
   const [prenotazioneErrore, setPrenotazioneErrore] = useState("")
-
   const [showModal, setShowModal] = useState(false)
   const [selectedVeicolo, setSelectedVeicolo] = useState(null)
-
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
   const size = 16
-
   const [totalElements, setTotalElements] = useState(0)
-
   const [totaleGiorni, setTotaleGiorni] = useState(0)
   const [total, setTotal] = useState(0)
+  const navigate = useNavigate()
 
   //-------------------------------------------------------
 
@@ -70,13 +66,22 @@ const Veicoli = () => {
     console.log("Transaction completed by " + details.payer.name.given_name)
     setPrenotazioneSuccesso("Pagamento effettuato con successo!")
     setPrenotazioneErrore("")
-    handleSubmitPrenotazione()
+    setPage(0)
+    fetchVeicoli()
+    setTimeout(() => {
+      setShowModal(false)
+      setPrenotazioneSuccesso("")
+      setPrenotazioneErrore("")
+      navigate("/me/prenotazioni")
+    }, 3000)
   }
 
   const handlePayPalError = (err) => {
     console.error("PayPal error: ", err)
     setPrenotazioneErrore("Errore durante il pagamento con PayPal.")
+    setPrenotazioneSuccesso("")
     setTimeout(() => {
+      setPrenotazioneErrore("")
       setPrenotazioneErrore("")
       setShowModal(false)
     }, 1500)
@@ -138,45 +143,6 @@ const Veicoli = () => {
 
   const handleDettagli = (veicoloId) => {
     console.log(`Mostra dettagli veicolo con ID: ${veicoloId}`)
-  }
-
-  const handleSubmitPrenotazione = async () => {
-    if (!user) {
-      setPrenotazioneErrore("Utente non trovato.")
-      return
-    }
-
-    const prenotazione = {
-      veicoloId: selectedVeicolo.id,
-      utenteId: user.id,
-      dataInizio: pickupDate,
-      dataFine: dropoffDate,
-    }
-
-    try {
-      await fetchWithToken("/prenotazioni/crea", {
-        method: "POST",
-        body: JSON.stringify(prenotazione),
-      })
-      setPrenotazioneSuccesso("Prenotazione effettuata con successo!")
-      setPrenotazioneErrore("")
-      setPage(0)
-      fetchVeicoli()
-      setTimeout(() => {
-        setShowModal(false)
-        setPrenotazioneSuccesso("")
-        setPrenotazioneErrore("")
-      }, 3000)
-    } catch (error) {
-      setPrenotazioneErrore("Veicolo non disponibile per la data selezionata.")
-      setPrenotazioneSuccesso("")
-      fetchVeicoli()
-      setTimeout(() => {
-        setShowModal(false)
-        setPrenotazioneSuccesso("")
-        setPrenotazioneErrore("")
-      }, 1500)
-    }
   }
 
   const handlePageChange = (newPage) => {
@@ -387,13 +353,13 @@ const Veicoli = () => {
                       </strong>
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 1, color: "text.secondary" }}>
-                      <strong>
-                        <AirIcon sx={{ verticalAlign: "middle", color: "primary.main" }} /> Aria Condizionata:{" "}
-                      </strong>
                       {veicolo.ariaCondizionata ? (
-                        <CheckCircleIcon sx={{ color: "success.main", verticalAlign: "middle" }} />
+                        <strong>
+                          <AirIcon sx={{ verticalAlign: "middle", color: "primary.main" }} /> Aria Condizionata:{" "}
+                          <CheckCircleIcon sx={{ color: "success.main", verticalAlign: "middle" }} />
+                        </strong>
                       ) : (
-                        <CancelIcon sx={{ color: "error.main", verticalAlign: "middle" }} />
+                        <strong></strong>
                       )}
                     </Typography>
                     <Typography
@@ -529,7 +495,7 @@ const Veicoli = () => {
                     </Box>
                   </Box>
                   <Typography variant="body2" component="p" className="mb-3 date-container text-center price-info">
-                    Totale {total} iva inclusa
+                    Totale {total}€ iva inclusa
                     <Typography variant="body2" component="p" className="fs-6">
                       per {totaleGiorni} giorni/o
                     </Typography>
@@ -546,10 +512,21 @@ const Veicoli = () => {
               </Grid>
             </Container>
             <Box className="">
-              {/* <Button variant="contained" color="primary" onClick={handleSubmitPrenotazione}>
-                Conferma Prenotazione
-              </Button> */}
-              <PayPalButton amount={formatAmount(total)} onSuccess={handlePayPalSuccess} onError={handlePayPalError} />
+              {user ? (
+                <PayPalButton
+                  amount={total}
+                  veicoloIdd={selectedVeicolo.id}
+                  utenteIdd={user.id}
+                  dataInizio={pickupDate}
+                  dataFine={dropoffDate}
+                  onSuccess={handlePayPalSuccess}
+                  onError={handlePayPalError}
+                />
+              ) : (
+                <Alert severity="error" className="mb-2">
+                  Esegui il Login o Registrati per effettuare una prenotazione.
+                </Alert>
+              )}
               <Button variant="outlined" color="secondary" onClick={() => setShowModal(false)}>
                 Annulla
               </Button>

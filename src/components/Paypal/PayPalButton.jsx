@@ -1,11 +1,10 @@
 import React from "react"
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js"
-import { set } from "date-fns"
 
 const PaypalClientId = import.meta.env.VITE_PAYPAL_CLIENT_ID
 const baseUrl = import.meta.env.VITE_API_URL
 
-const PayPalButton = ({ amount, onSuccess, onError }) => {
+const PayPalButton = ({ amount, veicoloIdd, utenteIdd, dataInizio, dataFine, onSuccess, onError }) => {
   return (
     <PayPalScriptProvider
       options={{
@@ -28,13 +27,26 @@ const PayPalButton = ({ amount, onSuccess, onError }) => {
         }}
         onApprove={async (data, actions) => {
           return actions.order.capture().then(async (details) => {
-            const response = await fetch(`/paypal/success?paymentId=${data.paymentID}&PayerID=${data.payerID}`, {
-              method: "GET",
-            })
-            if (response.ok) {
-              onSuccess(details)
-            } else {
-              onError("Payment verification failed")
+            try {
+              console.log("Payment approved, orderID: ", data.orderID)
+              console.log("Payment approved, payerID: ", data.payerID)
+              const response = await fetch(
+                `${baseUrl}/paypal/success?paymentId=${data.orderID}&PayerID=${data.payerID}&veicoloId=${veicoloIdd}&utenteId=${utenteIdd}&dataInizio=${dataInizio}&dataFine=${dataFine}`,
+                {
+                  method: "GET",
+                }
+              )
+              if (response.ok) {
+                console.log("Payment verification successful")
+                onSuccess(details)
+              } else {
+                const errorText = await response.text()
+                console.log("Payment verification failed: ", errorText)
+                onError("Payment verification failed: " + errorText)
+              }
+            } catch (error) {
+              console.log("Fetch error: ", error.message)
+              onError("Fetch error: " + error.message)
             }
           })
         }}
