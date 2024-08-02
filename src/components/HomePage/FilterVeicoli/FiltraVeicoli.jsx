@@ -51,7 +51,7 @@ const FiltraVeicoli = () => {
     <Box
       sx={{
         position: "absolute",
-        top: { xs: "2%", sm: "55%", md: "55%", lg: "33%", xl: "48%" },
+        top: { xs: "2%", sm: "55%", md: "55%", lg: "33%", xl: "40%" },
         left: "50%",
         transform: {
           xs: "translate(-50%, 25%)",

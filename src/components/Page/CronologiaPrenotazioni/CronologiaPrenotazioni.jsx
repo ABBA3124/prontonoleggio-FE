@@ -281,6 +281,11 @@ const CronologiaPrenotazioni = () => {
                           </div>
                         </Typography>
                       </Box>
+                      <Typography variant="h6" align="center" className="mt-3">
+                        <Button variant="contained" color="primary" href="/recensioni/mie">
+                          Scrivi una recensione
+                        </Button>
+                      </Typography>
                     </Typography>
                   </CardContent>
                   <CardActions sx={{ justifyContent: "space-between", mt: "auto" }}></CardActions>
