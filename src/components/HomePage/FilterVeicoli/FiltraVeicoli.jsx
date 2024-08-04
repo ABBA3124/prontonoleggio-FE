@@ -49,18 +49,8 @@ const FiltraVeicoli = () => {
 
   return (
     <Box
+      className="pickup"
       sx={{
-        position: "absolute",
-        top: { xs: "2%", sm: "55%", md: "55%", lg: "33%", xl: "40%" },
-        left: "50%",
-        transform: {
-          xs: "translate(-50%, 25%)",
-          sm: "translate(-50%, -55%)",
-          md: "translate(-50%, -35%)",
-          lg: "translate(-50%, 70%)",
-          xl: "translate(-50%, 78%)",
-        },
-
         color: "#ffffff",
         textAlign: "center",
         zIndex: 2,
