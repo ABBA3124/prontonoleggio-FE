@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Form, Button, Container, Spinner, Alert, Row, Col } from "react-bootstrap"
-import { fetchWithToken } from "../../../../../../api"
+import { fetchWithTokenAggiungiVeicoloAuto } from "../../../../../../api"
 
 const AggiungiMoto = () => {
   const [formData, setFormData] = useState({
@@ -9,18 +9,19 @@ const AggiungiMoto = () => {
     anno: "",
     targa: "",
     tipoVeicolo: "MOTO",
-    categoria: "",
+    categoria: "Sportiva",
     cilindrata: "",
     potenza: "",
     consumoCarburante: "",
     posti: "",
     tariffaGiornaliera: "",
-    disponibilita: "",
+    disponibilita: "DISPONIBILE",
     chilometraggio: "",
-    posizione: "",
-    documentiAssicurativi: "",
-    revisione: "",
-    immagini: "",
+    posizione: "Milano",
+    viaSede: "Via Milano N.106 Cap 20019",
+    documentiAssicurativi: "url_documenti_assicurativi",
+    revisione: "url_revisione",
+    immagini: "url_immagine_moto",
     bauletto: true,
     parabrezza: true,
     abs: true,
@@ -33,8 +34,21 @@ const AggiungiMoto = () => {
   const capitalizeFirstLetterMarca = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
   }
+
+  const capitalizeFirstLetterModello = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+  }
+
   const capitalizeFirstLetterTarga = (string) => {
-    return string.charAt(0).toUpperCase() + string.charAt(1).toUpperCase() + string.slice(2).toLowerCase()
+    return (
+      string.charAt(0).toUpperCase() +
+      string.charAt(1).toUpperCase() +
+      string.charAt(2) +
+      string.charAt(3) +
+      string.charAt(4) +
+      string.charAt(5).toUpperCase() +
+      string.charAt(6).toUpperCase()
+    )
   }
 
   const handleChange = (e) => {
@@ -46,6 +60,8 @@ const AggiungiMoto = () => {
           ? checked
           : name === "marca"
           ? capitalizeFirstLetterMarca(value)
+          : name === "modello"
+          ? capitalizeFirstLetterModello(value)
           : name === "targa"
           ? capitalizeFirstLetterTarga(value)
           : value,
@@ -59,23 +75,16 @@ const AggiungiMoto = () => {
     setSuccess("")
 
     try {
-      const response = await fetchWithToken("/veicoli/salva", {
+      const response = await fetchWithTokenAggiungiVeicoloAuto("/veicoli/salva", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       })
-
-      const responseText = await response.text()
-
-      if (response.ok) {
-        setSuccess("Moto aggiunta con successo!")
-      } else {
-        setError(responseText)
-      }
+      setSuccess("Moto aggiunta con successo!")
     } catch (error) {
-      setError("Errore nell'aggiunta della moto.")
+      setError("Errore nell'aggiunta Della Moto.")
     } finally {
       setLoading(false)
     }
@@ -86,7 +95,7 @@ const AggiungiMoto = () => {
       <h1 className="text-center mb-4">Aggiungi Moto</h1>
       <Form onSubmit={handleSubmit}>
         <Row>
-          <Col md={4}>
+          <Col md={3}>
             <Form.Group controlId="disponibilita" className="mt-3">
               <Form.Label>Disponibilità</Form.Label>
               <Form.Control as="select" name="disponibilita" value={formData.disponibilita} onChange={handleChange}>
@@ -96,7 +105,7 @@ const AggiungiMoto = () => {
               </Form.Control>
             </Form.Group>
           </Col>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="marca" className="mt-3">
               <Form.Label>Marca</Form.Label>
               <Form.Control
@@ -108,7 +117,7 @@ const AggiungiMoto = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="modello" className="mt-3">
               <Form.Label>Modello</Form.Label>
               <Form.Control
@@ -120,9 +129,7 @@ const AggiungiMoto = () => {
               />
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="anno" className="mt-3">
               <Form.Label>Anno</Form.Label>
               <Form.Control
@@ -134,7 +141,7 @@ const AggiungiMoto = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="targa" className="mt-3">
               <Form.Label>Targa</Form.Label>
               <Form.Control
@@ -146,9 +153,7 @@ const AggiungiMoto = () => {
               />
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="categoria" className="mt-3">
               <Form.Label>Categoria</Form.Label>
               <Form.Control as="select" name="categoria" value={formData.categoria} onChange={handleChange}>
@@ -166,7 +171,7 @@ const AggiungiMoto = () => {
               </Form.Control>
             </Form.Group>
           </Col>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="cilindrata" className="mt-3">
               <Form.Label>Cilindrata</Form.Label>
               <Form.Control
@@ -178,9 +183,7 @@ const AggiungiMoto = () => {
               />
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="potenza" className="mt-3">
               <Form.Label>Potenza</Form.Label>
               <Form.Control
@@ -192,7 +195,7 @@ const AggiungiMoto = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="consumoCarburante" className="mt-3">
               <Form.Label>Consumo Carburante</Form.Label>
               <Form.Control
@@ -204,9 +207,7 @@ const AggiungiMoto = () => {
               />
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="posti" className="mt-3">
               <Form.Label>Posti</Form.Label>
               <Form.Control
@@ -218,7 +219,7 @@ const AggiungiMoto = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="tariffaGiornaliera" className="mt-3">
               <Form.Label>Tariffa Giornaliera</Form.Label>
               <Form.Control
@@ -230,9 +231,7 @@ const AggiungiMoto = () => {
               />
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="chilometraggio" className="mt-3">
               <Form.Label>Chilometraggio</Form.Label>
               <Form.Control
@@ -244,7 +243,7 @@ const AggiungiMoto = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="posizione" className="mt-3">
               <Form.Label>Posizione</Form.Label>
               <Form.Control as="select" name="posizione" value={formData.posizione} onChange={handleChange}>
@@ -257,9 +256,20 @@ const AggiungiMoto = () => {
               </Form.Control>
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
+          <Col md={3}>
+            <Form.Group controlId="viaSede" className="mt-3">
+              <Form.Label>Via Sede Ritiro</Form.Label>
+              <Form.Control as="select" name="viaSede" value={formData.viaSede} onChange={handleChange}>
+                <option value="Via Milano N.106 Cap 20019">Via Milano</option>
+                <option value="Via Roma N.15 Cap 00128">Via Roma</option>
+                <option value="Via Napoli N.36 Cap 80013">Via Napoli</option>
+                <option value="Via Messina N.21 Cap 98121">Via Messina</option>
+                <option value="Via Catania N.8 Cap 95100">Via Catania</option>
+                <option value="Via Palermo N.1 Cap 90121">Via Palermo</option>
+              </Form.Control>
+            </Form.Group>
+          </Col>
+          <Col md={3}>
             <Form.Group controlId="documentiAssicurativi" className="mt-3">
               <Form.Label>Documenti Assicurativi</Form.Label>
               <Form.Control
@@ -271,7 +281,7 @@ const AggiungiMoto = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="revisione" className="mt-3">
               <Form.Label>Revisione</Form.Label>
               <Form.Control
@@ -283,9 +293,7 @@ const AggiungiMoto = () => {
               />
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
+          <Col md={12}>
             <Form.Group controlId="immagini" className="mt-3">
               <Form.Label>Immagini</Form.Label>
               <Form.Control
@@ -296,15 +304,13 @@ const AggiungiMoto = () => {
                 onChange={handleChange}
               />
             </Form.Group>
-          </Col>
-          <Row>
             {[
               { label: "Bauletto", name: "bauletto" },
               { label: "Parabrezza", name: "parabrezza" },
               { label: "ABS", name: "abs" },
               { label: "Controllo Trattamento", name: "controlloTrattamento" },
             ].map((field, index) => (
-              <Col md={12} key={index}>
+              <Col md={3} key={index}>
                 <Form.Group controlId={field.name} className="mt-3">
                   <Form.Check
                     type="checkbox"
@@ -316,7 +322,7 @@ const AggiungiMoto = () => {
                 </Form.Group>
               </Col>
             ))}
-          </Row>
+          </Col>
         </Row>
         <Button variant="primary" type="submit" className="mt-3 mb-3" disabled={loading}>
           Aggiungi
