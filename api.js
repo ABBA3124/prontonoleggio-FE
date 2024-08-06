@@ -96,6 +96,27 @@ export const fetchWithToken = async (endpoint, options = {}) => {
   return response.json()
 }
 
+export const fetchWithTokenAggiungiVeicoloAuto = async (endpoint, options = {}) => {
+  const token = localStorage.getItem("token")
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+    ...options.headers,
+  }
+
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    ...options,
+    headers,
+  })
+
+  if (!response.ok) {
+    const errorText = await response.text() // Prendi il testo della risposta dell'errore
+    throw new Error(errorText) // Lancia un errore con il testo dell'errore
+  }
+
+  return response.json() // Restituisci il json della risposta se ok
+}
+
 // Funzione per effettuare una richiesta con token di autenticazione e gestire risposte di testo
 export const fetchWithTokenAndTextResponse = async (endpoint, options = {}) => {
   const token = localStorage.getItem("token")
