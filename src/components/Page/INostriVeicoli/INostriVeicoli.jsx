@@ -112,7 +112,7 @@ const Veicoli = () => {
     const params = new URLSearchParams()
     if (pickupDate) params.append("dataInizio", pickupDate)
     if (dropoffDate) params.append("dataFine", dropoffDate)
-    if (location) params.append("posizione", location)
+    if (location) params.append("posizioneVeicolo", location)
     if (carType) params.append("tipoVeicolo", carType)
     if (carCategory) params.append("categoria", carCategory)
     if (minPrezzo) params.append("minPrezzo", minPrezzo)
