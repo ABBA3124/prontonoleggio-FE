@@ -7,36 +7,42 @@ const ModificaAuto = () => {
   const { id } = useParams()
   const [vehicleId, setVehicleId] = useState(id || "")
   const [formData, setFormData] = useState({
+    tipoVeicolo: "AUTO",
+    disponibilita: "",
+    nomeSede: "",
+    cittaSede: "",
+    viaSede: "",
+    provinciaSede: "",
+    telefonoSede: "",
+    emailSede: "info@ProntoNoleggio.com",
+    orariSede: "9:00-20:00",
+    targa: "",
+    immagini: "",
     marca: "",
     modello: "",
     anno: "",
-    targa: "",
-    tipoVeicolo: "AUTO",
     categoria: "",
+    alimentazione: "",
+    cambio: "",
+    trazione: "",
     cilindrata: "",
-    potenza: "",
+    potenzaKw: "",
     consumoCarburante: "",
     posti: "",
     tariffaGiornaliera: "",
-    disponibilita: "",
     chilometraggio: "",
-    posizione: "",
     documentiAssicurativi: "",
     revisione: "",
-    immagini: "",
-    motorizzazione: "",
-    trasmissione: "",
-    trazione: "",
+    abs: "",
     porte: "",
     capacitaBagagliaio: "",
     airbag: "",
-    abs: true,
-    controlloStabilita: true,
-    ariaCondizionata: true,
-    sistemaNavigazione: true,
+    controlloStabilita: "",
+    ariaCondizionata: "",
+    sistemaNavigazione: "",
     sistemaAudio: "",
-    bluetooth: true,
-    sediliRiscaldati: false,
+    bluetooth: "",
+    sediliRiscaldati: "",
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -45,8 +51,21 @@ const ModificaAuto = () => {
   const capitalizeFirstLetterMarca = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
   }
+
+  const capitalizeFirstLetterModello = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+  }
+
   const capitalizeFirstLetterTarga = (string) => {
-    return string.charAt(0).toUpperCase() + string.charAt(1).toUpperCase() + string.slice(2).toLowerCase()
+    return (
+      string.charAt(0).toUpperCase() +
+      string.charAt(1).toUpperCase() +
+      string.charAt(2) +
+      string.charAt(3) +
+      string.charAt(4) +
+      string.charAt(5).toUpperCase() +
+      string.charAt(6).toUpperCase()
+    )
   }
 
   const handleChange = (e) => {
@@ -58,6 +77,8 @@ const ModificaAuto = () => {
           ? checked
           : name === "marca"
           ? capitalizeFirstLetterMarca(value)
+          : name === "modello"
+          ? capitalizeFirstLetterModello(value)
           : name === "targa"
           ? capitalizeFirstLetterTarga(value)
           : value,
@@ -125,7 +146,77 @@ const ModificaAuto = () => {
             Cerca
           </Button>
         </Form.Group>
+
         <Row>
+          {/* <---------- Sede Veicolo ----------> */}
+          <h1 className="">Dati Sede</h1>
+          <Col md={2}>
+            <Form.Group controlId="nomeSede" className="mt-3">
+              <Form.Label>Nome Sede</Form.Label>
+              <Form.Control as="select" name="nomeSede" value={formData.nomeSede} onChange={handleChange}>
+                <option value="P.N. Milano">P.N. Milano</option>
+                <option value="P.N. Roma">P.N. Roma</option>
+                <option value="P.N. Napoli">P.N. Napoli</option>
+                <option value="P.N. Messina">P.N. Messina</option>
+                <option value="P.N. Catania">P.N. Catania</option>
+                <option value="P.N. Palermo">P.N. Palermo</option>
+              </Form.Control>
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Form.Group controlId="cittaSede" className="mt-3">
+              <Form.Label>Posizione Sede </Form.Label>
+              <Form.Control as="select" name="cittaSede" value={formData.cittaSede} onChange={handleChange}>
+                <option value="Milano">Milano</option>
+                <option value="Roma">Roma</option>
+                <option value="Napoli">Napoli</option>
+                <option value="Messina">Messina</option>
+                <option value="Catania">Catania</option>
+                <option value="Palermo">Palermo</option>
+              </Form.Control>
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Form.Group controlId="viaSede" className="mt-3">
+              <Form.Label>Via Sede</Form.Label>
+              <Form.Control as="select" name="viaSede" value={formData.viaSede} onChange={handleChange}>
+                <option value="Via Milano N.106 Cap 20019">Via Milano</option>
+                <option value="Via Roma N.15 Cap 00128">Via Roma</option>
+                <option value="Via Napoli N.36 Cap 80013">Via Napoli</option>
+                <option value="Via Messina N.21 Cap 98121">Via Messina</option>
+                <option value="Via Catania N.8 Cap 95100">Via Catania</option>
+                <option value="Via Palermo N.1 Cap 90121">Via Palermo</option>
+              </Form.Control>
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Form.Group controlId="provinciaSede" className="mt-3">
+              <Form.Label>Provincia Sede</Form.Label>
+              <Form.Control as="select" name="provinciaSede" value={formData.provinciaSede} onChange={handleChange}>
+                <option value="MI">MI</option>
+                <option value="RO">RO</option>
+                <option value="NA">NA</option>
+                <option value="ME">ME</option>
+                <option value="CA">CA</option>
+                <option value="PA">PA</option>
+              </Form.Control>
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Form.Group controlId="telefonoSede" className="mt-3">
+              <Form.Label>Telefono Sede</Form.Label>
+              <Form.Control as="select" name="telefonoSede" value={formData.telefonoSede} onChange={handleChange}>
+                <option value="+39 3488637581">MI</option>
+                <option value="+39 3488637582">RO</option>
+                <option value="+39 3488637583">NA</option>
+                <option value="+39 3488637584">ME</option>
+                <option value="+39 3488637585">CA</option>
+                <option value="+39 3488637586">PA</option>
+              </Form.Control>
+            </Form.Group>
+          </Col>
+          {/* <---------- Dati Veicolo ----------> */}
+          <h1 className="mt-2">Dati Veicolo</h1>
           <Col md={4}>
             <Form.Group controlId="disponibilita" className="mt-3">
               <Form.Label>Disponibilità</Form.Label>
@@ -137,44 +228,6 @@ const ModificaAuto = () => {
             </Form.Group>
           </Col>
           <Col md={4}>
-            <Form.Group controlId="marca" className="mt-3">
-              <Form.Label>Marca</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Inserisci marca"
-                name="marca"
-                value={formData.marca}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={4}>
-            <Form.Group controlId="modello" className="mt-3">
-              <Form.Label>Modello</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Inserisci modello"
-                name="modello"
-                value={formData.modello}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="anno" className="mt-3">
-              <Form.Label>Anno</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Inserisci anno"
-                name="anno"
-                value={formData.anno}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
             <Form.Group controlId="targa" className="mt-3">
               <Form.Label>Targa</Form.Label>
               <Form.Control
@@ -186,144 +239,7 @@ const ModificaAuto = () => {
               />
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="categoria" className="mt-3">
-              <Form.Label>Categoria</Form.Label>
-              <Form.Control as="select" name="categoria" value={formData.categoria} onChange={handleChange}>
-                <option value="Utilitaria">Utilitaria</option>
-                <option value="Berlina">Berlina</option>
-                <option value="Station Wagon">Station Wagon</option>
-                <option value="Monovolume">Monovolume</option>
-                <option value="SUV">SUV</option>
-                <option value="Coupé">Coupé</option>
-                <option value="Cabrio">Cabrio</option>
-                <option value="Sportiva">Sportiva</option>
-                <option value="Fuoristrada">Fuoristrada</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="cilindrata" className="mt-3">
-              <Form.Label>Cilindrata</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Inserisci cilindrata"
-                name="cilindrata"
-                value={formData.cilindrata}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="potenza" className="mt-3">
-              <Form.Label>Potenza</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Inserisci potenza"
-                name="potenza"
-                value={formData.potenza}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="consumoCarburante" className="mt-3">
-              <Form.Label>Consumo Carburante</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Inserisci consumo carburante"
-                name="consumoCarburante"
-                value={formData.consumoCarburante}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="posti" className="mt-3">
-              <Form.Label>Posti</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Inserisci numero di posti"
-                name="posti"
-                value={formData.posti}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="tariffaGiornaliera" className="mt-3">
-              <Form.Label>Tariffa Giornaliera</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Inserisci tariffa giornaliera"
-                name="tariffaGiornaliera"
-                value={formData.tariffaGiornaliera}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="chilometraggio" className="mt-3">
-              <Form.Label>Chilometraggio</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Inserisci chilometraggio"
-                name="chilometraggio"
-                value={formData.chilometraggio}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="posizione" className="mt-3">
-              <Form.Label>Posizione</Form.Label>
-              <Form.Control as="select" name="posizione" value={formData.posizione} onChange={handleChange}>
-                <option value="Milano">Milano</option>
-                <option value="Roma">Roma</option>
-                <option value="Napoli">Napoli</option>
-                <option value="Messina">Messina</option>
-                <option value="Catania">Catania</option>
-                <option value="Palermo">Palermo</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="documentiAssicurativi" className="mt-3">
-              <Form.Label>Documenti Assicurativi</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Inserisci documenti assicurativi"
-                name="documentiAssicurativi"
-                value={formData.documentiAssicurativi}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="revisione" className="mt-3">
-              <Form.Label>Revisione</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Inserisci revisione"
-                name="revisione"
-                value={formData.revisione}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
+          <Col md={4}>
             <Form.Group controlId="immagini" className="mt-3">
               <Form.Label>Immagini</Form.Label>
               <Form.Control
@@ -335,42 +251,188 @@ const ModificaAuto = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={6}>
-            <Form.Group controlId="motorizzazione" className="mt-3">
-              <Form.Label>Motorizzazione</Form.Label>
+          <Col md={2}>
+            <Form.Group controlId="marca" className="mt-3">
+              <Form.Label>Marca</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Inserisci motorizzazione"
-                name="motorizzazione"
-                value={formData.motorizzazione}
+                placeholder="Inserisci marca"
+                name="marca"
+                value={formData.marca}
                 onChange={handleChange}
               />
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="trasmissione" className="mt-3">
-              <Form.Label>Trasmissione</Form.Label>
-              <Form.Control as="select" name="trasmissione" value={formData.trasmissione} onChange={handleChange}>
-                <option value="Automatico">Automatico</option>
-                <option value="Manuale">Manuale</option>
+          <Col md={2}>
+            <Form.Group controlId="modello" className="mt-3">
+              <Form.Label>Modello</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Inserisci modello"
+                name="modello"
+                value={formData.modello}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Form.Group controlId="anno" className="mt-3">
+              <Form.Label>Anno</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Inserisci anno"
+                name="anno"
+                value={formData.anno}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Form.Group controlId="categoria" className="mt-3">
+              <Form.Label>Categoria</Form.Label>
+              <Form.Control as="select" name="categoria" value={formData.categoria} onChange={handleChange}>
+                <option value="Utilitaria">Utilitaria</option>
+                <option value="Berlina">Berlina</option>
+                <option value="Station Wagon">Station Wagon</option>
+                <option value="Monovolume">Monovolume</option>
+                <option value="Suv">Suv</option>
+                <option value="Coupé">Coupé</option>
+                <option value="Cabrio">Cabrio</option>
+                <option value="Sportiva">Sportiva</option>
+                <option value="Fuoristrada">Fuoristrada</option>
               </Form.Control>
             </Form.Group>
           </Col>
-          <Col md={6}>
+          <Col md={2}>
+            <Form.Group controlId="alimentazione" className="mt-3">
+              <Form.Label>Alimentazione</Form.Label>
+              <Form.Control as="select" name="alimentazione" value={formData.alimentazione} onChange={handleChange}>
+                <option value="Benzina">Benzina</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Ibrida">Ibrida</option>
+                <option value="Elettrica">Elettrica</option>
+              </Form.Control>
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Form.Group controlId="cambio" className="mt-3">
+              <Form.Label>Cambio</Form.Label>
+              <Form.Control as="select" name="cambio" value={formData.cambio} onChange={handleChange}>
+                <option value="Automatico">Automatico</option>
+                <option value="Manuale">Manuale</option>
+                <option value="Manuale">Sequenziale</option>
+              </Form.Control>
+            </Form.Group>
+          </Col>
+          <Col md={2}>
             <Form.Group controlId="trazione" className="mt-3">
               <Form.Label>Trazione</Form.Label>
               <Form.Control as="select" name="trazione" value={formData.trazione} onChange={handleChange}>
                 <option value="Anteriore">Anteriore</option>
                 <option value="Posteriore">Posteriore</option>
                 <option value="4x4">4x4</option>
+                <option value="Q2">Q2</option>
+                <option value="Q4">Q4</option>
               </Form.Control>
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
+          <Col md={2}>
+            <Form.Group controlId="cilindrata" className="mt-3">
+              <Form.Label>Cilindrata</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Inserisci cilindrata"
+                name="cilindrata"
+                value={formData.cilindrata}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Form.Group controlId="potenzaKw" className="mt-3">
+              <Form.Label>KW</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Inserisci potenza Kw"
+                name="potenzaKw"
+                value={formData.potenzaKw}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Form.Group controlId="consumoCarburante" className="mt-3">
+              <Form.Label>Consumo Carburante</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Inserisci consumo carburante"
+                name="consumoCarburante"
+                value={formData.consumoCarburante}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Form.Group controlId="posti" className="mt-3">
+              <Form.Label>Posti</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Inserisci numero di posti"
+                name="posti"
+                value={formData.posti}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Form.Group controlId="tariffaGiornaliera" className="mt-3">
+              <Form.Label>Tariffa Giornaliera</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Inserisci tariffa giornaliera"
+                name="tariffaGiornaliera"
+                value={formData.tariffaGiornaliera}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Form.Group controlId="chilometraggio" className="mt-3">
+              <Form.Label>Chilometraggio</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Inserisci chilometraggio"
+                name="chilometraggio"
+                value={formData.chilometraggio}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Form.Group controlId="documentiAssicurativi" className="mt-3">
+              <Form.Label>Documenti Assicurativi</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Inserisci documenti assicurativi"
+                name="documentiAssicurativi"
+                value={formData.documentiAssicurativi}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Form.Group controlId="revisione" className="mt-3">
+              <Form.Label>Revisione</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Inserisci revisione"
+                name="revisione"
+                value={formData.revisione}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={3}>
             <Form.Group controlId="porte" className="mt-3">
               <Form.Label>Porte</Form.Label>
               <Form.Control type="number" as="select" name="porte" value={formData.porte} onChange={handleChange}>
@@ -381,7 +443,7 @@ const ModificaAuto = () => {
               </Form.Control>
             </Form.Group>
           </Col>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="capacitaBagagliaio" className="mt-3">
               <Form.Label>Capacità Bagagliaio</Form.Label>
               <Form.Control
@@ -393,9 +455,7 @@ const ModificaAuto = () => {
               />
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="airbag" className="mt-3">
               <Form.Label>Airbag</Form.Label>
               <Form.Control
@@ -407,16 +467,14 @@ const ModificaAuto = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={6}>
+          <Col md={3}>
             <Form.Group controlId="sistemaAudio" className="mt-3">
               <Form.Label>Sistema Audio</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Inserisci sistema audio"
-                name="sistemaAudio"
-                value={formData.sistemaAudio}
-                onChange={handleChange}
-              />
+              <Form.Control as="select" name="sistemaAudio" value={formData.sistemaAudio} onChange={handleChange}>
+                <option value="Base">Base</option>
+                <option value="Premium">Premium</option>
+                <option value="Bose">Bose</option>
+              </Form.Control>
             </Form.Group>
           </Col>
         </Row>
