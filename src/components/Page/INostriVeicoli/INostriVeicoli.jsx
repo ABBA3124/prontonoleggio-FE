@@ -387,7 +387,7 @@ const Veicoli = () => {
                       <LocationOnIcon sx={{ mr: 0.5, color: "primary.main" }} />
                       <strong>Località di ritiro: </strong>
                       <span style={{ marginLeft: "4px" }}>
-                        {veicolo.posizione}, {veicolo.viaSede}
+                        {veicolo.nomeSede},{veicolo.viaSede}
                       </span>
                     </Typography>
                     <Typography

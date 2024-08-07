@@ -266,8 +266,8 @@ const AggiungiMoto = () => {
               <Form.Control as="select" name="alimentazione" value={formData.alimentazione} onChange={handleChange}>
                 <option value="Benzina">Benzina</option>
                 <option value="Diesel">Diesel</option>
-                <option value="Ibrida">Ibrida</option>
-                <option value="Elettrica">Elettrica</option>
+                <option value="Ibrido">Ibrido</option>
+                <option value="Elettrico">Elettrico</option>
               </Form.Control>
             </Form.Group>
           </Col>
