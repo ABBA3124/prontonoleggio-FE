@@ -1,13 +1,26 @@
-import Container from "react-bootstrap/Container"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
-import Nav from "react-bootstrap/Nav"
-import Form from "react-bootstrap/Form"
-import Button from "react-bootstrap/Button"
+import React, { useState } from "react"
+import { Row, Col, Nav, Form, Button, Container } from "react-bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css"
 import LogoProntoNoleggio from "../NavBar/img/ProntoNoleggioWhite.svg"
+import { useNavigate } from "react-router-dom"
+import { Alert } from "@mui/material"
 
 const Footer = () => {
+  const [email, setEmail] = useState("")
+  const [showAlert, setShowAlert] = useState(false)
+  const navigate = useNavigate()
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setShowAlert(true)
+    setTimeout(() => {
+      setShowAlert(false)
+      setEmail("")
+      window.scrollTo(0, 0)
+      navigate("/")
+    }, 2000)
+  }
+
   return (
     <footer className="footer bg-dark text-white py-4">
       <Container>
@@ -43,16 +56,27 @@ const Footer = () => {
             </Nav>
           </Col>
           <Col md={4}>
-            <h5>Contattaci</h5>
-            <Form>
+            <h5>Iscriviti alla Newsletter</h5>
+            <Form onSubmit={handleSubmit}>
               <Form.Group controlId="formBasicEmail">
                 <Form.Label>Indirizzo Email</Form.Label>
-                <Form.Control type="email" placeholder="Inserisci la tua email" className="mb-2" />
+                <Form.Control
+                  type="email"
+                  placeholder="Inserisci la tua email"
+                  className="mb-2"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </Form.Group>
               <Button variant="primary" type="submit">
                 Iscriviti
               </Button>
             </Form>
+            {showAlert && (
+              <Alert severity="success" className="mt-2">
+                Iscrizione avvenuta con successo per l'indirizzo {email}
+              </Alert>
+            )}
           </Col>
         </Row>
         <Row className="mt-3">
