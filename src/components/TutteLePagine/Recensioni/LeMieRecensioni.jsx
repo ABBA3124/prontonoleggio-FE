@@ -28,32 +28,28 @@ const theme = createTheme({
 })
 
 const RecensioneUtente = () => {
-  const [recensione, setRecensione] = useState(null)
+  const [recensioni, setRecensioni] = useState("")
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [editing, setEditing] = useState(false)
-  const [creating, setCreating] = useState(false)
   const [rating, setRating] = useState(0)
   const [titolo, setTitolo] = useState("")
   const [commento, setCommento] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
   const [utenteId, setUtenteId] = useState("")
+  const [prenotazioneId, setPrenotazioneId] = useState("")
 
   useEffect(() => {
-    fetchRecensione()
+    fetchRecensioni()
   }, [])
 
-  const fetchRecensione = async () => {
+  const fetchRecensioni = async () => {
     try {
       const data = await fetchWithToken("/recensioni/me")
       if (data.length > 0) {
-        setRecensione(data[0])
-        setRating(data[0].rating)
-        setTitolo(data[0].titolo)
-        setCommento(data[0].commento)
-        setUtenteId(data[0].utente.id)
+        setRecensioni(data)
       } else {
-        setRecensione(null)
+        setRecensioni("")
       }
     } catch (error) {
       console.error("Fetch error:", error.message)
@@ -63,57 +59,37 @@ const RecensioneUtente = () => {
     }
   }
 
-  const handleEdit = () => {
-    setEditing(true)
-  }
-
-  const handleCancelEdit = () => {
-    setEditing(false)
+  const handleEdit = (recensione) => {
+    setEditing(recensione.id)
+    setUtenteId(recensione.utente.id)
+    setPrenotazioneId(recensione.prenotazione.id)
     setRating(recensione.rating)
     setTitolo(recensione.titolo)
     setCommento(recensione.commento)
   }
 
-  const handleSaveEdit = async () => {
-    try {
-      const updatedReview = await fetchPut(`/recensioni/update/${recensione.id}`, {
-        rating,
-        titolo,
-        commento,
-      })
-      setRecensione(updatedReview)
-      setEditing(false)
-      setSuccessMessage("Recensione aggiornata con successo!")
-    } catch (error) {
-      console.error("Update error:", error.message)
-      setError(error.message)
-    }
-  }
-
-  const handleCreate = () => {
-    setCreating(true)
-  }
-
-  const handleCancelCreate = () => {
-    setCreating(false)
+  const handleCancelEdit = () => {
+    setEditing(false)
     setRating(0)
     setTitolo("")
     setCommento("")
   }
 
-  const handleSaveCreate = async () => {
+  const handleSaveEdit = async () => {
     try {
-      const newReview = await fetchPost(`/recensioni/create`, {
+      const updatedReview = await fetchPut(`/recensioni/update/${editing}`, {
         utenteId,
+        prenotazioneId,
         rating,
         titolo,
         commento,
       })
-      setRecensione(newReview)
-      setCreating(false)
-      setSuccessMessage("Recensione creata con successo!")
+      const updatedRecensioni = recensioni.map((recensione) => (recensione.id === editing ? updatedReview : recensione))
+      setRecensioni(updatedRecensioni)
+      setEditing(false)
+      setSuccessMessage("Recensione aggiornata con successo!")
     } catch (error) {
-      console.error("Create error:", error.message)
+      console.error("Update error:", error.message)
       setError(error.message)
     }
   }
@@ -139,54 +115,10 @@ const RecensioneUtente = () => {
           </Box>
         ) : error ? (
           <Alert severity="error">{error}</Alert>
-        ) : !recensione ? (
-          <>
-            <Typography variant="h6" align="center" className="mt-5">
-              Nessuna recensione trovata.
-            </Typography>
-            <Typography variant="h6" align="center" className="mt-3">
-              <Button variant="contained" color="primary" onClick={handleCreate}>
-                Scrivi una recensione
-              </Button>
-            </Typography>
-            {creating && (
-              <Box mt={4}>
-                <TextField
-                  fullWidth
-                  label="Titolo"
-                  value={titolo}
-                  onChange={(e) => setTitolo(e.target.value)}
-                  sx={{ mb: 2 }}
-                />
-                <TextField
-                  fullWidth
-                  label="Commento"
-                  value={commento}
-                  onChange={(e) => setCommento(e.target.value)}
-                  sx={{ mb: 2 }}
-                />
-                <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                  {[1, 2, 3, 4, 5].map((value) => (
-                    <IconButton key={value} onClick={() => setRating(value)}>
-                      {value <= rating ? (
-                        <StarIcon sx={{ color: "gold", mr: 0.5 }} />
-                      ) : (
-                        <StarBorderIcon sx={{ color: "gold", mr: 0.5 }} />
-                      )}
-                    </IconButton>
-                  ))}
-                </Box>
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Button variant="contained" color="primary" onClick={handleSaveCreate}>
-                    Salva
-                  </Button>
-                  <Button variant="outlined" color="secondary" onClick={handleCancelCreate}>
-                    Annulla
-                  </Button>
-                </Box>
-              </Box>
-            )}
-          </>
+        ) : recensioni.length === 0 ? (
+          <Typography variant="h6" align="center" className="mt-5">
+            Non hai creato nessuna recensione.
+          </Typography>
         ) : (
           <>
             <Box sx={{ textAlign: "center", mb: 4 }} className="mt-4">
@@ -204,7 +136,7 @@ const RecensioneUtente = () => {
                 }}
               >
                 <RateReviewIcon fontSize="large" sx={{ color: "primary.main" }} />
-                Recensione Utente
+                Recensioni Utente
               </Typography>
             </Box>
             <Snackbar
@@ -223,80 +155,106 @@ const RecensioneUtente = () => {
                 {successMessage}
               </MuiAlert>
             </Snackbar>
-            <Card sx={{ borderRadius: 2, boxShadow: 3, "&:hover": { boxShadow: 6 }, overflow: "hidden" }}>
-              <CardContent sx={{ backgroundColor: "#f9f9f9" }}>
-                <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                  <Avatar
-                    src={recensione.utente.avatar}
-                    alt={`${recensione.utente.nome} ${recensione.utente.cognome}`}
-                    sx={{ mr: 2 }}
-                  />
-                  <Box sx={{ flexGrow: 1 }}>
-                    <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-                      {recensione.utente.nome} {recensione.utente.cognome}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      {new Date(recensione.dataCreazione).toLocaleDateString()}
-                    </Typography>
-                  </Box>
-                  <IconButton onClick={handleEdit} sx={{ ml: "auto" }}>
-                    <EditIcon />
-                  </IconButton>
-                </Box>
-                {editing ? (
-                  <Box>
-                    <TextField
-                      fullWidth
-                      label="Titolo"
-                      value={titolo}
-                      onChange={(e) => setTitolo(e.target.value)}
-                      sx={{ mb: 2 }}
+            {recensioni.map((recensione) => (
+              <Card
+                key={recensione.id}
+                sx={{ borderRadius: 2, boxShadow: 3, "&:hover": { boxShadow: 6 }, overflow: "hidden", mb: 3 }}
+              >
+                <CardContent sx={{ backgroundColor: "#f9f9f9" }}>
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                    <Avatar
+                      src={recensione.utente.avatar}
+                      alt={`${recensione.utente.nome} ${recensione.utente.cognome}`}
+                      sx={{ mr: 2 }}
                     />
-                    <TextField
-                      fullWidth
-                      label="Commento"
-                      value={commento}
-                      onChange={(e) => setCommento(e.target.value)}
-                      sx={{ mb: 2 }}
-                    />
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                      {[1, 2, 3, 4, 5].map((value) => (
-                        <IconButton key={value} onClick={() => setRating(value)}>
-                          {value <= rating ? (
-                            <StarIcon sx={{ color: "gold", mr: 0.5 }} />
-                          ) : (
-                            <StarBorderIcon sx={{ color: "gold", mr: 0.5 }} />
-                          )}
-                        </IconButton>
-                      ))}
-                    </Box>
-                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                      <Button variant="contained" color="primary" onClick={handleSaveEdit}>
-                        Salva
-                      </Button>
-                      <Button variant="outlined" color="secondary" onClick={handleCancelEdit}>
-                        Annulla
-                      </Button>
-                    </Box>
-                  </Box>
-                ) : (
-                  <>
-                    <Typography variant="h5" component="div" sx={{ fontWeight: "bold", mb: 1 }}>
-                      {recensione.titolo}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-                      {recensione.commento}
-                    </Typography>
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                      {renderRating(recensione.rating)}
-                      <Typography variant="h6" sx={{ ml: 1 }}>
-                        {recensione.rating}/5
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                        {recensione.utente.nome} {recensione.utente.cognome}
                       </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        <strong>Pubblicata il: </strong>
+                        {new Date(recensione.dataCreazione).toLocaleDateString()}
+                      </Typography>
+                      {recensione.dataModifica !== null && (
+                        <Typography variant="body2" color="textSecondary">
+                          <strong>Ultima Modifica: </strong> {new Date(recensione.dataModifica).toLocaleDateString()}
+                        </Typography>
+                      )}
                     </Box>
-                  </>
-                )}
-              </CardContent>
-            </Card>
+                    <IconButton onClick={() => handleEdit(recensione)} sx={{ ml: "auto" }}>
+                      <EditIcon />
+                    </IconButton>
+                  </Box>
+                  {editing === recensione.id ? (
+                    <Box>
+                      <TextField
+                        fullWidth
+                        label="Titolo"
+                        value={titolo}
+                        onChange={(e) => setTitolo(e.target.value)}
+                        sx={{ mb: 2 }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Commento"
+                        value={commento}
+                        onChange={(e) => setCommento(e.target.value)}
+                        sx={{ mb: 2 }}
+                      />
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                        {[1, 2, 3, 4, 5].map((value) => (
+                          <IconButton key={value} onClick={() => setRating(value)}>
+                            {value <= rating ? (
+                              <StarIcon sx={{ color: "gold", mr: 0.5 }} />
+                            ) : (
+                              <StarBorderIcon sx={{ color: "gold", mr: 0.5 }} />
+                            )}
+                          </IconButton>
+                        ))}
+                      </Box>
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Button variant="contained" color="primary" onClick={handleSaveEdit}>
+                          Salva
+                        </Button>
+                        <Button variant="outlined" color="secondary" onClick={handleCancelEdit}>
+                          Annulla
+                        </Button>
+                      </Box>
+                    </Box>
+                  ) : (
+                    <>
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="body2" color="textSecondary">
+                          <strong>Data Inizio/Fine Noleggio</strong>{" "}
+                          {new Date(recensione.prenotazione.dataInizio).toLocaleDateString()}
+                          {" - "}
+                          {new Date(recensione.prenotazione.dataFine).toLocaleDateString()}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          <strong>Sede: </strong> {recensione.prenotazione.veicolo.nomeSede}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          <strong>Veicolo Noleggiato: </strong> {recensione.prenotazione.veicolo.marca}{" "}
+                          {recensione.prenotazione.veicolo.modello}
+                        </Typography>
+                      </Box>
+                      <Typography variant="h5" component="div" sx={{ fontWeight: "bold", mb: 1 }}>
+                        {recensione.titolo}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                        {recensione.commento}
+                      </Typography>
+                      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                        {renderRating(recensione.rating)}
+                        <Typography variant="h6" sx={{ ml: 1 }}>
+                          {recensione.rating}/5
+                        </Typography>
+                      </Box>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
           </>
         )}
       </Container>

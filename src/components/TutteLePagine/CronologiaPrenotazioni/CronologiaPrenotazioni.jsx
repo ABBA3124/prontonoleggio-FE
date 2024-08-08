@@ -17,14 +17,16 @@ import {
   Stack,
   IconButton,
 } from "@mui/material"
-import { format } from "date-fns"
-import { updatePrenotazione, deletePrenotazione, fetchMePrenotazioni } from "../../../../api"
+import { format, set } from "date-fns"
+import { updatePrenotazione, deletePrenotazione, fetchMePrenotazioni, fetchPost } from "../../../../api"
 import EditIcon from "@mui/icons-material/Edit"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EventIcon from "@mui/icons-material/Event"
 import EuroIcon from "@mui/icons-material/Euro"
 import LocationOnIcon from "@mui/icons-material/LocationOn"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import StarIcon from "@mui/icons-material/Star"
+import StarBorderIcon from "@mui/icons-material/StarBorder"
 
 const CronologiaPrenotazioni = () => {
   const [prenotazioni, setPrenotazioni] = useState([])
@@ -40,6 +42,13 @@ const CronologiaPrenotazioni = () => {
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
   const [totalElements, setTotalElements] = useState(0)
+  const [creating, setCreating] = useState(false)
+  const [rating, setRating] = useState(0)
+  const [titolo, setTitolo] = useState("")
+  const [commento, setCommento] = useState("")
+  const [recensione, setRecensione] = useState(null)
+  const [successMessage, setSuccessMessage] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
 
   useEffect(() => {
     const fetchPrenotazioni = async () => {
@@ -122,6 +131,51 @@ const CronologiaPrenotazioni = () => {
   const handlePageChange = (event, value) => {
     window.scrollTo(0, 0)
     setPage(value - 1)
+  }
+
+  const handleCreate = (prenotazione) => {
+    setSelectedPrenotazione(prenotazione)
+    setCreating(true)
+  }
+
+  const handleCancelCreate = () => {
+    setCreating(false)
+    setRating(0)
+    setTitolo("")
+    setCommento("")
+    setErrorMessage("")
+    setSuccessMessage("")
+  }
+
+  const handleSaveCreate = async () => {
+    try {
+      const newReview = await fetchPost(`/recensioni/crea`, {
+        utenteId: selectedPrenotazione.utente.id,
+        prenotazioneId: selectedPrenotazione.id,
+        rating,
+        titolo,
+        commento,
+      })
+      setRecensione(newReview)
+      setSuccessMessage("Recensione creata con successo!")
+      setTimeout(() => {
+        setSuccessMessage("")
+        setCreating(false)
+        setRating(0)
+        setTitolo("")
+        setCommento("")
+      }, 2500)
+    } catch (error) {
+      setSuccessMessage("")
+      setErrorMessage("Esiste già una recensione per questa prenotazione.")
+      setTimeout(() => {
+        setCreating(false)
+        setErrorMessage("")
+        setRating(0)
+        setTitolo("")
+        setCommento("")
+      }, 3000)
+    }
   }
 
   const calculateTotal = (prenotazione) => {
@@ -283,7 +337,7 @@ const CronologiaPrenotazioni = () => {
                         </Typography>
                       </Box>
                       <Typography variant="h6" align="center" className="mt-3">
-                        <Button variant="contained" color="primary" href="/recensioni/mie">
+                        <Button variant="contained" color="primary" onClick={() => handleCreate(prenotazione)}>
                           Scrivi una recensione
                         </Button>
                       </Typography>
@@ -356,6 +410,52 @@ const CronologiaPrenotazioni = () => {
           </Box>
         </Box>
       </Modal>
+      {creating && (
+        <Modal open={creating} onClose={handleCancelCreate}>
+          <Box sx={{ p: 4, backgroundColor: "white", borderRadius: 1, maxWidth: 400, mx: "auto", mt: 5 }}>
+            <Typography variant="h6" gutterBottom>
+              Scrivi una recensione
+            </Typography>
+            <Stack spacing={2}>
+              <TextField
+                fullWidth
+                label="Titolo"
+                value={titolo}
+                onChange={(e) => setTitolo(e.target.value)}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                fullWidth
+                label="Commento"
+                value={commento}
+                onChange={(e) => setCommento(e.target.value)}
+                sx={{ mb: 2 }}
+              />
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <IconButton key={value} onClick={() => setRating(value)}>
+                    {value <= rating ? (
+                      <StarIcon sx={{ color: "gold", mr: 0.5 }} />
+                    ) : (
+                      <StarBorderIcon sx={{ color: "gold", mr: 0.5 }} />
+                    )}
+                  </IconButton>
+                ))}
+              </Box>
+              {successMessage && <Alert severity="success">{successMessage}</Alert>}
+              {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+            </Stack>
+            <Box mt={2} display="flex" justifyContent="space-between">
+              <Button variant="contained" color="primary" onClick={handleSaveCreate}>
+                Salva
+              </Button>
+              <Button variant="outlined" color="secondary" onClick={handleCancelCreate}>
+                Annulla
+              </Button>
+            </Box>
+          </Box>
+        </Modal>
+      )}
     </Container>
   )
 }

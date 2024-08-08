@@ -111,9 +111,30 @@ const AllRecensioni = () => {
                         {recensione.utente.nome} {recensione.utente.cognome}
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
+                        <strong>Pubblicata il: </strong>
                         {new Date(recensione.dataCreazione).toLocaleDateString()}
                       </Typography>
+                      {recensione.dataModifica !== null && (
+                        <Typography variant="body2" color="textSecondary">
+                          <strong>Ultima Modifica: </strong> {new Date(recensione.dataModifica).toLocaleDateString()}
+                        </Typography>
+                      )}
                     </Box>
+                  </Box>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="body2" color="textSecondary">
+                      <strong>Data Inizio/Fine Noleggio</strong>{" "}
+                      {new Date(recensione.prenotazione.dataInizio).toLocaleDateString()}
+                      {" - "}
+                      {new Date(recensione.prenotazione.dataFine).toLocaleDateString()}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      <strong>Sede: </strong> {recensione.prenotazione.veicolo.nomeSede}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      <strong>Veicolo Noleggiato: </strong> {recensione.prenotazione.veicolo.marca}{" "}
+                      {recensione.prenotazione.veicolo.modello}
+                    </Typography>
                   </Box>
                   <Typography variant="h5" component="div" sx={{ fontWeight: "bold", mb: 1 }}>
                     {recensione.titolo}

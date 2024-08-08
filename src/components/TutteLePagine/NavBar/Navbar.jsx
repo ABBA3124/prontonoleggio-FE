@@ -318,8 +318,8 @@ const NavBar = () => {
                   <MenuItem onClick={handleClose} component="a" href="/me/prenotazioni">
                     Cronologia Prenotazioni
                   </MenuItem>
-                  <MenuItem onClick={handleClose} component="a" href="/recensioni/mie">
-                    La mia recensione
+                  <MenuItem onClick={handleClose} component="a" href="/recensioni/me">
+                    Le mie recensioni
                   </MenuItem>
                   <Divider />
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
