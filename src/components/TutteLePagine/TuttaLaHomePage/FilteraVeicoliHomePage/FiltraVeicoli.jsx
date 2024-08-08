@@ -168,9 +168,7 @@ const FiltraVeicoli = () => {
                   <MenuItem value="">Tutti</MenuItem>
                   <MenuItem value="Utilitaria">Utilitaria</MenuItem>
                   <MenuItem value="Sportiva">Sportiva</MenuItem>
-                  <MenuItem value="Suv">SUV</MenuItem>
                   <MenuItem value="Berlina">Berlina</MenuItem>
-                  <MenuItem value="Moto">Moto</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
