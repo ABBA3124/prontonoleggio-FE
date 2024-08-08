@@ -216,12 +216,12 @@ const TutteLePrenotazioni = () => {
                     onChange={handleChange}
                   >
                     <option value="">Tutte</option>
-                    <option value="Milano">Milano</option>
-                    <option value="Roma">Roma</option>
-                    <option value="Napoli">Napoli</option>
-                    <option value="Messina">Messina</option>
-                    <option value="Catania">Catania</option>
-                    <option value="Palermo">Palermo</option>
+                    <option value="P.N. Milano">Milano</option>
+                    <option value="P.N. Roma">Roma</option>
+                    <option value="P.N. Napoli">Napoli</option>
+                    <option value="P.N. Messina">Messina</option>
+                    <option value="P.N. Catania">Catania</option>
+                    <option value="P.N. Palermo">Palermo</option>
                   </Form.Control>
                 </Form.Group>
               </Col>
@@ -340,7 +340,7 @@ const TutteLePrenotazioni = () => {
                       <td>{prenotazione.veicolo.targa}</td>
                       <td>{prenotazione.veicolo.tipoVeicolo}</td>
                       <td>{prenotazione.veicolo.tariffaGiornaliera} €</td>
-                      <td>{prenotazione.veicolo.posizione}</td>
+                      <td>{prenotazione.veicolo.nomeSede}</td>
                       <td>{prenotazione.utente.id}</td>
                       <td>
                         {prenotazione.utente.nome} {prenotazione.utente.cognome}
