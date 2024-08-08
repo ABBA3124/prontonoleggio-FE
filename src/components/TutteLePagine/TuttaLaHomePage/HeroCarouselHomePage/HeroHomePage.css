@@ -3,13 +3,11 @@
   position: relative;
 }
 
-/* Stile per le immagini del carosello */
 .carousel-item img {
   height: 67vh;
   object-fit: cover;
 }
 
-/* Overlay scuro per l'immagine con id "prova" */
 #prova .overlay {
   content: "";
   position: absolute;
@@ -21,7 +19,6 @@
   z-index: 1;
 }
 
-/* Posiziona il testo al centro delle immagini del carosello */
 .carousel-caption {
   position: absolute;
   top: 50%;
@@ -29,8 +26,8 @@
   transform: translate(-135%, -50%);
   color: #ffffff;
   text-align: center;
-  z-index: 2; /* Assicura che il testo sia sopra l'overlay */
-  background-color: rgba(0, 0, 0, 0.5); /* Aggiungi uno sfondo semitrasparente per migliorare la leggibilità */
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.5);
   padding: 10px;
   border-radius: 10px;
 }

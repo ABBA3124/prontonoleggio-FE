@@ -5,6 +5,21 @@ import Hero1 from "../../../Immagini/imgHomePageCarousel/hero-1.jpg"
 import Hero2 from "../../../Immagini/imgHomePageCarousel/hero-2.jpg"
 import Hero4 from "../../../Immagini/imgHomePageCarousel/hero-4.jpg"
 import "./HeroHomePage.css"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
+
+const theme = createTheme({
+  typography: {
+    fontFamily: "Poppins, Arial",
+    h1: {
+      fontFamily: "Roboto, Arial",
+      fontWeight: "bold",
+    },
+    h6: {
+      fontFamily: "Roboto, Arial",
+      fontWeight: "normal",
+    },
+  },
+})
 
 const items = [
   {
@@ -26,44 +41,46 @@ const items = [
 
 const HeroHomePage = () => {
   return (
-    <div className="hero-image">
-      <Carousel
-        indicators={false}
-        navButtonsAlwaysVisible
-        autoPlay
-        animation="fade"
-        duration={700}
-        cycleNavigation
-        sx={{ height: "100%" }}
-      >
-        {items.map((item, index) => (
-          <Paper key={index} sx={{ position: "relative" }}>
-            <img className="d-block w-100" src={item.image} alt={`Slide ${index + 1}`} />
-            <Box
-              sx={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                background: "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-                textAlign: "center",
-              }}
-            >
-              <Typography variant="h6">{item.caption}</Typography>
-              <Typography variant="h1" sx={{ fontSize: { xs: "2rem", sm: "3rem", md: "4rem", lg: "5rem" } }}>
-                {item.title}
-              </Typography>
-            </Box>
-          </Paper>
-        ))}
-      </Carousel>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className="hero-image">
+        <Carousel
+          indicators={false}
+          navButtonsAlwaysVisible
+          autoPlay
+          animation="fade"
+          duration={700}
+          cycleNavigation
+          sx={{ height: "100%" }}
+        >
+          {items.map((item, index) => (
+            <Paper key={index} sx={{ position: "relative" }}>
+              <img className="d-block w-100" src={item.image} alt={`Slide ${index + 1}`} />
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  background: "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "white",
+                  textAlign: "center",
+                }}
+              >
+                <Typography variant="h6">{item.caption}</Typography>
+                <Typography variant="h1" sx={{ fontSize: { xs: "2rem", sm: "3rem", md: "4rem", lg: "5rem" } }}>
+                  {item.title}
+                </Typography>
+              </Box>
+            </Paper>
+          ))}
+        </Carousel>
+      </div>
+    </ThemeProvider>
   )
 }
 
