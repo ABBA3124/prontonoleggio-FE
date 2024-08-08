@@ -74,6 +74,7 @@ const Veicoli = () => {
       setPrenotazioneSuccesso("")
       setPrenotazioneErrore("")
       navigate("/me/prenotazioni")
+      window.scrollTo(0, 0)
     }, 3000)
   }
 
@@ -159,6 +160,7 @@ const Veicoli = () => {
 
   const handlePageChange = (newPage) => {
     setPage(newPage)
+    window.scrollTo(0, 0)
   }
 
   const handleReset = (e) => {
