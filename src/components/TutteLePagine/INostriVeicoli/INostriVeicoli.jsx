@@ -390,22 +390,19 @@ const Veicoli = () => {
                     </Typography>
 
                     <hr />
-                    <Typography
-                      variant="body2"
-                      sx={{ mb: 1, color: "text.secondary", display: "flex", alignItems: "center" }}
-                    >
+                    <Typography variant="body2" sx={{ mb: 1, color: "text.secondary" }}>
                       <LocationOnIcon sx={{ mr: 0.5, color: "primary.main" }} />
                       <strong>Località di ritiro: </strong>
+                      <br />
                       <span style={{ marginLeft: "4px" }}>
                         {veicolo.nomeSede},{veicolo.viaSede}
                       </span>
                     </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ mb: 1, color: "text.secondary", display: "flex", alignItems: "center" }}
-                    >
+                    <Typography variant="body2" sx={{ mb: 1, color: "text.secondary" }}>
                       <AttachMoneyIcon sx={{ mr: 0.5, color: "primary.main" }} />
-                      <strong>Tariffa giornaliera: </strong> {veicolo.tariffaGiornaliera} € /giorno
+                      <strong>Tariffa giornaliera: </strong>
+                      <br />
+                      {veicolo.tariffaGiornaliera} € /giorno
                     </Typography>
                   </CardContent>
                   <CardActions sx={{ justifyContent: "space-between", padding: 2 }}>
