@@ -31,16 +31,13 @@ const Footer = () => {
           <Col md={4}>
             <h5>Link Rapidi</h5>
             <Nav className="flex-column">
-              <Nav.Link href="#home" className="text-white">
+              <Nav.Link href="/" className="text-white">
                 Home
               </Nav.Link>
-              <Nav.Link href="#services" className="text-white">
-                Servizi
+              <Nav.Link href="/veicoli" className="text-white">
+                Trova Veicolo
               </Nav.Link>
-              <Nav.Link href="#about" className="text-white">
-                About Us
-              </Nav.Link>
-              <Nav.Link href="#contact" className="text-white">
+              <Nav.Link href="/contattaci" className="text-white">
                 Contattaci
               </Nav.Link>
             </Nav>

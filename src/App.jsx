@@ -25,6 +25,7 @@ import EliminaPrenotazione from "./components/ROLE/SuperAdmin/GestionePrenotazio
 import CronologiaPrenotazioni from "./components/Page/CronologiaPrenotazioni/CronologiaPrenotazioni"
 import TutteLePrenotazioni from "./components/ROLE/SuperAdmin/GestionePrenotazioni/TutteLePrenotazioni/TutteLePrenotazioni"
 import LeMieRecensioni from "./components/Page/Recensioni/LeMieRecensioni"
+import Contatti from "./components/Page/Contatti/Contatti"
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
         <Route path="/me/prenotazioni" element={<CronologiaPrenotazioni />} />
         <Route path="/superadmin/prenotazioni" element={<TutteLePrenotazioni />} />
         <Route path="/recensioni/mie" element={<LeMieRecensioni />} />
+        <Route path="/contattaci" element={<Contatti />} />
       </Routes>
       <Footer />
     </BrowserRouter>

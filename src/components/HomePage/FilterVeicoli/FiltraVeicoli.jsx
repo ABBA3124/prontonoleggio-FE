@@ -81,7 +81,7 @@ const FiltraVeicoli = () => {
           sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1 }}
         >
           <SearchIcon fontSize="large" />
-          Cerca Veicoli
+          Trova il veicolo perfetto per te
         </Typography>
         <form onSubmit={handleFilter}>
           <Grid container spacing={3}>
