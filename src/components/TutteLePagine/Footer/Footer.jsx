@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Row, Col, Nav, Form, Button, Container } from "react-bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css"
-import LogoProntoNoleggio from "../NavBar/img/ProntoNoleggioWhite.svg"
+import LogoProntoNoleggio from "../../Immagini/imgLogoPN/ProntoNoleggioWhite.svg"
 import { useNavigate } from "react-router-dom"
 import { Alert } from "@mui/material"
 

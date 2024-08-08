@@ -1,9 +1,9 @@
 import React from "react"
 import Carousel from "react-material-ui-carousel"
 import { Paper, Typography, Box } from "@mui/material"
-import Hero1 from "../Hero/img/hero-1.jpg"
-import Hero2 from "../Hero/img/hero-2.jpg"
-import Hero4 from "../Hero/img/hero-4.jpg"
+import Hero1 from "../../../Immagini/imgHomePageCarousel/hero-1.jpg"
+import Hero2 from "../../../Immagini/imgHomePageCarousel/hero-2.jpg"
+import Hero4 from "../../../Immagini/imgHomePageCarousel/hero-4.jpg"
 import "./HeroHomePage.css"
 
 const items = [

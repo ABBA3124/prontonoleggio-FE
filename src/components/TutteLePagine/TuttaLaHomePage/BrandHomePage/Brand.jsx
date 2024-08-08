@@ -3,12 +3,12 @@ import Slider from "react-slick"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 import "./Brand.css"
-import LogoBrand1 from "./img/01.png"
-import LogoBrand2 from "./img/02.png"
-import LogoBrand3 from "./img/03.png"
-import LogoBrand4 from "./img/04.png"
-import LogoBrand5 from "./img/05.png"
-import LogoBrand6 from "./img/06.png"
+import LogoBrand1 from "../../../Immagini/imgBrand/01.png"
+import LogoBrand2 from "../../../Immagini/imgBrand/02.png"
+import LogoBrand3 from "../../../Immagini/imgBrand/03.png"
+import LogoBrand4 from "../../../Immagini/imgBrand/04.png"
+import LogoBrand5 from "../../../Immagini/imgBrand/05.png"
+import LogoBrand6 from "../../../Immagini/imgBrand/06.png"
 
 const Brand = () => {
   const settings = {

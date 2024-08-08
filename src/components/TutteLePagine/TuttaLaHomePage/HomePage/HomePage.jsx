@@ -1,8 +1,8 @@
 import React from "react"
-import HeroHomePage from "../Hero/HeroHomePage"
-import FiltraVeicoli from "../FilterVeicoli/FiltraVeicoli"
-import Brand from "../Brand/Brand"
-import Recensioni from "../../Page/Recensioni/AllRecensioni"
+import HeroHomePage from "../HeroCarouselHomePage/HeroHomePage"
+import FiltraVeicoli from "../FilteraVeicoliHomePage/FiltraVeicoli"
+import Brand from "../BrandHomePage/Brand"
+import Recensioni from "../../Recensioni/AllRecensioni"
 
 const HomePage = () => {
   return (

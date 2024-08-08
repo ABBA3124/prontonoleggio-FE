@@ -1,3 +1,8 @@
+import LogoProntoNoleggio from "../../Immagini/imgLogoPN/ProntoNoleggioWhite.svg"
+import { fetchWithToken } from "../../../../api"
+import LoginModal from "../../Auth/LoginModal"
+import RegisterModal from "../../Auth//RegisterModal"
+
 import React, { useState, useEffect } from "react"
 import {
   AppBar,
@@ -16,10 +21,6 @@ import {
   Box,
 } from "@mui/material"
 import MenuIcon from "@mui/icons-material/Menu"
-import { fetchWithToken } from "../../../api"
-import RegisterModal from "../Auth/RegisterModal"
-import LoginModal from "../Auth/LoginModal"
-import LogoProntoNoleggio from "./img/ProntoNoleggioWhite.svg"
 
 const fetchUserData = async () => {
   try {
@@ -194,7 +195,6 @@ const NavBar = () => {
             >
               Home
             </Button>
-
             <Button
               color="inherit"
               href="/veicoli"
@@ -205,6 +205,17 @@ const NavBar = () => {
               }}
             >
               I Nostri Veicoli
+            </Button>
+            <Button
+              color="inherit"
+              href="/contattaci"
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                },
+              }}
+            >
+              Contattaci
             </Button>
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
