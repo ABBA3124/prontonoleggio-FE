@@ -23,7 +23,6 @@ import EliminaVeicolo from "./components/ROLE/SuperAdmin/GestioneVeicoli/Elimina
 import ModificaPrenotazione from "./components/ROLE/SuperAdmin/GestionePrenotazioni/ModificaPrenotazione/ModificaPrenotazione"
 import EliminaPrenotazione from "./components/ROLE/SuperAdmin/GestionePrenotazioni/EliminaPrenotazione/EliminaPrenotazione"
 import CronologiaPrenotazioni from "./components/Page/CronologiaPrenotazioni/CronologiaPrenotazioni"
-//--------------------------------------------------------------------------------------------
 import TutteLePrenotazioni from "./components/ROLE/SuperAdmin/GestionePrenotazioni/TutteLePrenotazioni/TutteLePrenotazioni"
 import LeMieRecensioni from "./components/Page/Recensioni/LeMieRecensioni"
 

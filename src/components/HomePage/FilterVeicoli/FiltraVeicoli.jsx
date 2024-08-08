@@ -47,6 +47,23 @@ const FiltraVeicoli = () => {
     }
   }
 
+  const handleDateChange = (setter) => (e) => {
+    const newDate = e.target.value
+    setter(newDate)
+
+    if (setter === setPickupDate && newDate >= dropoffDate) {
+      const nextDay = new Date(newDate)
+      nextDay.setDate(nextDay.getDate() + 1)
+      setDropoffDate(nextDay.toISOString().split("T")[0])
+    } else if (setter === setDropoffDate) {
+      if (newDate === pickupDate || newDate < pickupDate) {
+        const nextDay = new Date(pickupDate)
+        nextDay.setDate(nextDay.getDate() + 1)
+        setDropoffDate(nextDay.toISOString().split("T")[0])
+      }
+    }
+  }
+
   return (
     <Box
       className="pickup"
@@ -82,8 +99,12 @@ const FiltraVeicoli = () => {
                   sx={{ color: "#000" }}
                 >
                   <MenuItem value="">Tutte</MenuItem>
-                  <MenuItem value="milano">Milano</MenuItem>
-                  <MenuItem value="roma">Roma</MenuItem>
+                  <MenuItem value="Milano">Milano</MenuItem>
+                  <MenuItem value="Roma">Roma</MenuItem>
+                  <MenuItem value="Napoli">Napoli</MenuItem>
+                  <MenuItem value="Messina">Messina</MenuItem>
+                  <MenuItem value="Catania">Catania</MenuItem>
+                  <MenuItem value="Palermo">Palermo</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -93,7 +114,8 @@ const FiltraVeicoli = () => {
                 type="date"
                 fullWidth
                 value={pickupDate}
-                onChange={(e) => setPickupDate(e.target.value)}
+                // onChange={(e) => setPickupDate(e.target.value)}
+                onChange={handleDateChange(setPickupDate)}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -106,7 +128,8 @@ const FiltraVeicoli = () => {
                 type="date"
                 fullWidth
                 value={dropoffDate}
-                onChange={(e) => setDropoffDate(e.target.value)}
+                // onChange={(e) => setDropoffDate(e.target.value)}
+                onChange={handleDateChange(setDropoffDate)}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -140,8 +163,9 @@ const FiltraVeicoli = () => {
                   <MenuItem value="">Tutti</MenuItem>
                   <MenuItem value="Utilitaria">Utilitaria</MenuItem>
                   <MenuItem value="Sportiva">Sportiva</MenuItem>
-                  <MenuItem value="SUV">SUV</MenuItem>
+                  <MenuItem value="Suv">SUV</MenuItem>
                   <MenuItem value="Berlina">Berlina</MenuItem>
+                  <MenuItem value="Moto">Moto</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
