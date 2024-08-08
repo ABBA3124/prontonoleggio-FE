@@ -9,6 +9,11 @@ import { createTheme, ThemeProvider } from "@mui/material/styles"
 const theme = createTheme({
   typography: {
     fontFamily: "Poppins, Arial",
+    fontFamily: "Poppins, Arial",
+    h4: {
+      fontFamily: "Roboto, Arial",
+      fontWeight: "bold",
+    },
   },
 })
 
@@ -64,7 +69,15 @@ const AllRecensioni = () => {
   return (
     <ThemeProvider theme={theme}>
       <Container>
-        <Box sx={{ textAlign: "center", mb: 4 }}>
+        <Box
+          sx={{
+            textAlign: "center",
+            mb: 4,
+            pb: 2,
+            borderBottom: "2px solid",
+            borderColor: "primary.main",
+          }}
+        >
           <Typography
             variant="h4"
             align="center"
@@ -78,7 +91,7 @@ const AllRecensioni = () => {
               textShadow: "2px 2px 4px rgba(0,0,0,0.2)",
             }}
           >
-            <RateReviewIcon fontSize="large" sx={{ color: "primary.main" }} />
+            <RateReviewIcon fontSize="large" sx={{ color: "primary.main", fontSize: "2.5rem" }} />
             Recensioni
           </Typography>
         </Box>

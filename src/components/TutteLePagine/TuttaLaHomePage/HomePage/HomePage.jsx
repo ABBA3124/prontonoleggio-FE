@@ -2,7 +2,7 @@ import React from "react"
 import HeroHomePage from "../HeroCarouselHomePage/HeroHomePage"
 import FiltraVeicoli from "../FilteraVeicoliHomePage/FiltraVeicoli"
 import Brand from "../BrandHomePage/Brand"
-import Recensioni from "../../Recensioni/AllRecensioni"
+import Recensioni from "../../Recensioni/AllRecensioniHomePage"
 
 const HomePage = () => {
   return (
