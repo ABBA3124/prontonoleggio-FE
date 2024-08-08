@@ -1,12 +1,12 @@
 import React, { useState } from "react"
 import { Form, Button, Container, Spinner, Alert, Row, Col } from "react-bootstrap"
-import { fetchWithTokenAggiungiVeicoloAuto } from "../../../../../../api"
+import { fetchWithTokenAggiungiVeicoloAuto } from "../../../../../../../api"
 
 const AggiungiMoto = () => {
   const [formData, setFormData] = useState({
     tipoVeicolo: "MOTO",
     disponibilita: "DISPONIBILE",
-    nomeSede: "Pronto Noleggio Milano",
+    nomeSede: "P.N. Milano",
     cittaSede: "Milano",
     viaSede: "Via Milano N.106 Cap 20019",
     provinciaSede: "MI",
@@ -107,7 +107,7 @@ const AggiungiMoto = () => {
           <Col md={2}>
             <Form.Group controlId="nomeSede" className="mt-3">
               <Form.Label>Nome Sede</Form.Label>
-              <Form.Control as="select" name="nomeSede" value={formData.cittanomeSedeSede} onChange={handleChange}>
+              <Form.Control as="select" name="nomeSede" value={formData.nomeSede} onChange={handleChange}>
                 <option value="P.N. Milano">P.N. Milano</option>
                 <option value="P.N. Roma">P.N. Roma</option>
                 <option value="P.N. Napoli">P.N. Napoli</option>

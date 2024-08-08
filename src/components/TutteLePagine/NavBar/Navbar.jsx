@@ -256,17 +256,17 @@ const NavBar = () => {
                   <MenuItem onClick={handleClose} component="a" href="/veicoli/all">
                     Tutti i Veicoli
                   </MenuItem>
-                  <MenuItem onClick={handleClose} component="a" href="/modifica/auto/id=">
-                    Modifica Auto per ID
-                  </MenuItem>
                   <MenuItem onClick={handleClose} component="a" href="/crea/auto">
                     Aggiungi Auto
                   </MenuItem>
-                  <MenuItem onClick={handleClose} component="a" href="/modifica/moto/id=">
-                    Modifica Moto per ID
+                  <MenuItem onClick={handleClose} component="a" href="/modifica/auto/id=">
+                    Modifica Auto per ID
                   </MenuItem>
                   <MenuItem onClick={handleClose} component="a" href="/crea/moto">
                     Aggiungi Moto
+                  </MenuItem>
+                  <MenuItem onClick={handleClose} component="a" href="/modifica/moto/id=">
+                    Modifica Moto per ID
                   </MenuItem>
                   <MenuItem onClick={handleClose} component="a" href="/elimina/veicolo/id=">
                     Elimina Veicolo per ID

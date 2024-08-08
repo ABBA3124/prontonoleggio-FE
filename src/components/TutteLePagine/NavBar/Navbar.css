@@ -7,11 +7,11 @@
 }
 
 .custom-toggler {
-  border-color: rgb(253, 0, 0); /* Colore del bordo */
+  border-color: rgb(253, 0, 0);
 }
 
 .custom-toggler-icon {
-  background-color: rgb(255, 0, 0); /* Colore delle linee dell'icona del toggler */
+  background-color: rgb(255, 0, 0);
 }
 
 .offcanvas-body {

@@ -1,13 +1,13 @@
 import React, { useState } from "react"
 import { Form, Button, Container, Spinner, Alert, Row, Col } from "react-bootstrap"
-import { fetchWithToken } from "../../../../../../api"
+import { fetchWithToken } from "../../../../../../../api"
 import { useParams } from "react-router-dom"
 
-const ModificaMoto = () => {
+const ModificaAuto = () => {
   const { id } = useParams()
   const [vehicleId, setVehicleId] = useState(id || "")
   const [formData, setFormData] = useState({
-    tipoVeicolo: "MOTO",
+    tipoVeicolo: "AUTO",
     disponibilita: "",
     nomeSede: "",
     cittaSede: "",
@@ -34,8 +34,15 @@ const ModificaMoto = () => {
     documentiAssicurativi: "",
     revisione: "",
     abs: "",
-    bauletto: "",
-    parabrezza: "",
+    porte: "",
+    capacitaBagagliaio: "",
+    airbag: "",
+    controlloStabilita: "",
+    ariaCondizionata: "",
+    sistemaNavigazione: "",
+    sistemaAudio: "",
+    bluetooth: "",
+    sediliRiscaldati: "",
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -96,7 +103,7 @@ const ModificaMoto = () => {
       const responseText = await response.text()
 
       if (response.ok) {
-        setSuccess("Moto modificata con successo!")
+        setSuccess("Auto modificata con successo!")
       } else {
         setError(responseText)
       }
@@ -116,7 +123,6 @@ const ModificaMoto = () => {
       setLoading(true)
       const vehicleData = await fetchWithToken(`/veicoli/${vehicleId}`)
       setFormData(vehicleData)
-      console.log(vehicleData)
     } catch (error) {
       console.error("Errore nella ricerca del veicolo:", error)
     } finally {
@@ -126,7 +132,7 @@ const ModificaMoto = () => {
 
   return (
     <Container className="mt-5">
-      <h1 className="text-center mb-4">Modifica Moto per ID</h1>
+      <h1 className="text-center mb-4">Modifica Auto per ID</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="vehicleId">
           <Form.Label>ID Veicolo</Form.Label>
@@ -140,18 +146,14 @@ const ModificaMoto = () => {
             Cerca
           </Button>
         </Form.Group>
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        {/*  */}
+
         <Row>
           {/* <---------- Sede Veicolo ----------> */}
           <h1 className="">Dati Sede</h1>
           <Col md={2}>
             <Form.Group controlId="nomeSede" className="mt-3">
               <Form.Label>Nome Sede</Form.Label>
-              <Form.Control as="select" name="nomeSede" value={formData.cittanomeSedeSede} onChange={handleChange}>
+              <Form.Control as="select" name="nomeSede" value={formData.nomeSede} onChange={handleChange}>
                 <option value="P.N. Milano">P.N. Milano</option>
                 <option value="P.N. Roma">P.N. Roma</option>
                 <option value="P.N. Napoli">P.N. Napoli</option>
@@ -213,10 +215,9 @@ const ModificaMoto = () => {
               </Form.Control>
             </Form.Group>
           </Col>
-
           {/* <---------- Dati Veicolo ----------> */}
           <h1 className="mt-2">Dati Veicolo</h1>
-          <Col md={2}>
+          <Col md={4}>
             <Form.Group controlId="disponibilita" className="mt-3">
               <Form.Label>Disponibilità</Form.Label>
               <Form.Control as="select" name="disponibilita" value={formData.disponibilita} onChange={handleChange}>
@@ -226,7 +227,7 @@ const ModificaMoto = () => {
               </Form.Control>
             </Form.Group>
           </Col>
-          <Col md={2}>
+          <Col md={4}>
             <Form.Group controlId="targa" className="mt-3">
               <Form.Label>Targa</Form.Label>
               <Form.Control
@@ -238,7 +239,7 @@ const ModificaMoto = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={2}>
+          <Col md={4}>
             <Form.Group controlId="immagini" className="mt-3">
               <Form.Label>Immagini</Form.Label>
               <Form.Control
@@ -290,17 +291,15 @@ const ModificaMoto = () => {
             <Form.Group controlId="categoria" className="mt-3">
               <Form.Label>Categoria</Form.Label>
               <Form.Control as="select" name="categoria" value={formData.categoria} onChange={handleChange}>
+                <option value="Utilitaria">Utilitaria</option>
+                <option value="Berlina">Berlina</option>
+                <option value="Station Wagon">Station Wagon</option>
+                <option value="Monovolume">Monovolume</option>
+                <option value="Suv">Suv</option>
+                <option value="Coupé">Coupé</option>
+                <option value="Cabrio">Cabrio</option>
                 <option value="Sportiva">Sportiva</option>
-                <option value="Cruiser">Cruiser</option>
-                <option value="Touring">Touring</option>
-                <option value="Enduro">Enduro</option>
-                <option value="Naked">Naked</option>
-                <option value="Cross">Cross</option>
-                <option value="Scooter">Scooter</option>
-                <option value="Cafe Racer">Cafe Racer</option>
-                <option value="Chopper">Chopper</option>
-                <option value="Trial">Trial</option>
-                <option value="Adventure">Adventure</option>
+                <option value="Fuoristrada">Fuoristrada</option>
               </Form.Control>
             </Form.Group>
           </Col>
@@ -351,10 +350,10 @@ const ModificaMoto = () => {
           </Col>
           <Col md={2}>
             <Form.Group controlId="potenzaKw" className="mt-3">
-              <Form.Label>Potenza</Form.Label>
+              <Form.Label>KW</Form.Label>
               <Form.Control
                 type="number"
-                placeholder="Inserisci potenza in Kw"
+                placeholder="Inserisci potenza Kw"
                 name="potenzaKw"
                 value={formData.potenzaKw}
                 onChange={handleChange}
@@ -433,28 +432,76 @@ const ModificaMoto = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={12}>
-            {[
-              { label: "ABS", name: "abs" },
-              { label: "Bauletto", name: "bauletto" },
-              { label: "Parabrezza", name: "parabrezza" },
-            ].map((field, index) => (
-              <Col md={3} key={index}>
-                <Form.Group controlId={field.name} className="mt-3">
-                  <Form.Check
-                    type="checkbox"
-                    label={field.label}
-                    name={field.name}
-                    checked={formData[field.name]}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-              </Col>
-            ))}
+          <Col md={3}>
+            <Form.Group controlId="porte" className="mt-3">
+              <Form.Label>Porte</Form.Label>
+              <Form.Control type="number" as="select" name="porte" value={formData.porte} onChange={handleChange}>
+                <option value="5">Cinque Porte</option>
+                <option value="3">Tre Porte</option>
+                <option value="2">Due Porte</option>
+                <option value="4">Quattro Porte</option>
+              </Form.Control>
+            </Form.Group>
+          </Col>
+          <Col md={3}>
+            <Form.Group controlId="capacitaBagagliaio" className="mt-3">
+              <Form.Label>Capacità Bagagliaio</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Inserisci capacità bagagliaio"
+                name="capacitaBagagliaio"
+                value={formData.capacitaBagagliaio}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={3}>
+            <Form.Group controlId="airbag" className="mt-3">
+              <Form.Label>Airbag</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Inserisci numero di airbag"
+                name="airbag"
+                value={formData.airbag}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={3}>
+            <Form.Group controlId="sistemaAudio" className="mt-3">
+              <Form.Label>Sistema Audio</Form.Label>
+              <Form.Control as="select" name="sistemaAudio" value={formData.sistemaAudio} onChange={handleChange}>
+                <option value="Base">Base</option>
+                <option value="Premium">Premium</option>
+                <option value="Bose">Bose</option>
+              </Form.Control>
+            </Form.Group>
           </Col>
         </Row>
+        <Row>
+          {[
+            { label: "ABS", name: "abs" },
+            { label: "Controllo Stabilità", name: "controlloStabilita" },
+            { label: "Aria Condizionata", name: "ariaCondizionata" },
+            { label: "Sistema Navigazione", name: "sistemaNavigazione" },
+            { label: "Bluetooth", name: "bluetooth" },
+            { label: "Sedili Riscaldati", name: "sediliRiscaldati" },
+          ].map((field, index) => (
+            <Col md={12} key={index}>
+              <Form.Group controlId={field.name} className="mt-3">
+                <Form.Check
+                  type="checkbox"
+                  label={field.label}
+                  name={field.name}
+                  checked={formData[field.name]}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+          ))}
+        </Row>
         <Button variant="primary" type="submit" className="mt-3 mb-3" disabled={loading}>
-          Aggiungi
+          Modifica
         </Button>
       </Form>
       {loading && (
@@ -478,4 +525,4 @@ const ModificaMoto = () => {
   )
 }
 
-export default ModificaMoto
+export default ModificaAuto
