@@ -12,8 +12,20 @@ import {
   Typography,
 } from "@mui/material"
 import SearchIcon from "@mui/icons-material/Search"
-import "./FiltraVeicoli.css"
 import { useNavigate } from "react-router-dom"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
+
+const theme = createTheme({
+  typography: {
+    fontFamily: "Poppins, Arial",
+    h4: {
+      fontSize: "2.5rem",
+      fontWeight: "bold",
+      textShadow: "2px 2px 4px rgba(0,0,0,0.2)",
+      color: "#333", // Colore scuro per migliorare la leggibilità su sfondo bianco
+    },
+  },
+})
 
 const FiltraVeicoli = () => {
   const today = new Date().toISOString().split("T")[0]
@@ -73,16 +85,14 @@ const FiltraVeicoli = () => {
       }}
     >
       <Container className="pickup-wrapper wow fadeInUp mt-4">
-        <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-          color="text.primary"
-          sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1 }}
-        >
-          <SearchIcon fontSize="large" />
-          Trova il veicolo perfetto per te
-        </Typography>
+        <ThemeProvider theme={theme}>
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1, mb: 4 }}>
+            <SearchIcon fontSize="large" sx={{ color: "primary.main" }} />
+            <Typography variant="h4" align="center" gutterBottom>
+              Trova il veicolo perfetto per te
+            </Typography>
+          </Box>
+        </ThemeProvider>
         <form onSubmit={handleFilter}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={4}>
