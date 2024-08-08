@@ -12,7 +12,6 @@ import {
   Typography,
 } from "@mui/material"
 import SearchIcon from "@mui/icons-material/Search"
-import { fetchGet } from "../../../../api"
 import "./FiltraVeicoli.css"
 import { useNavigate } from "react-router-dom"
 
