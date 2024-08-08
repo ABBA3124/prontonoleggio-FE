@@ -14,11 +14,9 @@ import {
   Typography,
   Box,
   Grid,
-  Paper,
 } from "@mui/material"
 import { fetchWithTokenAggiungiVeicoloAuto } from "../../../../../../../api"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
-import { set } from "date-fns"
 
 const AggiungiAuto = () => {
   const [formData, setFormData] = useState({
@@ -139,7 +137,7 @@ const AggiungiAuto = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container className="mt-5">
+      <Container className="mt-2">
         <Typography variant="h1" align="center" gutterBottom>
           Aggiungi Auto
         </Typography>
@@ -476,21 +474,6 @@ const AggiungiAuto = () => {
             Aggiungi
           </Button>
         </Box>
-        {loading && (
-          <Box display="flex" justifyContent="center" mt={3}>
-            <CircularProgress />
-          </Box>
-        )}
-        {error && (
-          <Alert severity="error" className="mb-3">
-            {error}
-          </Alert>
-        )}
-        {success && (
-          <Alert severity="success" className="mt-3">
-            {success}
-          </Alert>
-        )}
       </Container>
     </ThemeProvider>
   )

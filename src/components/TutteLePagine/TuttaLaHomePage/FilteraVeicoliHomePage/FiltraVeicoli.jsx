@@ -53,6 +53,7 @@ const FiltraVeicoli = () => {
     if (maxPrezzo) params.append("maxPrezzo", maxPrezzo)
 
     navigate(`/veicoli?${params.toString()}`)
+    window.scrollTo(0, 0)
   }
 
   const handleDateChange = (setter) => (e) => {

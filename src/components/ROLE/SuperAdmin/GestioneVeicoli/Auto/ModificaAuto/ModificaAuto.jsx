@@ -1,7 +1,23 @@
 import React, { useState } from "react"
-import { Form, Button, Container, Spinner, Alert, Row, Col } from "react-bootstrap"
+import {
+  Container,
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  FormControlLabel,
+  CircularProgress,
+  Alert,
+  Typography,
+  Box,
+  Grid,
+} from "@mui/material"
 import { fetchWithToken } from "../../../../../../../api"
 import { useParams } from "react-router-dom"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
 
 const ModificaAuto = () => {
   const { id } = useParams()
@@ -104,11 +120,21 @@ const ModificaAuto = () => {
 
       if (response.ok) {
         setSuccess("Auto modificata con successo!")
+        setError("")
+        window.scrollTo(0, 0)
+        setTimeout(() => {
+          setSuccess("")
+        }, 4000)
       } else {
         setError(responseText)
       }
     } catch (error) {
       setSuccess("Auto modificata con successo!")
+      setError("")
+      window.scrollTo(0, 0)
+      setTimeout(() => {
+        setSuccess("")
+      }, 4000)
     } finally {
       setLoading(false)
     }
@@ -130,398 +156,443 @@ const ModificaAuto = () => {
     }
   }
 
-  return (
-    <Container className="mt-5">
-      <h1 className="text-center mb-4">Modifica Auto per ID</h1>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="vehicleId">
-          <Form.Label>ID Veicolo</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Inserisci ID veicolo"
-            value={vehicleId}
-            onChange={(e) => setVehicleId(e.target.value)}
-          />
-          <Button variant="primary" className="mt-2" onClick={handleSearch}>
-            Cerca
-          </Button>
-        </Form.Group>
+  const theme = createTheme({
+    typography: {
+      fontFamily: "Poppins, Arial",
+      h1: {
+        fontSize: "2.5rem",
+        fontWeight: "bold",
+        textShadow: "2px 2px 4px rgba(0,0,0,0.2)",
+        color: "#333",
+      },
+      h2: {
+        fontSize: "1.5rem",
+        fontWeight: "bold",
+        textShadow: "2px 2px 4px rgba(0,0,0,0.2)",
+        color: "#333",
+      },
+      body1: {
+        fontSize: "1rem",
+        color: "#424242",
+      },
+    },
+    palette: {
+      primary: {
+        main: "#0d47a1",
+      },
+      secondary: {
+        main: "#1565c0",
+      },
+    },
+  })
 
-        <Row>
-          {/* <---------- Sede Veicolo ----------> */}
-          <h1 className="">Dati Sede</h1>
-          <Col md={2}>
-            <Form.Group controlId="nomeSede" className="mt-3">
-              <Form.Label>Nome Sede</Form.Label>
-              <Form.Control as="select" name="nomeSede" value={formData.nomeSede} onChange={handleChange}>
-                <option value="P.N. Milano">P.N. Milano</option>
-                <option value="P.N. Roma">P.N. Roma</option>
-                <option value="P.N. Napoli">P.N. Napoli</option>
-                <option value="P.N. Messina">P.N. Messina</option>
-                <option value="P.N. Catania">P.N. Catania</option>
-                <option value="P.N. Palermo">P.N. Palermo</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="cittaSede" className="mt-3">
-              <Form.Label>Posizione Sede </Form.Label>
-              <Form.Control as="select" name="cittaSede" value={formData.cittaSede} onChange={handleChange}>
-                <option value="Milano">Milano</option>
-                <option value="Roma">Roma</option>
-                <option value="Napoli">Napoli</option>
-                <option value="Messina">Messina</option>
-                <option value="Catania">Catania</option>
-                <option value="Palermo">Palermo</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="viaSede" className="mt-3">
-              <Form.Label>Via Sede</Form.Label>
-              <Form.Control as="select" name="viaSede" value={formData.viaSede} onChange={handleChange}>
-                <option value="Via Milano N.106 Cap 20019">Via Milano</option>
-                <option value="Via Roma N.15 Cap 00128">Via Roma</option>
-                <option value="Via Napoli N.36 Cap 80013">Via Napoli</option>
-                <option value="Via Messina N.21 Cap 98121">Via Messina</option>
-                <option value="Via Catania N.8 Cap 95100">Via Catania</option>
-                <option value="Via Palermo N.1 Cap 90121">Via Palermo</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="provinciaSede" className="mt-3">
-              <Form.Label>Provincia Sede</Form.Label>
-              <Form.Control as="select" name="provinciaSede" value={formData.provinciaSede} onChange={handleChange}>
-                <option value="MI">MI</option>
-                <option value="RO">RO</option>
-                <option value="NA">NA</option>
-                <option value="ME">ME</option>
-                <option value="CA">CA</option>
-                <option value="PA">PA</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="telefonoSede" className="mt-3">
-              <Form.Label>Telefono Sede</Form.Label>
-              <Form.Control as="select" name="telefonoSede" value={formData.telefonoSede} onChange={handleChange}>
-                <option value="+39 3488637581">MI</option>
-                <option value="+39 3488637582">RO</option>
-                <option value="+39 3488637583">NA</option>
-                <option value="+39 3488637584">ME</option>
-                <option value="+39 3488637585">CA</option>
-                <option value="+39 3488637586">PA</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-          {/* <---------- Dati Veicolo ----------> */}
-          <h1 className="mt-2">Dati Veicolo</h1>
-          <Col md={4}>
-            <Form.Group controlId="disponibilita" className="mt-3">
-              <Form.Label>Disponibilità</Form.Label>
-              <Form.Control as="select" name="disponibilita" value={formData.disponibilita} onChange={handleChange}>
-                <option value="DISPONIBILE">Disponibile</option>
-                <option value="NON_DISPONIBILE">Non Disponibile</option>
-                <option value="MANUTENZIONE">Manutenzione</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-          <Col md={4}>
-            <Form.Group controlId="targa" className="mt-3">
-              <Form.Label>Targa</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Inserisci targa"
-                name="targa"
-                value={formData.targa}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={4}>
-            <Form.Group controlId="immagini" className="mt-3">
-              <Form.Label>Immagini</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Inserisci URL immagini"
-                name="immagini"
-                value={formData.immagini}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="marca" className="mt-3">
-              <Form.Label>Marca</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Inserisci marca"
-                name="marca"
-                value={formData.marca}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="modello" className="mt-3">
-              <Form.Label>Modello</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Inserisci modello"
-                name="modello"
-                value={formData.modello}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="anno" className="mt-3">
-              <Form.Label>Anno</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Inserisci anno"
-                name="anno"
-                value={formData.anno}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="categoria" className="mt-3">
-              <Form.Label>Categoria</Form.Label>
-              <Form.Control as="select" name="categoria" value={formData.categoria} onChange={handleChange}>
-                <option value="Utilitaria">Utilitaria</option>
-                <option value="Berlina">Berlina</option>
-                <option value="Station Wagon">Station Wagon</option>
-                <option value="Monovolume">Monovolume</option>
-                <option value="Suv">Suv</option>
-                <option value="Coupé">Coupé</option>
-                <option value="Cabrio">Cabrio</option>
-                <option value="Sportiva">Sportiva</option>
-                <option value="Fuoristrada">Fuoristrada</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="alimentazione" className="mt-3">
-              <Form.Label>Alimentazione</Form.Label>
-              <Form.Control as="select" name="alimentazione" value={formData.alimentazione} onChange={handleChange}>
-                <option value="Benzina">Benzina</option>
-                <option value="Diesel">Diesel</option>
-                <option value="Ibrido">Ibrido</option>
-                <option value="Elettrico">Elettrico</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="cambio" className="mt-3">
-              <Form.Label>Cambio</Form.Label>
-              <Form.Control as="select" name="cambio" value={formData.cambio} onChange={handleChange}>
-                <option value="Automatico">Automatico</option>
-                <option value="Manuale">Manuale</option>
-                <option value="Manuale">Sequenziale</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="trazione" className="mt-3">
-              <Form.Label>Trazione</Form.Label>
-              <Form.Control as="select" name="trazione" value={formData.trazione} onChange={handleChange}>
-                <option value="Anteriore">Anteriore</option>
-                <option value="Posteriore">Posteriore</option>
-                <option value="4x4">4x4</option>
-                <option value="Q2">Q2</option>
-                <option value="Q4">Q4</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="cilindrata" className="mt-3">
-              <Form.Label>Cilindrata</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Inserisci cilindrata"
-                name="cilindrata"
-                value={formData.cilindrata}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="potenzaKw" className="mt-3">
-              <Form.Label>KW</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Inserisci potenza Kw"
-                name="potenzaKw"
-                value={formData.potenzaKw}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="consumoCarburante" className="mt-3">
-              <Form.Label>Consumo Carburante</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Inserisci consumo carburante"
-                name="consumoCarburante"
-                value={formData.consumoCarburante}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="posti" className="mt-3">
-              <Form.Label>Posti</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Inserisci numero di posti"
-                name="posti"
-                value={formData.posti}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="tariffaGiornaliera" className="mt-3">
-              <Form.Label>Tariffa Giornaliera</Form.Label>
-              <Form.Control
+  return (
+    <ThemeProvider theme={theme}>
+      <Container className="mt-2">
+        <Typography variant="h1" align="center" gutterBottom>
+          Modifica Auto per ID
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <FormControl fullWidth margin="normal">
+            <TextField
+              label="ID Veicolo"
+              placeholder="Inserisci ID veicolo"
+              value={vehicleId}
+              onChange={(e) => setVehicleId(e.target.value)}
+            />
+            <Button variant="contained" color="primary" className="mt-2" onClick={handleSearch}>
+              Cerca
+            </Button>
+          </FormControl>
+          {loading && (
+            <Box display="flex" justifyContent="center" mt={3}>
+              <CircularProgress />
+            </Box>
+          )}
+          {error && (
+            <Alert severity="error" className="mb-3 mb-3">
+              {error}
+            </Alert>
+          )}
+          {success && (
+            <Alert severity="success" className="mt-3 mb-3">
+              {success}
+            </Alert>
+          )}
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="h2">Sede</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} md={2}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Nome Sede</InputLabel>
+                <Select name="nomeSede" value={formData.nomeSede} onChange={handleChange} label="Nome Sede">
+                  <MenuItem value="P.N. Milano">P.N. Milano</MenuItem>
+                  <MenuItem value="P.N. Roma">P.N. Roma</MenuItem>
+                  <MenuItem value="P.N. Napoli">P.N. Napoli</MenuItem>
+                  <MenuItem value="P.N. Messina">P.N. Messina</MenuItem>
+                  <MenuItem value="P.N. Catania">P.N. Catania</MenuItem>
+                  <MenuItem value="P.N. Palermo">P.N. Palermo</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={2}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Posizione Sede</InputLabel>
+                <Select name="cittaSede" value={formData.cittaSede} onChange={handleChange} label="Posizione Sede">
+                  <MenuItem value="Milano">Milano</MenuItem>
+                  <MenuItem value="Roma">Roma</MenuItem>
+                  <MenuItem value="Napoli">Napoli</MenuItem>
+                  <MenuItem value="Messina">Messina</MenuItem>
+                  <MenuItem value="Catania">Catania</MenuItem>
+                  <MenuItem value="Palermo">Palermo</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={2}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Via Sede</InputLabel>
+                <Select name="viaSede" value={formData.viaSede} onChange={handleChange} label="Via Sede">
+                  <MenuItem value="Via Milano N.106 Cap 20019">Via Milano</MenuItem>
+                  <MenuItem value="Via Roma N.15 Cap 00128">Via Roma</MenuItem>
+                  <MenuItem value="Via Napoli N.36 Cap 80013">Via Napoli</MenuItem>
+                  <MenuItem value="Via Messina N.21 Cap 98121">Via Messina</MenuItem>
+                  <MenuItem value="Via Catania N.8 Cap 95100">Via Catania</MenuItem>
+                  <MenuItem value="Via Palermo N.1 Cap 90121">Via Palermo</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={2}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Provincia Sede</InputLabel>
+                <Select
+                  name="provinciaSede"
+                  value={formData.provinciaSede}
+                  onChange={handleChange}
+                  label="Provincia Sede"
+                >
+                  <MenuItem value="MI">MI</MenuItem>
+                  <MenuItem value="RO">RO</MenuItem>
+                  <MenuItem value="NA">NA</MenuItem>
+                  <MenuItem value="ME">ME</MenuItem>
+                  <MenuItem value="CA">CA</MenuItem>
+                  <MenuItem value="PA">PA</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={2} className="mb-3">
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Telefono Sede</InputLabel>
+                <Select name="telefonoSede" value={formData.telefonoSede} onChange={handleChange} label="Telefono Sede">
+                  <MenuItem value="+39 3488637581">MI</MenuItem>
+                  <MenuItem value="+39 3488637582">RO</MenuItem>
+                  <MenuItem value="+39 3488637583">NA</MenuItem>
+                  <MenuItem value="+39 3488637584">ME</MenuItem>
+                  <MenuItem value="+39 3488637585">CA</MenuItem>
+                  <MenuItem value="+39 3488637586">PA</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h2">Noleggio</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Disponibilità</InputLabel>
+                <Select
+                  name="disponibilita"
+                  value={formData.disponibilita}
+                  onChange={handleChange}
+                  label="Disponibilità"
+                >
+                  <MenuItem value="DISPONIBILE">Disponibile</MenuItem>
+                  <MenuItem value="NON_DISPONIBILE">Non Disponibile</MenuItem>
+                  <MenuItem value="MANUTENZIONE">Manutenzione</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Tariffa Giornaliera"
                 type="number"
                 placeholder="Inserisci tariffa giornaliera"
                 name="tariffaGiornaliera"
                 value={formData.tariffaGiornaliera}
                 onChange={handleChange}
               />
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="chilometraggio" className="mt-3">
-              <Form.Label>Chilometraggio</Form.Label>
-              <Form.Control
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Documenti Assicurativi"
+                placeholder="Inserisci documenti assicurativi"
+                name="documentiAssicurativi"
+                value={formData.documentiAssicurativi}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Revisione"
+                placeholder="Inserisci revisione"
+                name="revisione"
+                value={formData.revisione}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h2">Veicolo</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} md={2}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Immagini"
+                placeholder="Inserisci URL immagini"
+                name="immagini"
+                value={formData.immagini}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Targa"
+                placeholder="Inserisci targa"
+                name="targa"
+                value={formData.targa}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Marca"
+                placeholder="Inserisci marca"
+                name="marca"
+                value={formData.marca}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Modello"
+                placeholder="Inserisci modello"
+                name="modello"
+                value={formData.modello}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={1}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Anno"
+                type="number"
+                placeholder="Inserisci anno"
+                name="anno"
+                value={formData.anno}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Categoria</InputLabel>
+                <Select name="categoria" value={formData.categoria} onChange={handleChange} label="Categoria">
+                  <MenuItem value="Utilitaria">Utilitaria</MenuItem>
+                  <MenuItem value="Berlina">Berlina</MenuItem>
+                  <MenuItem value="Station Wagon">Station Wagon</MenuItem>
+                  <MenuItem value="Monovolume">Monovolume</MenuItem>
+                  <MenuItem value="Suv">Suv</MenuItem>
+                  <MenuItem value="Coupé">Coupé</MenuItem>
+                  <MenuItem value="Cabrio">Cabrio</MenuItem>
+                  <MenuItem value="Sportiva">Sportiva</MenuItem>
+                  <MenuItem value="Fuoristrada">Fuoristrada</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Porte</InputLabel>
+                <Select name="porte" value={formData.porte} onChange={handleChange} label="Porte">
+                  <MenuItem value="5">Cinque Porte</MenuItem>
+                  <MenuItem value="3">Tre Porte</MenuItem>
+                  <MenuItem value="2">Due Porte</MenuItem>
+                  <MenuItem value="4">Quattro Porte</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Sistema Audio</InputLabel>
+                <Select name="sistemaAudio" value={formData.sistemaAudio} onChange={handleChange} label="Sistema Audio">
+                  <MenuItem value="Base">Base</MenuItem>
+                  <MenuItem value="Premium">Premium</MenuItem>
+                  <MenuItem value="Bose">Bose</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Posti"
+                type="number"
+                placeholder="Inserisci numero di posti"
+                name="posti"
+                value={formData.posti}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Chilometraggio"
                 type="number"
                 placeholder="Inserisci chilometraggio"
                 name="chilometraggio"
                 value={formData.chilometraggio}
                 onChange={handleChange}
               />
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="documentiAssicurativi" className="mt-3">
-              <Form.Label>Documenti Assicurativi</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Inserisci documenti assicurativi"
-                name="documentiAssicurativi"
-                value={formData.documentiAssicurativi}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={2}>
-            <Form.Group controlId="revisione" className="mt-3">
-              <Form.Label>Revisione</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Inserisci revisione"
-                name="revisione"
-                value={formData.revisione}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={3}>
-            <Form.Group controlId="porte" className="mt-3">
-              <Form.Label>Porte</Form.Label>
-              <Form.Control type="number" as="select" name="porte" value={formData.porte} onChange={handleChange}>
-                <option value="5">Cinque Porte</option>
-                <option value="3">Tre Porte</option>
-                <option value="2">Due Porte</option>
-                <option value="4">Quattro Porte</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-          <Col md={3}>
-            <Form.Group controlId="capacitaBagagliaio" className="mt-3">
-              <Form.Label>Capacità Bagagliaio</Form.Label>
-              <Form.Control
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Capacità Bagagliaio"
                 type="number"
                 placeholder="Inserisci capacità bagagliaio"
                 name="capacitaBagagliaio"
                 value={formData.capacitaBagagliaio}
                 onChange={handleChange}
               />
-            </Form.Group>
-          </Col>
-          <Col md={3}>
-            <Form.Group controlId="airbag" className="mt-3">
-              <Form.Label>Airbag</Form.Label>
-              <Form.Control
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Airbag"
                 type="number"
                 placeholder="Inserisci numero di airbag"
                 name="airbag"
                 value={formData.airbag}
                 onChange={handleChange}
               />
-            </Form.Group>
-          </Col>
-          <Col md={3}>
-            <Form.Group controlId="sistemaAudio" className="mt-3">
-              <Form.Label>Sistema Audio</Form.Label>
-              <Form.Control as="select" name="sistemaAudio" value={formData.sistemaAudio} onChange={handleChange}>
-                <option value="Base">Base</option>
-                <option value="Premium">Premium</option>
-                <option value="Bose">Bose</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          {[
-            { label: "ABS", name: "abs" },
-            { label: "Controllo Stabilità", name: "controlloStabilita" },
-            { label: "Aria Condizionata", name: "ariaCondizionata" },
-            { label: "Sistema Navigazione", name: "sistemaNavigazione" },
-            { label: "Bluetooth", name: "bluetooth" },
-            { label: "Sedili Riscaldati", name: "sediliRiscaldati" },
-          ].map((field, index) => (
-            <Col md={12} key={index}>
-              <Form.Group controlId={field.name} className="mt-3">
-                <Form.Check
-                  type="checkbox"
-                  label={field.label}
-                  name={field.name}
-                  checked={formData[field.name]}
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h2">Motore</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Alimentazione</InputLabel>
+                <Select
+                  name="alimentazione"
+                  value={formData.alimentazione}
                   onChange={handleChange}
+                  label="Alimentazione"
+                >
+                  <MenuItem value="Benzina">Benzina</MenuItem>
+                  <MenuItem value="Diesel">Diesel</MenuItem>
+                  <MenuItem value="Ibrido">Ibrido</MenuItem>
+                  <MenuItem value="Elettrico">Elettrico</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Cambio</InputLabel>
+                <Select name="cambio" value={formData.cambio} onChange={handleChange} label="Cambio">
+                  <MenuItem value="Automatico">Automatico</MenuItem>
+                  <MenuItem value="Manuale">Manuale</MenuItem>
+                  <MenuItem value="Manuale">Sequenziale</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Trazione</InputLabel>
+                <Select name="trazione" value={formData.trazione} onChange={handleChange} label="Trazione">
+                  <MenuItem value="Anteriore">Anteriore</MenuItem>
+                  <MenuItem value="Posteriore">Posteriore</MenuItem>
+                  <MenuItem value="4x4">4x4</MenuItem>
+                  <MenuItem value="Q2">Q2</MenuItem>
+                  <MenuItem value="Q4">Q4</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Cilindrata"
+                type="number"
+                placeholder="Inserisci cilindrata"
+                name="cilindrata"
+                value={formData.cilindrata}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="KW"
+                type="number"
+                placeholder="Inserisci potenza Kw"
+                name="potenzaKw"
+                value={formData.potenzaKw}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Consumo Carburante"
+                type="number"
+                placeholder="Inserisci consumo carburante"
+                name="consumoCarburante"
+                value={formData.consumoCarburante}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h2">Optional</Typography>
+            </Grid>
+            {[
+              { label: "ABS", name: "abs" },
+              { label: "Controllo Stabilità", name: "controlloStabilita" },
+              { label: "Aria Condizionata", name: "ariaCondizionata" },
+              { label: "Sistema Navigazione", name: "sistemaNavigazione" },
+              { label: "Bluetooth", name: "bluetooth" },
+              { label: "Sedili Riscaldati", name: "sediliRiscaldati" },
+            ].map((field, index) => (
+              <Grid item xs={4} key={index}>
+                <FormControlLabel
+                  control={<Checkbox checked={formData[field.name]} onChange={handleChange} name={field.name} />}
+                  label={field.label}
                 />
-              </Form.Group>
-            </Col>
-          ))}
-        </Row>
-        <Button variant="primary" type="submit" className="mt-3 mb-3" disabled={loading}>
-          Modifica
-        </Button>
-      </Form>
-      {loading && (
-        <div className="text-center mt-3">
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-        </div>
-      )}
-      {error && (
-        <Alert variant="danger" className="mt-3">
-          {error}
-        </Alert>
-      )}
-      {success && (
-        <Alert variant="success" className="mt-3">
-          {success}
-        </Alert>
-      )}
-    </Container>
+              </Grid>
+            ))}
+          </Grid>
+          <Button variant="contained" color="primary" type="submit" className="mt-3 mb-3" disabled={loading}>
+            Modifica
+          </Button>
+        </form>
+      </Container>
+    </ThemeProvider>
   )
 }
 
