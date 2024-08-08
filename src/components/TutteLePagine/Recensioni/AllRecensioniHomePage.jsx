@@ -98,8 +98,18 @@ const AllRecensioni = () => {
         <Grid container spacing={3}>
           {recensioni.map((recensione) => (
             <Grid item xs={12} sm={6} md={4} key={recensione.id}>
-              <Card sx={{ borderRadius: 2, boxShadow: 3, "&:hover": { boxShadow: 6 }, overflow: "hidden" }}>
-                <CardContent sx={{ backgroundColor: "#f9f9f9" }}>
+              <Card
+                sx={{
+                  borderRadius: 2,
+                  boxShadow: 3,
+                  "&:hover": { boxShadow: 6 },
+                  overflow: "hidden",
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100%", // Imposta l'altezza della carta per essere uguale in tutte le carte
+                }}
+              >
+                <CardContent sx={{ backgroundColor: "#f9f9f9", flexGrow: 1 }}>
                   <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                     <Avatar
                       src={recensione.utente.avatar}

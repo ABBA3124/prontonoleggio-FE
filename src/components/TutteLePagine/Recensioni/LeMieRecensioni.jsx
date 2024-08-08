@@ -13,6 +13,7 @@ import {
   IconButton,
   Button,
   Snackbar,
+  CardMedia,
 } from "@mui/material"
 import StarIcon from "@mui/icons-material/Star"
 import StarBorderIcon from "@mui/icons-material/StarBorder"
@@ -20,6 +21,7 @@ import RateReviewIcon from "@mui/icons-material/RateReview"
 import EditIcon from "@mui/icons-material/Edit"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import MuiAlert from "@mui/material/Alert"
+import { Image } from "@mui/icons-material"
 
 const theme = createTheme({
   typography: {
@@ -236,6 +238,15 @@ const RecensioneUtente = () => {
                         <Typography variant="body2" color="textSecondary">
                           <strong>Veicolo Noleggiato: </strong> {recensione.prenotazione.veicolo.marca}{" "}
                           {recensione.prenotazione.veicolo.modello}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" className="mt-2">
+                          <CardMedia
+                            component="img"
+                            height="100"
+                            image={recensione.prenotazione.veicolo.immagini}
+                            alt={`${recensione.prenotazione.veicolo.marca} ${recensione.prenotazione.veicolo.modello}`}
+                            sx={{ filter: "brightness(0.85)", width: "auto" }}
+                          />
                         </Typography>
                       </Box>
                       <Typography variant="h5" component="div" sx={{ fontWeight: "bold", mb: 1 }}>
