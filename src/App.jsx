@@ -49,7 +49,7 @@ function App() {
         <Route path="/elimina/prenotazione" element={<EliminaPrenotazione />} />
         <Route path="/me/prenotazioni" element={<CronologiaPrenotazioni />} />
         <Route path="/superadmin/prenotazioni" element={<TutteLePrenotazioni />} />
-        <Route path="/recensioni/mie" element={<LeMieRecensioni />} />
+        <Route path="/recensioni/me" element={<LeMieRecensioni />} />
         <Route path="/contattaci" element={<Contatti />} />
       </Routes>
       <Footer />
