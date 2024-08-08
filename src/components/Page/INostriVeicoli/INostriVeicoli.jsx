@@ -32,7 +32,7 @@ import EventIcon from "@mui/icons-material/Event"
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney"
 import AirIcon from "@mui/icons-material/Air"
 import PayPalButton from "../../Paypal/PayPalButton"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 
 const Veicoli = () => {
   const today = new Date().toISOString().split("T")[0]
@@ -59,6 +59,7 @@ const Veicoli = () => {
   const [totaleGiorni, setTotaleGiorni] = useState(0)
   const [total, setTotal] = useState(0)
   const navigate = useNavigate()
+  const locationSearch = useLocation()
 
   //-------------------------------------------------------
 
@@ -95,6 +96,17 @@ const Veicoli = () => {
   }
 
   //-------------------------------------------------------
+  useEffect(() => {
+    const params = new URLSearchParams(locationSearch.search)
+    setLocation(params.get("posizione") || "")
+    setPickupDate(params.get("dataInizio") || today)
+    setDropoffDate(params.get("dataFine") || nextWeek)
+    setCarType(params.get("tipoVeicolo") || "")
+    setCarCategory(params.get("categoria") || "")
+    setMinPrezzo(params.get("minPrezzo") || "")
+    setMaxPrezzo(params.get("maxPrezzo") || "")
+  }, [locationSearch])
+
   useEffect(() => {
     const fetchUtente = async () => {
       try {
@@ -208,9 +220,9 @@ const Veicoli = () => {
         <form onSubmit={handleFilter}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={4}>
-              <FormControl fullWidth>
+              <FormControl fullWidth variant="outlined" sx={{ bgcolor: "white", borderRadius: 1 }}>
                 <InputLabel>Località</InputLabel>
-                <Select value={location} onChange={(e) => setLocation(e.target.value)}>
+                <Select value={location} onChange={(e) => setLocation(e.target.value)} label="Località">
                   <MenuItem value="">Tutte</MenuItem>
                   <MenuItem value="Milano">Milano</MenuItem>
                   <MenuItem value="Roma">Roma</MenuItem>
@@ -246,9 +258,9 @@ const Veicoli = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
-              <FormControl fullWidth>
+              <FormControl fullWidth variant="outlined" sx={{ bgcolor: "white", borderRadius: 1 }}>
                 <InputLabel>Tipo Veicolo</InputLabel>
-                <Select value={carType} onChange={(e) => setCarType(e.target.value)}>
+                <Select value={carType} onChange={(e) => setCarType(e.target.value)} label="Tipo Veicolo">
                   <MenuItem value="">Tutti</MenuItem>
                   <MenuItem value="AUTO">Auto</MenuItem>
                   <MenuItem value="MOTO">Moto</MenuItem>
@@ -256,9 +268,9 @@ const Veicoli = () => {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
-              <FormControl fullWidth>
+              <FormControl fullWidth variant="outlined" sx={{ bgcolor: "white", borderRadius: 1 }}>
                 <InputLabel>Categoria Veicolo</InputLabel>
-                <Select value={carCategory} onChange={(e) => setCarCategory(e.target.value)}>
+                <Select value={carCategory} onChange={(e) => setCarCategory(e.target.value)} label="Categoria Veicolo">
                   <MenuItem value="">Tutti</MenuItem>
                   <MenuItem value="Utilitaria">Utilitaria</MenuItem>
                   <MenuItem value="Sportiva">Sportiva</MenuItem>

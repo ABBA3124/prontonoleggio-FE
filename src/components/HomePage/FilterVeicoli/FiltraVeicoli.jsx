@@ -14,6 +14,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search"
 import { fetchGet } from "../../../../api"
 import "./FiltraVeicoli.css"
+import { useNavigate } from "react-router-dom"
 
 const FiltraVeicoli = () => {
   const today = new Date().toISOString().split("T")[0]
@@ -26,8 +27,9 @@ const FiltraVeicoli = () => {
   const [carCategory, setCarCategory] = useState("")
   const [minPrezzo, setMinPrezzo] = useState("")
   const [maxPrezzo, setMaxPrezzo] = useState("")
+  const navigate = useNavigate()
 
-  const handleFilter = async (e) => {
+  const handleFilter = (e) => {
     e.preventDefault()
     const params = new URLSearchParams()
 
@@ -39,12 +41,7 @@ const FiltraVeicoli = () => {
     if (minPrezzo) params.append("minPrezzo", minPrezzo)
     if (maxPrezzo) params.append("maxPrezzo", maxPrezzo)
 
-    try {
-      const veicoli = await fetchGet(`/veicoli/search?${params.toString()}`)
-      console.log("Veicoli disponibili:", veicoli)
-    } catch (error) {
-      console.error("Errore nella ricerca dei veicoli:", error)
-    }
+    navigate(`/veicoli?${params.toString()}`)
   }
 
   const handleDateChange = (setter) => (e) => {
