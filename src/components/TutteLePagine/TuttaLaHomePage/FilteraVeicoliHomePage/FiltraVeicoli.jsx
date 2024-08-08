@@ -22,7 +22,7 @@ const theme = createTheme({
       fontSize: "2.5rem",
       fontWeight: "bold",
       textShadow: "2px 2px 4px rgba(0,0,0,0.2)",
-      color: "#333", // Colore scuro per migliorare la leggibilità su sfondo bianco
+      color: "#333",
     },
   },
 })
@@ -120,7 +120,6 @@ const FiltraVeicoli = () => {
                 type="date"
                 fullWidth
                 value={pickupDate}
-                // onChange={(e) => setPickupDate(e.target.value)}
                 onChange={handleDateChange(setPickupDate)}
                 InputLabelProps={{
                   shrink: true,
@@ -134,7 +133,6 @@ const FiltraVeicoli = () => {
                 type="date"
                 fullWidth
                 value={dropoffDate}
-                // onChange={(e) => setDropoffDate(e.target.value)}
                 onChange={handleDateChange(setDropoffDate)}
                 InputLabelProps={{
                   shrink: true,
