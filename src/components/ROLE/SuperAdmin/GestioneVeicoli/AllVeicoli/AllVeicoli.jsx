@@ -138,7 +138,7 @@ const AllVeicoli = () => {
           </Col>
           <Col md={2}>
             <Form.Group>
-              <Form.Label>Località</Form.Label>
+              <Form.Label>Posizione</Form.Label>
               <Form.Control
                 as="select"
                 name="posizioneVeicolo"
@@ -231,7 +231,7 @@ const AllVeicoli = () => {
               <td>{veicolo.tipoVeicolo}</td>
               <td>{veicolo.tariffaGiornaliera} €</td>
               <td>{veicolo.disponibilita}</td>
-              <td>{veicolo.posizione}</td>
+              <td>{veicolo.nomeSede}</td>
               <td>{format(new Date(veicolo.dataCreazioneVeicolo), "dd/MM/yyyy HH:mm")}</td>
               <td>{veicolo.id}</td>
               <td>
