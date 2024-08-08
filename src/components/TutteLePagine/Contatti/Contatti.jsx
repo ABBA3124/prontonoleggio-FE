@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Container, Grid, Paper, Typography, TextField, Button, Box } from "@mui/material"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { fetchWithToken } from "../../../../api"
+import { Alert } from "@mui/material"
 
 const theme = createTheme({
   typography: {
@@ -38,12 +39,23 @@ const Contatti = () => {
   const [userData, setUserData] = useState(null)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
+  const [showAlert, setShowAlert] = useState(false)
+  const [formValues, setFormValues] = useState({
+    nome: "",
+    email: "",
+    messaggio: "",
+  })
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchWithToken("/utente/me")
         setUserData(data)
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          nome: `${data.nome} ${data.cognome}`,
+          email: data.email,
+        }))
       } catch (error) {
         setError("Errore durante il caricamento del profilo. Per favore, effettua il login.")
         setSuccess("")
@@ -52,6 +64,29 @@ const Contatti = () => {
 
     fetchData()
   }, [])
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setShowAlert(true)
+    setSuccess("Messaggio inviato con successo!")
+    setFormValues({
+      nome: userData ? `${userData.nome} ${userData.cognome}` : "",
+      email: userData ? userData.email : "",
+      messaggio: "",
+    })
+    setTimeout(() => {
+      setShowAlert(false)
+      setSuccess("")
+    }, 3000)
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormValues({
+      ...formValues,
+      [name]: value,
+    })
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -96,7 +131,7 @@ const Contatti = () => {
               <Typography variant="h2" component="h2">
                 Invia un Messaggio
               </Typography>
-              <form>
+              <form onSubmit={handleSubmit}>
                 <TextField
                   id="formName"
                   label="Nome Completo"
@@ -104,7 +139,9 @@ const Contatti = () => {
                   fullWidth
                   margin="normal"
                   required
-                  value={userData ? `${userData.nome} ${userData.cognome}` : "Inserisci il tuo nome e cognome*"}
+                  name="nome"
+                  value={formValues.nome}
+                  onChange={handleChange}
                 />
                 <TextField
                   id="formEmail"
@@ -114,7 +151,9 @@ const Contatti = () => {
                   margin="normal"
                   type="email"
                   required
-                  value={userData ? userData.email : "Inserisci la tua email*"}
+                  name="email"
+                  value={formValues.email}
+                  onChange={handleChange}
                 />
                 <TextField
                   id="formMessage"
@@ -125,7 +164,15 @@ const Contatti = () => {
                   multiline
                   rows={3}
                   required
+                  name="messaggio"
+                  value={formValues.messaggio}
+                  onChange={handleChange}
                 />
+                {showAlert && (
+                  <Alert severity="success" onClose={() => setShowAlert(false)}>
+                    {success}
+                  </Alert>
+                )}
                 <Button
                   variant="contained"
                   color="primary"
