@@ -18,6 +18,7 @@ import {
   Modal,
   Box,
   Typography,
+  Paper,
 } from "@mui/material"
 import { fetchGet, fetchWithToken } from "../../../../api"
 import { format } from "date-fns"
@@ -50,7 +51,8 @@ const Veicoli = () => {
   const [user, setUser] = useState(null)
   const [prenotazioneSuccesso, setPrenotazioneSuccesso] = useState("")
   const [prenotazioneErrore, setPrenotazioneErrore] = useState("")
-  const [showModal, setShowModal] = useState(false)
+  const [showPrenotaModal, setShowPrenotaModal] = useState(false)
+  const [showDettagliModal, setShowDettagliModal] = useState(false)
   const [selectedVeicolo, setSelectedVeicolo] = useState(null)
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
@@ -61,8 +63,6 @@ const Veicoli = () => {
   const navigate = useNavigate()
   const locationSearch = useLocation()
 
-  //-------------------------------------------------------
-
   const handlePayPalSuccess = (details) => {
     console.log("Transaction completed by " + details.payer.name.given_name)
     setPrenotazioneSuccesso("Pagamento effettuato con successo!")
@@ -70,7 +70,7 @@ const Veicoli = () => {
     setPage(0)
     fetchVeicoli()
     setTimeout(() => {
-      setShowModal(false)
+      setShowPrenotaModal(false)
       setPrenotazioneSuccesso("")
       setPrenotazioneErrore("")
       navigate("/me/prenotazioni")
@@ -84,7 +84,7 @@ const Veicoli = () => {
     setTimeout(() => {
       setPrenotazioneErrore("")
       setPrenotazioneErrore("")
-      setShowModal(false)
+      setShowPrenotaModal(false)
     }, 1500)
   }
 
@@ -95,7 +95,6 @@ const Veicoli = () => {
     return parseFloat(amount.replace(",", ".")).toFixed(2)
   }
 
-  //-------------------------------------------------------
   useEffect(() => {
     const params = new URLSearchParams(locationSearch.search)
     setLocation(params.get("posizione") || "")
@@ -150,11 +149,12 @@ const Veicoli = () => {
 
   const handlePrenota = (veicolo) => {
     setSelectedVeicolo(veicolo)
-    setShowModal(true)
+    setShowPrenotaModal(true)
   }
 
-  const handleDettagli = (veicoloId) => {
-    console.log(`Mostra dettagli veicolo con ID: ${veicoloId}`)
+  const handleDettagli = (veicolo) => {
+    setSelectedVeicolo(veicolo)
+    setShowDettagliModal(true)
   }
 
   const handlePageChange = (newPage) => {
@@ -428,7 +428,7 @@ const Veicoli = () => {
                     <Button
                       variant="outlined"
                       color="secondary"
-                      onClick={() => handleDettagli(veicolo.id)}
+                      onClick={() => handleDettagli(veicolo)}
                       sx={{
                         transition: "background-color 0.3s, transform 0.3s",
                         "&:hover": {
@@ -454,92 +454,262 @@ const Veicoli = () => {
         />
       </Container>
       {selectedVeicolo && (
-        <Modal open={showModal} onClose={() => setShowModal(false)} aria-labelledby="modal-title" centered>
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 400,
-              bgcolor: "background.paper",
-              boxShadow: 24,
-              p: 4,
-              borderRadius: 2,
-            }}
+        <>
+          <Modal
+            open={showPrenotaModal}
+            onClose={() => setShowPrenotaModal(false)}
+            aria-labelledby="modal-title"
+            centered
           >
-            <Typography id="modal-title" variant="h6" component="h2">
-              Conferma Prenotazione
-            </Typography>
-            <Container>
-              <Grid container spacing={2}>
-                <Grid item xs={12} className="text-center mb-3">
-                  <Typography variant="h6" component="p" className="mb-3 text-center price-info">
-                    {selectedVeicolo.marca} {selectedVeicolo.modello}
-                  </Typography>
-                  <img
-                    src={selectedVeicolo.immagini}
-                    className="vehicle-card-img rounded-5 mb-3"
-                    style={{ width: "100%" }}
-                    alt={`${selectedVeicolo.marca} ${selectedVeicolo.modello}`}
-                  />
-                  <Box className="d-flex justify-content-around mb-3 date-container">
-                    <Box className="text-center date-info">
-                      <Typography variant="body2" component="p">
-                        <strong>Data Inizio:</strong>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                bgcolor: "background.paper",
+                boxShadow: 24,
+                p: 4,
+                borderRadius: 2,
+              }}
+            >
+              <Typography id="modal-title" variant="h6" component="h2">
+                Conferma Prenotazione
+              </Typography>
+              <Container>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} className="text-center mb-3">
+                    <Typography variant="h6" component="p" className="mb-3 text-center price-info">
+                      {selectedVeicolo.marca} {selectedVeicolo.modello}
+                    </Typography>
+                    <img
+                      src={selectedVeicolo.immagini}
+                      className="vehicle-card-img rounded-5 mb-3"
+                      style={{ width: "100%" }}
+                      alt={`${selectedVeicolo.marca} ${selectedVeicolo.modello}`}
+                    />
+                    <Box className="d-flex justify-content-around mb-3 date-container">
+                      <Box className="text-center date-info">
+                        <Typography variant="body2" component="p">
+                          <strong>Data Inizio:</strong>
+                        </Typography>
+                        <Typography variant="body2" component="p">
+                          {format(new Date(pickupDate), "dd/MM/yyyy")}
+                        </Typography>
+                      </Box>
+                      <Box className="text-center date-info">
+                        <Typography variant="body2" component="p">
+                          <strong>Data Fine:</strong>
+                        </Typography>
+                        <Typography variant="body2" component="p">
+                          {format(new Date(dropoffDate), "dd/MM/yyyy")}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Typography variant="body2" component="p" className="mb-3 date-container text-center price-info">
+                      Totale {total}€ iva inclusa
+                      <Typography variant="body2" component="p" className="fs-6">
+                        per {totaleGiorni} giorni/o
                       </Typography>
-                      <Typography variant="body2" component="p">
-                        {format(new Date(pickupDate), "dd/MM/yyyy")}
+                    </Typography>
+                    <Box className="confirm-message mb-3">
+                      <Typography variant="body2" component="p" className="m-0">
+                        <i className="bi bi-question-circle-fill me-2"></i>
+                        Vuoi confermare la prenotazione di questo veicolo?
                       </Typography>
                     </Box>
-                    <Box className="text-center date-info">
-                      <Typography variant="body2" component="p">
-                        <strong>Data Fine:</strong>
-                      </Typography>
-                      <Typography variant="body2" component="p">
-                        {format(new Date(dropoffDate), "dd/MM/yyyy")}
-                      </Typography>
-                    </Box>
-                  </Box>
-                  <Typography variant="body2" component="p" className="mb-3 date-container text-center price-info">
-                    Totale {total}€ iva inclusa
-                    <Typography variant="body2" component="p" className="fs-6">
-                      per {totaleGiorni} giorni/o
-                    </Typography>
-                  </Typography>
-                  <Box className="confirm-message mb-3">
-                    <Typography variant="body2" component="p" className="m-0">
-                      <i className="bi bi-question-circle-fill me-2"></i>
-                      Vuoi confermare la prenotazione di questo veicolo?
-                    </Typography>
-                  </Box>
-                  {prenotazioneErrore && <Alert severity="error">{prenotazioneErrore}</Alert>}
-                  {prenotazioneSuccesso && <Alert severity="success">{prenotazioneSuccesso}</Alert>}
+                    {prenotazioneErrore && <Alert severity="error">{prenotazioneErrore}</Alert>}
+                    {prenotazioneSuccesso && <Alert severity="success">{prenotazioneSuccesso}</Alert>}
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Container>
-            <Box className="">
-              {user ? (
-                <PayPalButton
-                  amount={total}
-                  veicoloIdd={selectedVeicolo.id}
-                  utenteIdd={user.id}
-                  dataInizio={pickupDate}
-                  dataFine={dropoffDate}
-                  onSuccess={handlePayPalSuccess}
-                  onError={handlePayPalError}
-                />
-              ) : (
-                <Alert severity="error" className="mb-2">
-                  Esegui il Login o Registrati per effettuare una prenotazione.
-                </Alert>
-              )}
-              <Button variant="outlined" color="secondary" onClick={() => setShowModal(false)}>
-                Annulla
-              </Button>
+              </Container>
+              <Box className="">
+                {user ? (
+                  <PayPalButton
+                    amount={total}
+                    veicoloIdd={selectedVeicolo.id}
+                    utenteIdd={user.id}
+                    dataInizio={pickupDate}
+                    dataFine={dropoffDate}
+                    onSuccess={handlePayPalSuccess}
+                    onError={handlePayPalError}
+                  />
+                ) : (
+                  <Alert severity="error" className="mb-2">
+                    Esegui il Login o Registrati per effettuare una prenotazione.
+                  </Alert>
+                )}
+                <Button variant="outlined" color="secondary" onClick={() => setShowPrenotaModal(false)}>
+                  Annulla
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        </Modal>
+          </Modal>
+
+          <Modal
+            open={showDettagliModal}
+            onClose={() => setShowDettagliModal(false)}
+            aria-labelledby="modal-title"
+            centered
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 500,
+                p: 4,
+              }}
+            >
+              <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
+                <Typography
+                  id="modal-title"
+                  variant="h4"
+                  component="h2"
+                  align="center"
+                  gutterBottom
+                  sx={{ fontWeight: "bold", mb: 4 }}
+                >
+                  Dettagli Veicolo
+                </Typography>
+                <Container>
+                  <Grid container spacing={4}>
+                    <Grid item xs={12} className="text-center">
+                      <Typography
+                        variant="h5"
+                        component="p"
+                        className="mb-3 text-center price-info"
+                        sx={{ fontWeight: "bold", mb: 3 }}
+                      >
+                        {selectedVeicolo.marca} {selectedVeicolo.modello}
+                      </Typography>
+                      <img
+                        src={selectedVeicolo.immagini}
+                        className="vehicle-card-img rounded-5 mb-3"
+                        style={{ width: "100%", borderRadius: "8px" }}
+                        alt={`${selectedVeicolo.marca} ${selectedVeicolo.modello}`}
+                      />
+                      <Box
+                        className="d-flex justify-content-around mb-3 date-container"
+                        sx={{ flexWrap: "wrap", gap: 2 }}
+                      >
+                        <Box className="text-center date-info" sx={{ minWidth: "120px" }}>
+                          <Typography variant="body2" component="p" sx={{ fontWeight: "bold" }}>
+                            Categoria:
+                          </Typography>
+                          <Typography variant="body2" component="p">
+                            {selectedVeicolo.categoria}
+                          </Typography>
+                        </Box>
+                        <Box className="text-center date-info" sx={{ minWidth: "120px" }}>
+                          <Typography variant="body2" component="p" sx={{ fontWeight: "bold" }}>
+                            Posti:
+                          </Typography>
+                          <Typography variant="body2" component="p">
+                            {selectedVeicolo.posti}
+                          </Typography>
+                        </Box>
+                        <Box className="text-center date-info" sx={{ minWidth: "120px" }}>
+                          <Typography variant="body2" component="p" sx={{ fontWeight: "bold" }}>
+                            Consumo Carburante:
+                          </Typography>
+                          <Typography variant="body2" component="p">
+                            {selectedVeicolo.consumoCarburante} L/100km
+                          </Typography>
+                        </Box>
+                        <Box className="text-center date-info" sx={{ minWidth: "120px" }}>
+                          <Typography variant="body2" component="p" sx={{ fontWeight: "bold" }}>
+                            Cilindrata:
+                          </Typography>
+                          <Typography variant="body2" component="p">
+                            {selectedVeicolo.cilindrata} cc
+                          </Typography>
+                        </Box>
+                        <Box className="text-center date-info" sx={{ minWidth: "120px" }}>
+                          <Typography variant="body2" component="p" sx={{ fontWeight: "bold" }}>
+                            Carburante:
+                          </Typography>
+                          <Typography variant="body2" component="p">
+                            {selectedVeicolo.alimentazione}
+                          </Typography>
+                        </Box>
+                        <Box className="text-center date-info" sx={{ minWidth: "120px" }}>
+                          <Typography variant="body2" component="p" sx={{ fontWeight: "bold" }}>
+                            Trazione:
+                          </Typography>
+                          <Typography variant="body2" component="p">
+                            {selectedVeicolo.trazione}
+                          </Typography>
+                        </Box>
+                        <Box className="text-center date-info" sx={{ minWidth: "120px" }}>
+                          <Typography variant="body2" component="p">
+                            <strong>Data Inizio:</strong>
+                          </Typography>
+                          <Typography variant="body2" component="p">
+                            {format(new Date(pickupDate), "dd/MM/yyyy")}
+                          </Typography>
+                        </Box>
+                        <Box className="text-center date-info" sx={{ minWidth: "120px" }}>
+                          <Typography variant="body2" component="p">
+                            <strong>Data Fine:</strong>
+                          </Typography>
+                          <Typography variant="body2" component="p">
+                            {format(new Date(dropoffDate), "dd/MM/yyyy")}
+                          </Typography>
+                        </Box>
+                        <Box className="text-center date-info" sx={{ minWidth: "200px" }}>
+                          <Typography variant="body2" component="p" sx={{ fontWeight: "bold" }}>
+                            Località di ritiro:
+                          </Typography>
+                          <Typography variant="body2" component="p">
+                            {selectedVeicolo.nomeSede}, {selectedVeicolo.viaSede}
+                          </Typography>
+                        </Box>
+                        <Box className="text-center date-info" sx={{ minWidth: "160px" }}>
+                          <Typography variant="body2" component="p" sx={{ fontWeight: "bold" }}>
+                            Tariffa giornaliera:
+                          </Typography>
+                          <Typography variant="body2" component="p">
+                            {selectedVeicolo.tariffaGiornaliera} € /giorno
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handlePrenota(selectedVeicolo)}
+                          sx={{
+                            transition: "background-color 0.3s, transform 0.3s",
+                            "&:hover": {
+                              backgroundColor: "darkblue",
+                              transform: "scale(1.05)",
+                            },
+                          }}
+                        >
+                          <i className="bi bi-calendar-check" style={{ marginRight: "8px", flexShrink: 0 }}></i>
+                          Prenota Ora
+                        </Button>
+                        <Button variant="outlined" color="secondary" onClick={() => setShowDettagliModal(false)}>
+                          Chiudi
+                        </Button>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Container>
+              </Paper>
+              <Box className="text-center"></Box>
+            </Box>
+          </Modal>
+        </>
       )}
     </Container>
   )
