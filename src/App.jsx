@@ -26,34 +26,146 @@ import CronologiaPrenotazioni from "./components/TutteLePagine/CronologiaPrenota
 import TutteLePrenotazioni from "./components/ROLE/SuperAdmin/GestionePrenotazioni/TutteLePrenotazioni/TutteLePrenotazioni"
 import LeMieRecensioni from "./components/TutteLePagine/Recensioni/LeMieRecensioni"
 import Contatti from "./components/TutteLePagine/Contatti/Contatti"
+import { AuthProvider } from "./components/Auth/AuthContext/AuthContext"
+import RoleBasedRoute from "./components/Auth/RoleBasedRoute/RoleBasedRoute"
+const Role1 = import.meta.env.VITE_ROLE_VERIFICA1
+const Role2 = import.meta.env.VITE_ROLE_VERIFICA2
+const Role3 = import.meta.env.VITE_ROLE_VERIFICA3
 
 function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="*" element={<NotFoundPage />} />
-        <Route path="/" element={<HomePage />} />
-        <Route path="/profilo/me" element={<ProfilePage />} />
-        <Route path="/veicoli" element={<Veicoli />} />
-        <Route path="/superadmin/utenti/all" element={<GetAllUtenti />} />
-        <Route path="/cerca/utente/id=" element={<CercaUtente />} />
-        <Route path="/elimina/utente/:uId" element={<EliminaUtente />} />
-        <Route path="/veicoli/all" element={<AllVeicoli />} />
-        <Route path="/modifica/auto/:id" element={<ModificaAuto />} />
-        <Route path="/modifica/moto/:id" element={<ModificaMoto />} />
-        <Route path="/crea/auto" element={<AggiungiAuto />} />
-        <Route path="/crea/moto" element={<AggiungiMoto />} />
-        <Route path="/elimina/veicolo/:vId" element={<EliminaVeicolo />} />
-        <Route path="/modifica/prenotazione" element={<ModificaPrenotazione />} />
-        <Route path="/elimina/prenotazione" element={<EliminaPrenotazione />} />
-        <Route path="/me/prenotazioni" element={<CronologiaPrenotazioni />} />
-        <Route path="/superadmin/prenotazioni" element={<TutteLePrenotazioni />} />
-        <Route path="/recensioni/me" element={<LeMieRecensioni />} />
-        <Route path="/contattaci" element={<Contatti />} />
-      </Routes>
-      <Footer />
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="*" element={<NotFoundPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/veicoli" element={<Veicoli />} />
+          <Route path="/contattaci" element={<Contatti />} />
+          <Route
+            path="/profilo/me"
+            element={
+              <RoleBasedRoute allowedRoles={[Role3, Role2, Role1]}>
+                <ProfilePage />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/recensioni/me"
+            element={
+              <RoleBasedRoute allowedRoles={[Role3, Role2, Role1]}>
+                <LeMieRecensioni />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/me/prenotazioni"
+            element={
+              <RoleBasedRoute allowedRoles={[Role3, Role2, Role1]}>
+                <CronologiaPrenotazioni />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/superadmin/utenti/all"
+            element={
+              <RoleBasedRoute allowedRoles={Role1}>
+                <GetAllUtenti />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/cerca/utente/id="
+            element={
+              <RoleBasedRoute allowedRoles={Role1}>
+                <CercaUtente />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/elimina/utente/:uId"
+            element={
+              <RoleBasedRoute allowedRoles={Role1}>
+                <EliminaUtente />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/veicoli/all"
+            element={
+              <RoleBasedRoute allowedRoles={Role1}>
+                <AllVeicoli />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/crea/auto"
+            element={
+              <RoleBasedRoute allowedRoles={Role1}>
+                <AggiungiAuto />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/modifica/auto/:id"
+            element={
+              <RoleBasedRoute allowedRoles={Role1}>
+                <ModificaAuto />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/crea/moto"
+            element={
+              <RoleBasedRoute allowedRoles={Role1}>
+                <AggiungiMoto />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/modifica/moto/:id"
+            element={
+              <RoleBasedRoute allowedRoles={Role1}>
+                <ModificaMoto />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/elimina/veicolo/:vId"
+            element={
+              <RoleBasedRoute allowedRoles={Role1}>
+                <EliminaVeicolo />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/superadmin/prenotazioni"
+            element={
+              <RoleBasedRoute allowedRoles={Role1}>
+                <TutteLePrenotazioni />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/modifica/prenotazione"
+            element={
+              <RoleBasedRoute allowedRoles={Role1}>
+                <ModificaPrenotazione />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/elimina/prenotazione"
+            element={
+              <RoleBasedRoute allowedRoles={Role1}>
+                <EliminaPrenotazione />
+              </RoleBasedRoute>
+            }
+          />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 
