@@ -165,6 +165,7 @@ const UserInfo = ({ userData }) => {
     const completeFormData = {
       nome: formData.nome || userData.nome,
       cognome: formData.cognome || userData.cognome,
+      avatar: formData.avatar || userData.avatar,
       sesso: formData.sesso || userData.sesso,
       username: formData.username || userData.username,
       email: formData.email || userData.email,
@@ -209,6 +210,14 @@ const UserInfo = ({ userData }) => {
             label="Cognome"
             name="cognome"
             value={formData.cognome}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="normal"
+            fullWidth
+            label="Immagine"
+            name="avatar"
+            value={formData.avatar}
             onChange={handleChange}
           />
           <TextField
