@@ -19,6 +19,8 @@ import {
   TableRow,
   Paper,
 } from "@mui/material"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import CancelIcon from "@mui/icons-material/Cancel"
 import { fetchWithToken, updateProfile, fetchWithTokenAndTextResponse } from "../../../../api"
 import { useNavigate } from "react-router-dom"
 
@@ -274,7 +276,24 @@ const UserInfo = ({ userData }) => {
               {userData?.role === ROLE1 && <UserDetail label="Ruolo" value={userData.role} />}
               {userData?.role === ROLE2 && <UserDetail label="Ruolo" value={userData.role} />}
               {userData?.role === ROLE1 && userData?.role === ROLE2 && <UserDetail label="ID" value={userData.id} />}
+
               <UserDetail label="Email" value={userData.email} />
+              <UserDetail
+                label="Verifica Account"
+                value={
+                  userData.emailConfirmed ? (
+                    <>
+                      <CheckCircleIcon style={{ color: "green", marginRight: "8px" }} />
+                      Utente verificato
+                    </>
+                  ) : (
+                    <>
+                      <CancelIcon style={{ color: "red", marginRight: "8px" }} />
+                      Utente non verificato
+                    </>
+                  )
+                }
+              />
               <UserDetail label="Età" value={userData.eta} />
               <UserDetail label="Data di Nascita" value={new Date(userData.dataNascita).toLocaleDateString()} />
               <UserDetail label="Sesso" value={userData.sesso} />
