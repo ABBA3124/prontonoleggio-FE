@@ -113,7 +113,7 @@ const Veicoli = () => {
         const user = await fetchWithToken("/utente/me")
         setUser(user)
       } catch (error) {
-        setErrore("Errore durante il caricamento del profilo.")
+        // setErrore("Errore durante il caricamento del profilo.")
       }
     }
     fetchVeicoli()
