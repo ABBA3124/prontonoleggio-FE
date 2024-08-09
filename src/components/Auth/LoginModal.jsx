@@ -19,8 +19,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { login } from "../../../api"
 import CloseIcon from "@mui/icons-material/Close"
-import RegisterModal from "../Auth/RegisterModal"
-import { Cursor } from "react-bootstrap-icons"
+import RegisterModal from "./RegisterModal"
 
 function Copyright(props) {
   return (
@@ -155,7 +154,11 @@ const LoginModal = ({ show, handleClose }) => {
           </Grid>
         </Grid>
       </Modal>
-      <RegisterModal show={showRegisterModal} handleClose={handleLoginModalClose} />
+      <RegisterModal
+        show={showRegisterModal}
+        handleClose={handleLoginModalClose}
+        handleOpenLogin={handleLoginModalShow} // Aggiungi questa prop
+      />
     </ThemeProvider>
   )
 }

@@ -22,6 +22,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 import CloseIcon from "@mui/icons-material/Close"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { register } from "../../../api"
+import { set } from "date-fns"
 
 function Copyright(props) {
   return (
@@ -82,7 +83,6 @@ const RegisterModal = ({ show, handleClose }) => {
     try {
       const result = await register(userData)
       if (result) {
-        console.log("Registrazione eseguita con successo!")
         setSuccess("Registrazione eseguita con successo!")
         setError("")
         setNome("")
@@ -101,7 +101,13 @@ const RegisterModal = ({ show, handleClose }) => {
         setDataNascita("")
         setCodiceFiscale("")
         setPatente("")
-        handleClose()
+        setTimeout(() => {
+          setSuccess("Effettua il login per continuare.")
+          setTimeout(() => {
+            setSuccess("")
+            handleClose()
+          }, 4000)
+        }, 2000)
       }
     } catch (error) {
       setError("Registrazione fallita!")
@@ -114,14 +120,14 @@ const RegisterModal = ({ show, handleClose }) => {
       <Modal open={show} onClose={handleClose}>
         <Grid container component="main" sx={{ height: "100vh" }}>
           <CssBaseline />
-          <Grid item xs={false} sm={12} md={7} lg={2} />
+          <Grid item xs={false} sm={12} md={7} lg={6} />
           <Grid
             item
             xs={12}
             sm={8}
             md={5}
-            lg={12}
-            xl={12}
+            lg={6}
+            xl={6}
             component={Paper}
             elevation={6}
             square
@@ -153,7 +159,7 @@ const RegisterModal = ({ show, handleClose }) => {
               <Typography component="h1" variant="h5">
                 Registrati
               </Typography>
-              <Box component="form" noValidate onSubmit={handleSubmit} sx={{ width: "50%", mt: 1 }}>
+              <Box component="form" noValidate onSubmit={handleSubmit} sx={{ width: "100%", mt: 1 }}>
                 {error && (
                   <Alert severity="error" sx={{ width: "100%", mt: 2 }}>
                     {error}
@@ -348,6 +354,16 @@ const RegisterModal = ({ show, handleClose }) => {
                   value={patente}
                   onChange={(e) => setPatente(e.target.value)}
                 />
+                {error && (
+                  <Alert severity="error" sx={{ width: "100%", mt: 2 }}>
+                    {error}
+                  </Alert>
+                )}
+                {success && (
+                  <Alert severity="success" sx={{ width: "100%", mt: 2 }}>
+                    {success}
+                  </Alert>
+                )}
                 <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                   Registrati
                 </Button>
