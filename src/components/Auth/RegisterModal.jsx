@@ -341,7 +341,7 @@ const RegisterModal = ({ show, handleClose }) => {
                   name="codiceFiscale"
                   autoComplete="codiceFiscale"
                   value={codiceFiscale}
-                  onChange={(e) => setCodiceFiscale(e.target.value)}
+                  onChange={(e) => setCodiceFiscale(e.target.value.toUpperCase())}
                 />
                 <TextField
                   margin="normal"
@@ -352,7 +352,7 @@ const RegisterModal = ({ show, handleClose }) => {
                   name="patente"
                   autoComplete="patente"
                   value={patente}
-                  onChange={(e) => setPatente(e.target.value)}
+                  onChange={(e) => setPatente(e.target.value.toUpperCase())}
                 />
                 {error && (
                   <Alert severity="error" sx={{ width: "100%", mt: 2 }}>
