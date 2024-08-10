@@ -312,14 +312,12 @@ const CronologiaPrenotazioni = () => {
                       </Box>
                       <hr />
                       <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                        <Typography
-                          variant="body2"
-                          sx={{ mb: 1, color: "text.secondary", display: "flex", alignItems: "center" }}
-                        >
+                        <Typography variant="body2" sx={{ mb: 1, color: "text.secondary" }}>
                           <LocationOnIcon sx={{ mr: 0.5, color: "primary.main" }} />
                           <strong>Località di ritiro: </strong>
+                          <br />
                           <span style={{ marginLeft: "4px" }}>
-                            {prenotazione.veicolo.posizione}, {prenotazione.veicolo.viaSede}
+                            {prenotazione.veicolo.nomeSede},{prenotazione.veicolo.viaSede}
                           </span>
                         </Typography>
                       </Box>
