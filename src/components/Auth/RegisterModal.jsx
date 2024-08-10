@@ -201,8 +201,8 @@ const RegisterModal = ({ show, handleClose }) => {
                     value={sesso}
                     onChange={(e) => setSesso(e.target.value)}
                   >
-                    <FormControlLabel value="MASCHIO" control={<Radio />} label="Maschio" />
-                    <FormControlLabel value="FEMMINA" control={<Radio />} label="Femmina" />
+                    <FormControlLabel value="MASCHIO" control={<Radio />} label="M" />
+                    <FormControlLabel value="FEMMINA" control={<Radio />} label="F" />
                     <FormControlLabel value="ALTRO" control={<Radio />} label="Altro" />
                   </RadioGroup>
                 </FormControl>
