@@ -131,7 +131,17 @@ const AllRecensioni = () => {
                       )}
                     </Box>
                   </Box>
+                  <Typography variant="h5" component="div" sx={{ fontWeight: "bold", mb: 1 }}>
+                    {recensione.titolo}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                    {recensione.commento}
+                  </Typography>
                   <Box sx={{ mb: 2 }}>
+                    <Typography variant="body2" color="textSecondary">
+                      <strong>Veicolo Noleggiato: </strong> {recensione.prenotazione.veicolo.marca}{" "}
+                      {recensione.prenotazione.veicolo.modello}
+                    </Typography>
                     <Typography variant="body2" color="textSecondary">
                       <strong>Data Inizio/Fine Noleggio</strong>{" "}
                       {new Date(recensione.prenotazione.dataInizio).toLocaleDateString()}
@@ -141,17 +151,7 @@ const AllRecensioni = () => {
                     <Typography variant="body2" color="textSecondary">
                       <strong>Sede: </strong> {recensione.prenotazione.veicolo.nomeSede}
                     </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      <strong>Veicolo Noleggiato: </strong> {recensione.prenotazione.veicolo.marca}{" "}
-                      {recensione.prenotazione.veicolo.modello}
-                    </Typography>
                   </Box>
-                  <Typography variant="h5" component="div" sx={{ fontWeight: "bold", mb: 1 }}>
-                    {recensione.titolo}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-                    {recensione.commento}
-                  </Typography>
                   <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                     {renderRating(recensione.rating)}
                     <Typography variant="h6" sx={{ ml: 1 }}>
