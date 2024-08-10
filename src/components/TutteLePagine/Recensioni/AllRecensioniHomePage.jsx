@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react"
 import { fetchWithToken } from "../../../../api"
-import { Container, Grid, Card, CardContent, Typography, CircularProgress, Alert, Avatar, Box } from "@mui/material"
+import {
+  Container,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  CircularProgress,
+  Alert,
+  Avatar,
+  Box,
+  Button,
+} from "@mui/material"
 import StarIcon from "@mui/icons-material/Star"
 import StarBorderIcon from "@mui/icons-material/StarBorder"
 import RateReviewIcon from "@mui/icons-material/RateReview"
@@ -8,7 +19,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles"
 
 const theme = createTheme({
   typography: {
-    fontFamily: "Poppins, Arial",
     fontFamily: "Poppins, Arial",
     h4: {
       fontFamily: "Roboto, Arial",
@@ -19,6 +29,7 @@ const theme = createTheme({
 
 const AllRecensioni = () => {
   const [recensioni, setRecensioni] = useState([])
+  const [visibleCount, setVisibleCount] = useState(3)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -48,6 +59,10 @@ const AllRecensioni = () => {
       }
     }
     return stars
+  }
+
+  const loadMoreRecensioni = () => {
+    setVisibleCount((prevCount) => prevCount + 3)
   }
 
   if (loading) {
@@ -96,7 +111,7 @@ const AllRecensioni = () => {
           </Typography>
         </Box>
         <Grid container spacing={3}>
-          {recensioni.map((recensione) => (
+          {recensioni.slice(0, visibleCount).map((recensione) => (
             <Grid item xs={12} sm={6} md={4} key={recensione.id}>
               <Card
                 sx={{
@@ -106,7 +121,7 @@ const AllRecensioni = () => {
                   overflow: "hidden",
                   display: "flex",
                   flexDirection: "column",
-                  height: "100%", // Imposta l'altezza della carta per essere uguale in tutte le carte
+                  height: "100%",
                 }}
               >
                 <CardContent sx={{ backgroundColor: "#f9f9f9", flexGrow: 1 }}>
@@ -143,7 +158,7 @@ const AllRecensioni = () => {
                       {recensione.prenotazione.veicolo.modello}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                      <strong>Data Inizio/Fine Noleggio</strong>{" "}
+                      <strong>Data Inizio/Fine Noleggio: </strong>{" "}
                       {new Date(recensione.prenotazione.dataInizio).toLocaleDateString()}
                       {" - "}
                       {new Date(recensione.prenotazione.dataFine).toLocaleDateString()}
@@ -163,6 +178,13 @@ const AllRecensioni = () => {
             </Grid>
           ))}
         </Grid>
+        {visibleCount < recensioni.length && (
+          <Box sx={{ textAlign: "center", mt: 4 }}>
+            <Button variant="contained" onClick={loadMoreRecensioni}>
+              Carica Altre Recensioni
+            </Button>
+          </Box>
+        )}
       </Container>
     </ThemeProvider>
   )
